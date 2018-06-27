@@ -258,6 +258,13 @@ public class GameState {
 
     }
 
+    //TODO: implement possible turns
+    public ArrayList<Turn> getPossibleTurns() {
+        ArrayList<Turn> turns = new ArrayList<>();
+
+        return turns;
+    }
+
     /*
     0- no one
     1- white
