@@ -107,7 +107,7 @@ public class App
 
             int pickUp = charToNum(str.charAt(7));
 
-            int spots = (str.length() - 7) / 2;
+            int spots = (str.length() - 8) / 2;
             int[] drop = new int[spots];
             for(int i = 0; i < spots; i++) {
                 drop[i] = charToNum(str.charAt(8 + (2 * i) + 1));

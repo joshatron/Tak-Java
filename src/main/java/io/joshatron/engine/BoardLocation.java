@@ -27,6 +27,23 @@ public class BoardLocation {
         }
     }
 
+    public void moveOpposite(Direction direction) {
+        switch(direction) {
+            case SOUTH:
+                y -= 1;
+                break;
+            case NORTH:
+                y += 1;
+                break;
+            case WEST:
+                x += 1;
+                break;
+            case EAST:
+                x -= 1;
+                break;
+        }
+    }
+
     public int getX() {
         return x;
     }

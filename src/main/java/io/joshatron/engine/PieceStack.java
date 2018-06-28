@@ -24,9 +24,10 @@ public class PieceStack {
             return null;
         }
 
+        int pieceLoc = pieces.size() - toRemove;
         ArrayList<Piece> removed = new ArrayList<>();
-        for(int i = pieces.size() - toRemove; i < pieces.size(); i++) {
-            removed.add(pieces.remove(i));
+        for(int i = 0; i < toRemove; i++) {
+            removed.add(pieces.remove(pieceLoc));
         }
 
         return removed;
@@ -38,8 +39,8 @@ public class PieceStack {
         }
 
         ArrayList<Piece> top = new ArrayList<>();
-        for(int i = pieces.size() - num; i < pieces.size(); i++) {
-            top.add(pieces.get(i));
+        for(int i = 0; i < num; i++) {
+            top.add(pieces.get(pieces.size() - num));
         }
 
         return top;
@@ -48,6 +49,11 @@ public class PieceStack {
     public void collapseTopPiece() {
         int top = pieces.size() - 1;
         pieces.set(top, new Piece(pieces.get(top).isWhite(), PieceType.STONE));
+    }
+
+    public void uncollapseTopPiece() {
+        int top = pieces.size() - 1;
+        pieces.set(top, new Piece(pieces.get(top).isWhite(), PieceType.WALL));
     }
 
     public Piece getTopPiece() {
