@@ -52,7 +52,7 @@ public class App
             else {
                 Turn turn = turnFromString(input);
                 if(turn != null && state.isLegalTurn(turn)) {
-                    state.ExecuteTurn(turn);
+                    state.executeTurn(turn);
                 }
                 else {
                     System.out.println("Invalid move. If you need help, type help. To quit, type exit.");
@@ -81,7 +81,7 @@ public class App
             int y = charToNum(str.charAt(4)) - 1;
 
             if(type != null && x != -1 && y != -1) {
-                PlaceTurn turn = new PlaceTurn(TurnType.PLACE, new BoardLocation(x, y), type);
+                PlaceTurn turn = new PlaceTurn(new BoardLocation(x, y), type);
                 return turn;
             }
         }
@@ -114,7 +114,7 @@ public class App
             }
 
             if(dir != null && x != -1 && y != -1 && pickUp != -1) {
-                MoveTurn turn = new MoveTurn(TurnType.MOVE, new BoardLocation(x, y), pickUp, dir, drop);
+                MoveTurn turn = new MoveTurn(new BoardLocation(x, y), pickUp, dir, drop);
                 return turn;
             }
         }

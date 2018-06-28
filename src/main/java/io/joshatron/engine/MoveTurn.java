@@ -8,9 +8,9 @@ public class MoveTurn extends Turn {
     private int[] placed;
     private boolean flattened;
 
-    public MoveTurn(TurnType type, BoardLocation startLocation, int pickedUp,
+    public MoveTurn(BoardLocation startLocation, int pickedUp,
                     Direction direction, int[] placed) {
-        super(type);
+        super(TurnType.MOVE);
         this.startLocation = startLocation;
         this.pickedUp = pickedUp;
         this.direction = direction;

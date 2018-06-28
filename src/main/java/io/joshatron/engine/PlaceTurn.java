@@ -5,8 +5,8 @@ public class PlaceTurn extends Turn {
     private BoardLocation location;
     private PieceType pieceType;
 
-    public PlaceTurn(TurnType type, BoardLocation location, PieceType pieceType) {
-        super(type);
+    public PlaceTurn(BoardLocation location, PieceType pieceType) {
+        super(TurnType.PLACE);
         this.location = location;
         this.pieceType = pieceType;
     }

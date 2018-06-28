@@ -302,7 +302,7 @@ public class GameState {
         return false;
     }
 
-    public boolean ExecuteTurn(Turn turn) {
+    public boolean executeTurn(Turn turn) {
         if(isLegalTurn(turn)) {
             if(turn.getType() == TurnType.PLACE) {
                 PlaceTurn place = (PlaceTurn)turn;
