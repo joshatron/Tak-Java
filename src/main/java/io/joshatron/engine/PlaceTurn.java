@@ -11,6 +11,12 @@ public class PlaceTurn extends Turn {
         this.pieceType = pieceType;
     }
 
+    public PlaceTurn(int x, int y, PieceType pieceType) {
+        super(TurnType.PLACE);
+        this.location = new BoardLocation(x, y);
+        this.pieceType = pieceType;
+    }
+
     public BoardLocation getLocation() {
         return location;
     }

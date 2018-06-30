@@ -18,6 +18,16 @@ public class MoveTurn extends Turn {
         this.flattened = false;
     }
 
+    public MoveTurn(int x, int y, int pickedUp,
+                    Direction direction, int[] placed) {
+        super(TurnType.MOVE);
+        this.startLocation = new BoardLocation(x, y);
+        this.pickedUp = pickedUp;
+        this.direction = direction;
+        this.placed = placed;
+        this.flattened = false;
+    }
+
     public BoardLocation getStartLocation() {
         return startLocation;
     }
