@@ -140,7 +140,7 @@ public class GameStateTest {
         Assert.assertFalse(state.isLegalTurn(turn));
         turn = new PlaceTurn(3,3, PieceType.STONE);
         Assert.assertFalse(state.isLegalTurn(turn));
-        turn = new PlaceTurn(1,1, PieceType.STONE);
+        turn = new PlaceTurn(1,2, PieceType.STONE);
         Assert.assertTrue(state.isLegalTurn(turn));
     }
 
@@ -193,21 +193,74 @@ public class GameStateTest {
     //Makes sure you can't place anything besides stones for the first 2 turns
     @Test
     public void isLegalTurnPlaceBadFirstMoves() {
+        GameState state = new GameState(true, 5);
+        //white illegal turns
+        PlaceTurn turn = new PlaceTurn(0,0,PieceType.CAPSTONE);
+        Assert.assertFalse(state.isLegalTurn(turn));
+        turn = new PlaceTurn(0,0,PieceType.WALL);
+        Assert.assertFalse(state.isLegalTurn(turn));
+        turn = new PlaceTurn(0,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(turn));
+        //black illegal turns
+        turn = new PlaceTurn(1,1,PieceType.CAPSTONE);
+        Assert.assertFalse(state.isLegalTurn(turn));
+        turn = new PlaceTurn(1,1,PieceType.WALL);
+        Assert.assertFalse(state.isLegalTurn(turn));
+        turn = new PlaceTurn(1,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(turn));
     }
 
     //Tests that some legal moves are legal
     @Test
     public void isLegalTurnMoveNormal() {
+        GameState state = initializeState(5);
+
+        MoveTurn move = new MoveTurn(1,0,1,Direction.WEST,new int[]{1});
+        Assert.assertTrue(state.executeTurn(move));
+        PlaceTurn place = new PlaceTurn(0,2,PieceType.WALL);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(1,0,PieceType.CAPSTONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(0,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        move = new MoveTurn(1,0,1,Direction.WEST,new int[]{1});
+        Assert.assertTrue(state.executeTurn(move));
+        place = new PlaceTurn(4,4,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        move = new MoveTurn(0,0,2,Direction.SOUTH,new int[]{1,1});
+        Assert.assertTrue(state.isLegalTurn(move));
     }
 
     //Tests if you try to make a move off board
     @Test
     public void isLegalTurnMoveOffBoard() {
+        GameState state = initializeState(5);
+
+        PlaceTurn place = new PlaceTurn(1,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        MoveTurn move = new MoveTurn(0,0,1,Direction.EAST,new int[]{1});
+        Assert.assertTrue(state.executeTurn(move));
+        place = new PlaceTurn(2,2,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        move = new MoveTurn(1,0,2,Direction.NORTH,new int[]{2});
+        Assert.assertFalse(state.isLegalTurn(move));
+        move = new MoveTurn(1,0,2,Direction.WEST,new int[]{1,1});
+        Assert.assertFalse(state.isLegalTurn(move));
     }
 
     //Tests if you try to grab a pile you don't own
     @Test
     public void isLegalTurnMoveIllegalPickup() {
+        GameState state = initializeState(5);
+
+        //Entire stack is owned by other player
+        MoveTurn move = new MoveTurn(0,0,1,Direction.EAST,new int[]{1});
+        Assert.assertFalse(state.isLegalTurn(move));
+        move = new MoveTurn(1,0,1,Direction.WEST,new int[]{1});
+        Assert.assertTrue(state.executeTurn(move));
+        //Only top of stack is owned by other player
+        move = new MoveTurn(0,0,2,Direction.EAST,new int[]{2});
+        Assert.assertFalse(state.isLegalTurn(move));
     }
 
     //Tests if you try to cover a wall or capstone illegally

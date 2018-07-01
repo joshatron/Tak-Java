@@ -40,7 +40,7 @@ public class PieceStack {
 
         ArrayList<Piece> top = new ArrayList<>();
         for(int i = 0; i < num; i++) {
-            top.add(pieces.get(pieces.size() - num));
+            top.add(pieces.get(pieces.size() - num + i));
         }
 
         return top;

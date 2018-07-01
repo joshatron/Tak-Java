@@ -151,6 +151,7 @@ public class GameState {
             // Check that each position of move is legal
             BoardLocation currentLocation = new BoardLocation(move.getStartLocation().getX(), move.getStartLocation().getY());
             int[] toPlace = move.getPlaced();
+            ArrayList<Piece> stuff = board.getPosition(currentLocation).getPieces();
             ArrayList<Piece> pieces = board.getPosition(currentLocation).getTopPieces(move.getPickedUp());
             for(int i = 0; i < toPlace.length; i++) {
                 // Check that at least one piece was placed
@@ -172,9 +173,10 @@ public class GameState {
                     if(board.getPosition(currentLocation).getTopPiece().getType() == PieceType.CAPSTONE) {
                         return false;
                     }
+
                     // If there is a wall and you don't have only a capstone, fail
                     if(board.getPosition(currentLocation).getTopPiece().getType() == PieceType.WALL) {
-                        if(pieces.size() == 1 && pieces.get(0).getType() != PieceType.CAPSTONE) {
+                        if(pieces.size() != 1 || pieces.get(0).getType() != PieceType.CAPSTONE) {
                             return false;
                         }
                     }

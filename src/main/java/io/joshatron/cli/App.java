@@ -2,6 +2,7 @@ package io.joshatron.cli;
 
 import io.joshatron.engine.*;
 
+import java.sql.SQLOutput;
 import java.util.Scanner;
 
 /**
@@ -12,9 +13,88 @@ public class App
 {
     public static void main( String[] args )
     {
-        System.out.println("Initializing game...");
-        GameState state = new GameState(true, 5);
         Scanner reader = new Scanner(System.in);
+        int games = -1;
+        int size = -1;
+        boolean whiteFirst = true;
+
+        System.out.println("---------------------");
+        System.out.println("| Welcome to TakCLI |");
+        System.out.println("---------------------");
+        System.out.println();
+        while(true) {
+            System.out.print("How many games would you like to play? ");
+            String input = reader.nextLine();
+            try {
+                games = Integer.parseInt(input);
+                break;
+            }
+            catch(Exception e) {
+                System.out.println("Invalid number. Please enter a valid number greater than 0.");
+            }
+        }
+        while(true) {
+            System.out.print("What size board would you like to play on? ");
+            String input = reader.nextLine();
+            try {
+                size = Integer.parseInt(input);
+                break;
+            }
+            catch(Exception e) {
+                System.out.println("Invalid number Please enter 3, 4, 5, 6, or 8.");
+            }
+        }
+        while(true) {
+            System.out.print("Who goes first, white or black? ");
+            String input = reader.nextLine();
+            if(input.charAt(0) == 'w') {
+                whiteFirst = true;
+                break;
+            }
+            else if(input.charAt(0) == 'b') {
+                whiteFirst = false;
+                break;
+            }
+            else {
+                System.out.println("Invalid input. Please enter black or white.");
+            }
+        }
+
+        int whiteWins = 0;
+        int blackWins = 0;
+        for(int i = 0; i < games; i++) {
+            System.out.println("----------");
+            System.out.println("| Game " + (i + 1) + " |");
+            System.out.println("----------");
+            int result = playGame(whiteFirst, size, reader);
+            if(result == 1) {
+                whiteWins++;
+            }
+            else if(result == 2){
+                blackWins++;
+            }
+            else {
+                System.exit(0);
+            }
+            whiteFirst = !whiteFirst;
+        }
+
+        if(whiteWins > blackWins) {
+            System.out.println("White is the winner " + whiteWins + ":" + blackWins);
+        }
+        else if(whiteWins < blackWins) {
+            System.out.println("Black is the winner " + blackWins + ":" + whiteWins);
+        }
+        else {
+            System.out.println("It's a tie! Both players won the same number of games.");
+        }
+    }
+
+    //Plays game with the given conditions
+    //Returns a boolean whether white won
+    private static int playGame(boolean whiteFirst, int size, Scanner reader) {
+        System.out.println("Initializing game...");
+        GameState state = new GameState(whiteFirst, size);
 
 
         while(state.checkForWinner() == 0) {
@@ -59,6 +139,17 @@ public class App
                 }
             }
         }
+
+        if(state.checkForWinner() == 1) {
+            System.out.println("White wins!");
+            return 1;
+        }
+        else if(state.checkForWinner() == 2) {
+            System.out.println("Black wins!");
+            return 2;
+        }
+
+        return 0;
     }
 
     private static Turn turnFromString(String str) {
