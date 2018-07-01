@@ -266,61 +266,335 @@ public class GameStateTest {
     //Tests if you try to cover a wall or capstone illegally
     @Test
     public void isLegalTurnMoveIllegalCover() {
+        GameState state = initializeState(5);
+
+        MoveTurn move = new MoveTurn(1,0,1,Direction.WEST,new int[]{1});
+        Assert.assertTrue(state.executeTurn(move));
+        PlaceTurn place = new PlaceTurn(0,1,PieceType.WALL);
+        Assert.assertTrue(state.executeTurn(place));
+        move = new MoveTurn(0,0,1,Direction.SOUTH,new int[]{1});
+        Assert.assertFalse(state.isLegalTurn(move));
+        place = new PlaceTurn(1,0,PieceType.CAPSTONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(1,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        move = new MoveTurn(1,0,1,Direction.WEST,new int[]{1});
+        Assert.assertTrue(state.executeTurn(move));
+        place = new PlaceTurn(1,0,PieceType.CAPSTONE);
+        Assert.assertTrue(state.executeTurn(place));
+        move = new MoveTurn(0,0,2,Direction.SOUTH,new int[]{1,1});
+        Assert.assertFalse(state.isLegalTurn(move));
+        move = new MoveTurn(0,0,2,Direction.SOUTH,new int[]{2});
+        Assert.assertFalse(state.isLegalTurn(move));
+        move = new MoveTurn(0,0,1,Direction.EAST,new int[]{1});
+        Assert.assertFalse(state.isLegalTurn(move));
     }
 
     //Tests if you try to pick up more than the max height
     @Test
     public void isLegalTurnMoveTooManyPickup() {
+        GameState state = initializeState(3);
+
+        MoveTurn move = new MoveTurn(1,0,1,Direction.WEST,new int[]{1});
+        Assert.assertTrue(state.executeTurn(move));
+        PlaceTurn place = new PlaceTurn(0,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        move = new MoveTurn(0,0,2,Direction.SOUTH,new int[]{2});
+        Assert.assertTrue(state.executeTurn(move));
+        place = new PlaceTurn(1,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        move = new MoveTurn(0,1,3,Direction.EAST,new int[]{3});
+        Assert.assertTrue(state.executeTurn(move));
+        place = new PlaceTurn(2,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        move = new MoveTurn(1,1,4,Direction.EAST,new int[]{4});
+        Assert.assertFalse(state.isLegalTurn(move));
     }
 
     //Tests if you try to not leave at least 1 piece in each spot in the path
     @Test
     public void isLegalTurnMoveEmptySpots() {
+        GameState state = initializeState(5);
+
+        MoveTurn move = new MoveTurn(1,0,1,Direction.SOUTH,new int[]{0,1});
+        Assert.assertFalse(state.isLegalTurn(move));
+        move = new MoveTurn(1,0,1,Direction.WEST,new int[]{1});
+        Assert.assertTrue(state.executeTurn(move));
+        PlaceTurn place = new PlaceTurn(1,1,PieceType.STONE);
+        move = new MoveTurn(0,0,2,Direction.EAST,new int[]{1,0,1});
+        Assert.assertFalse(state.isLegalTurn(move));
     }
 
     //Tests if you try to do a move in the first 2 turns
     @Test
     public void isLegalTurnMoveBadFirstMoves() {
+        GameState state = new GameState(true,5);
+
+        PlaceTurn place = new PlaceTurn(0,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        MoveTurn move = new MoveTurn(0,0,1,Direction.SOUTH,new int[]{1});
+        Assert.assertFalse(state.isLegalTurn(move));
     }
 
     //Tests a straight horizontal win path
     @Test
     public void checkForWinnerStraightHorizontal() {
+        GameState state = new GameState(true,3);
+
+        PlaceTurn place = new PlaceTurn(0,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(0,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(1,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(1,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(2,0,PieceType.STONE);
+        Assert.assertEquals(0,state.checkForWinner());
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertEquals(1,state.checkForWinner());
     }
 
     //Tests a straight vertical win path
     @Test
     public void checkForWinnerStraightVertical() {
+        GameState state = new GameState(false,3);
+
+        PlaceTurn place = new PlaceTurn(0,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(1,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(1,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(0,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(1,2,PieceType.STONE);
+        Assert.assertEquals(0,state.checkForWinner());
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertEquals(2,state.checkForWinner());
     }
 
     //Tests a non-straight horizontal win path
     @Test
     public void checkForWinnerCurvyHorizontal() {
+        GameState state = new GameState(true,6);
+
+        MoveTurn moveDown = new MoveTurn(5,0,1,Direction.SOUTH,new int[]{1});
+        MoveTurn moveUp = new MoveTurn(5,1,1,Direction.NORTH,new int[]{1});
+
+        PlaceTurn place = new PlaceTurn(5,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(0,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(1,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(state.executeTurn(moveDown));
+        place = new PlaceTurn(2,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(state.executeTurn(moveUp));
+        place = new PlaceTurn(3,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(state.executeTurn(moveDown));
+        place = new PlaceTurn(3,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(state.executeTurn(moveUp));
+        place = new PlaceTurn(3,2,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(state.executeTurn(moveDown));
+        place = new PlaceTurn(2,2,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(state.executeTurn(moveUp));
+        place = new PlaceTurn(1,2,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(state.executeTurn(moveDown));
+        place = new PlaceTurn(0,2,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(state.executeTurn(moveUp));
+        place = new PlaceTurn(0,3,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(state.executeTurn(moveDown));
+        place = new PlaceTurn(0,4,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(state.executeTurn(moveUp));
+        place = new PlaceTurn(1,4,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(state.executeTurn(moveDown));
+        place = new PlaceTurn(2,4,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(state.executeTurn(moveUp));
+        place = new PlaceTurn(3,4,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(state.executeTurn(moveDown));
+        place = new PlaceTurn(4,4,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(state.executeTurn(moveUp));
+        place = new PlaceTurn(5,4,PieceType.STONE);
+        Assert.assertEquals(0,state.checkForWinner());
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertEquals(1,state.checkForWinner());
     }
 
     //Tests a non-straight vertical win path
     @Test
     public void checkForWinnerCurvyVertical() {
+        GameState state = new GameState(false,6);
+
+        MoveTurn moveDown = new MoveTurn(5,0,1,Direction.SOUTH,new int[]{1});
+        MoveTurn moveUp = new MoveTurn(5,1,1,Direction.NORTH,new int[]{1});
+
+        PlaceTurn place = new PlaceTurn(5,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(0,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(1,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(state.executeTurn(moveDown));
+        place = new PlaceTurn(2,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(state.executeTurn(moveUp));
+        place = new PlaceTurn(3,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(state.executeTurn(moveDown));
+        place = new PlaceTurn(3,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(state.executeTurn(moveUp));
+        place = new PlaceTurn(3,2,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(state.executeTurn(moveDown));
+        place = new PlaceTurn(2,2,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(state.executeTurn(moveUp));
+        place = new PlaceTurn(1,2,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(state.executeTurn(moveDown));
+        place = new PlaceTurn(0,2,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(state.executeTurn(moveUp));
+        place = new PlaceTurn(0,3,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(state.executeTurn(moveDown));
+        place = new PlaceTurn(0,4,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(state.executeTurn(moveUp));
+        place = new PlaceTurn(1,4,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(state.executeTurn(moveDown));
+        place = new PlaceTurn(1,5,PieceType.STONE);
+        Assert.assertEquals(0,state.checkForWinner());
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertEquals(2,state.checkForWinner());
     }
 
     //Tests that walls can't be in win paths
     @Test
     public void checkForWinnerWallInPath() {
+        GameState state = new GameState(true,3);
+
+        PlaceTurn place = new PlaceTurn(0,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(0,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(1,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(1,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(2,0,PieceType.WALL);
+        Assert.assertEquals(0,state.checkForWinner());
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertEquals(0,state.checkForWinner());
     }
 
     //Tests that capstones can be in win paths
     @Test
     public void checkForWinnerCapstoneInPath() {
+        GameState state = new GameState(true,5);
+
+        PlaceTurn place = new PlaceTurn(0,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(0,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(1,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(1,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(2,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(2,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(3,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(3,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(4,0,PieceType.CAPSTONE);
+        Assert.assertEquals(0,state.checkForWinner());
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertEquals(1,state.checkForWinner());
     }
 
     //Tests that the top spot in a stack is the one counted
     @Test
     public void checkForWinnerStacks() {
+        GameState state = new GameState(true,3);
+
+        PlaceTurn place = new PlaceTurn(1,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(0,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(2,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(2,2,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(1,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(0,2,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        MoveTurn move = new MoveTurn(1,0,1,Direction.SOUTH,new int[]{1});
+        Assert.assertEquals(0,state.checkForWinner());
+        Assert.assertTrue(state.executeTurn(move));
+        Assert.assertEquals(1,state.checkForWinner());
+    }
+
+    //Tests that diagonals don't count toward win paths
+    @Test
+    public void checkForWinnerDiagonals() {
+        GameState state = new GameState(false,3);
+
+        PlaceTurn place = new PlaceTurn(0,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(0,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(0,2,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(1,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(1,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(2,2,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertEquals(0,state.checkForWinner());
     }
 
     //Tests the win condition that happens with a full board
     @Test
     public void checkForWinnerFullBoard() {
+        GameState state = initializeState(3);
+
+        PlaceTurn place = new PlaceTurn(2,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(0,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(1,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(2,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(0,2,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(1,2,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(2,2,PieceType.STONE);
+        Assert.assertEquals(0, state.checkForWinner());
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertEquals(1, state.checkForWinner());
     }
 
     //Tests the win condition that happens when a player runs out of pieces

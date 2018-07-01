@@ -234,6 +234,45 @@ public class GameState {
             }
         }
 
+
+        //Check for a full board
+        boolean empty = false;
+        int white = 0;
+        int black = 0;
+        for(int x = 0; x < getBoardSize(); x++) {
+            for(int y = 0; y < getBoardSize(); y++) {
+                if(board.getPosition(x,y).getPieces().size() == 0) {
+                    empty = true;
+                }
+                else {
+                    if(board.getPosition(x,y).getTopPiece().isWhite()) {
+                        white++;
+                    }
+                    else {
+                        black++;
+                    }
+                }
+            }
+        }
+
+        if(!empty) {
+            if(white > black) {
+                return 1;
+            }
+            else if(black > white) {
+                return 2;
+            }
+            else if(whiteCapstones > blackCapstones) {
+                return 1;
+            }
+            else if(blackCapstones > whiteCapstones) {
+                return 2;
+            }
+            else {
+                return 3;
+            }
+        }
+
         //Check for each possible path
         boolean whitePath = false;
         boolean blackPath = false;
@@ -335,7 +374,7 @@ public class GameState {
             else {
                 MoveTurn move = (MoveTurn)turn;
                 ArrayList<Piece> pieces = board.getPosition(move.getStartLocation()).removePieces(move.getPickedUp());
-                BoardLocation current = move.getStartLocation();
+                BoardLocation current = new BoardLocation(move.getStartLocation().getX(), move.getStartLocation().getY());
                 for(int i = 0; i < move.getPlaced().length; i++) {
                     current.move(move.getDirection());
                     // If there is a wall, collapse it
