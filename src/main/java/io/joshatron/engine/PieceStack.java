@@ -67,6 +67,10 @@ public class PieceStack {
         return pieces;
     }
 
+    public int getHeight() {
+        return pieces.size();
+    }
+
     // Prints top to bottom according to tak by mail rules
     public String getString() {
         if(pieces.size() == 0) {

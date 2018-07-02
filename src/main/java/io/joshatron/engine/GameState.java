@@ -206,7 +206,8 @@ public class GameState {
             int black = 0;
             for(int x = 0; x < board.getBoardSize(); x++) {
                 for(int y = 0; y < board.getBoardSize(); y++) {
-                    if(board.getPosition(x, y).getTopPiece().getType() == PieceType.STONE) {
+                    if(board.getPosition(x, y).getPieces().size() > 0 &&
+                       board.getPosition(x, y).getTopPiece().getType() == PieceType.STONE) {
                         if(board.getPosition(x, y).getTopPiece().isWhite()) {
                             white++;
                         }
@@ -304,10 +305,10 @@ public class GameState {
         else if(!whitePath && blackPath) {
             return 2;
         }
-        else if(whitePath && blackPath && whiteTurn) {
+        else if(whitePath && blackPath && !whiteTurn) {
             return 1;
         }
-        else if(whitePath && blackPath && !whiteTurn) {
+        else if(whitePath && blackPath && whiteTurn) {
             return 2;
         }
 
@@ -406,6 +407,23 @@ public class GameState {
             PlaceTurn place = (PlaceTurn)turn;
 
             board.getPosition(place.getLocation()).removePieces(1);
+            //white made last turn
+            if(!whiteTurn) {
+                if(place.getPieceType() == PieceType.STONE || place.getPieceType() == PieceType.WALL) {
+                    whiteNormalPieces++;
+                }
+                else {
+                    whiteCapstones++;
+                }
+            }
+            else {
+                if(place.getPieceType() == PieceType.STONE || place.getPieceType() == PieceType.WALL) {
+                    blackNormalPieces++;
+                }
+                else {
+                    blackCapstones++;
+                }
+            }
         }
         //Undo a move turn
         else {
@@ -427,6 +445,8 @@ public class GameState {
 
             board.getPosition(current).addPieces(pickedUp);
         }
+
+        whiteTurn = !whiteTurn;
     }
 
     //TODO: implement possible turns

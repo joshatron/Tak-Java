@@ -3,6 +3,8 @@ package io.joshatron.engine;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 public class GameStateTest {
     //These tests are set up to be closer to black box testing.
     //This is done to make sure no rules can be broken instead of focusing on line coverage.
@@ -600,31 +602,190 @@ public class GameStateTest {
     //Tests the win condition that happens when a player runs out of pieces
     @Test
     public void checkForWinnerOutOfPieces() {
+        GameState state = new GameState(true,5);
+
+        PlaceTurn place = new PlaceTurn(1,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(0,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        for(int i = 0; i < 2; i++) {
+            for(int y = 1; y < 5; y++) {
+                place = new PlaceTurn(0,y,PieceType.STONE);
+                Assert.assertTrue(state.executeTurn(place));
+                for(int x = 1; x < 5 - i; x++) {
+                    place = new PlaceTurn(x,y,PieceType.STONE);
+                    Assert.assertTrue(state.executeTurn(place));
+                    MoveTurn move = new MoveTurn(x-1,y,x,Direction.EAST,new int[]{x});
+                    Assert.assertTrue(state.executeTurn(move));
+                }
+            }
+        }
+
+        place = new PlaceTurn(2,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(3,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(0,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(0,2,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(1,1,PieceType.CAPSTONE);
+        Assert.assertEquals(0,state.checkForWinner());
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertEquals(2,state.checkForWinner());
     }
 
     //Makes sure the right player wins when both players get a road in the final move
     @Test
     public void checkForWinnerDoubleRoad() {
+        GameState state = new GameState(true,3);
+
+        PlaceTurn place = new PlaceTurn(0,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(0,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(2,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(2,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(2,2,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(1,2,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        MoveTurn move = new MoveTurn(2,2,1,Direction.WEST,new int[]{1});
+        Assert.assertTrue(state.executeTurn(move));
+        place = new PlaceTurn(0,2,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        move = new MoveTurn(1,2,2,Direction.NORTH,new int[]{1,1});
+        Assert.assertEquals(0, state.checkForWinner());
+        Assert.assertTrue(state.executeTurn(move));
+        Assert.assertEquals(1, state.checkForWinner());
     }
 
-    //Tests that places end up with the right state
+    //Tests that places end up with the right state and undo correctly
     @Test
-    public void executeTurnPlace() {
+    public void executeAndUndoPlace() {
+        GameState state = initializeState(5);
+
+        PlaceTurn place = new PlaceTurn(0,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(1,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(0,2,PieceType.CAPSTONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(1,2,PieceType.CAPSTONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(0,3,PieceType.WALL);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(1,3,PieceType.WALL);
+        Assert.assertTrue(state.executeTurn(place));
+
+        //Check final state
+        Assert.assertTrue(state.getBoard().getPosition(0,0).getTopPiece().isBlack());
+        Assert.assertEquals(PieceType.STONE, state.getBoard().getPosition(0,0).getTopPiece().getType());
+        Assert.assertTrue(state.getBoard().getPosition(1,0).getTopPiece().isWhite());
+        Assert.assertEquals(PieceType.STONE, state.getBoard().getPosition(1,0).getTopPiece().getType());
+        Assert.assertTrue(state.getBoard().getPosition(0,1).getTopPiece().isWhite());
+        Assert.assertEquals(PieceType.STONE, state.getBoard().getPosition(0,1).getTopPiece().getType());
+        Assert.assertTrue(state.getBoard().getPosition(1,1).getTopPiece().isBlack());
+        Assert.assertEquals(PieceType.STONE, state.getBoard().getPosition(1,1).getTopPiece().getType());
+        Assert.assertTrue(state.getBoard().getPosition(0,2).getTopPiece().isWhite());
+        Assert.assertEquals(PieceType.CAPSTONE, state.getBoard().getPosition(0,2).getTopPiece().getType());
+        Assert.assertTrue(state.getBoard().getPosition(1,2).getTopPiece().isBlack());
+        Assert.assertEquals(PieceType.CAPSTONE, state.getBoard().getPosition(1,2).getTopPiece().getType());
+        Assert.assertTrue(state.getBoard().getPosition(0,3).getTopPiece().isWhite());
+        Assert.assertEquals(PieceType.WALL, state.getBoard().getPosition(0,3).getTopPiece().getType());
+        Assert.assertTrue(state.getBoard().getPosition(1,3).getTopPiece().isBlack());
+        Assert.assertEquals(PieceType.WALL, state.getBoard().getPosition(1,3).getTopPiece().getType());
+
+        state.undoTurn();
+        Assert.assertEquals(0,state.getBoard().getPosition(1,3).getHeight());
+        Assert.assertFalse(state.isWhiteTurn());
+        state.undoTurn();
+        Assert.assertEquals(0,state.getBoard().getPosition(0,3).getHeight());
+        Assert.assertTrue(state.isWhiteTurn());
+        state.undoTurn();
+        Assert.assertEquals(0,state.getBoard().getPosition(1,2).getHeight());
+        Assert.assertFalse(state.isWhiteTurn());
+        state.undoTurn();
+        Assert.assertEquals(0,state.getBoard().getPosition(0,2).getHeight());
+        Assert.assertTrue(state.isWhiteTurn());
+        state.undoTurn();
+        Assert.assertEquals(0,state.getBoard().getPosition(1,1).getHeight());
+        Assert.assertFalse(state.isWhiteTurn());
+        state.undoTurn();
+        Assert.assertEquals(0,state.getBoard().getPosition(0,1).getHeight());
+        Assert.assertTrue(state.isWhiteTurn());
+        state.undoTurn();
+        Assert.assertEquals(0,state.getBoard().getPosition(1,0).getHeight());
+        Assert.assertFalse(state.isWhiteTurn());
+        state.undoTurn();
+        Assert.assertEquals(0,state.getBoard().getPosition(0,0).getHeight());
+        Assert.assertTrue(state.isWhiteTurn());
+        Assert.assertEquals(21,state.getWhiteNormalPiecesLeft());
+        Assert.assertEquals(1,state.getWhiteCapstonesLeft());
+        Assert.assertEquals(21,state.getBlackNormalPiecesLeft());
+        Assert.assertEquals(1,state.getBlackCapstonesLeft());
     }
 
-    //Tests that moves end up with the right state
+    //Tests that moves end up with the right state and undo correctly
     @Test
-    public void executeTurnMove() {
-    }
+    public void executeAndUndoMove() {
+        GameState state = initializeState(5);
 
-    //Tests that place undos end up with the right state
-    @Test
-    public void undoTurnPlace() {
-    }
+        PlaceTurn place = new PlaceTurn(1,1,PieceType.CAPSTONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(2,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        MoveTurn move = new MoveTurn(1,1,1,Direction.EAST,new int[]{1});
+        Assert.assertTrue(state.executeTurn(move));
+        place = new PlaceTurn(2,2,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        move = new MoveTurn(2,1,2,Direction.SOUTH,new int[]{2});
+        Assert.assertTrue(state.executeTurn(move));
+        place = new PlaceTurn(2,3,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        move = new MoveTurn(2,2,3,Direction.SOUTH,new int[]{3});
+        Assert.assertTrue(state.executeTurn(move));
+        place = new PlaceTurn(2,1,PieceType.WALL);
+        Assert.assertTrue(state.executeTurn(place));
+        move = new MoveTurn(2,3,3,Direction.NORTH,new int[]{2,1});
+        Assert.assertTrue(state.executeTurn(move));
 
-    //Tests that move undos end up with the right state
-    @Test
-    public void undoTurnMove() {
+        //Verify final state
+        Assert.assertTrue(state.getBoard().getPosition(2,3).getTopPiece().isBlack());
+        Assert.assertEquals(1, state.getBoard().getPosition(2,3).getHeight());
+        Assert.assertEquals(PieceType.STONE, state.getBoard().getPosition(2,3).getTopPiece().getType());
+        ArrayList<Piece> pieces = state.getBoard().getPosition(2,2).getPieces();
+        Assert.assertEquals(2, pieces.size());
+        Assert.assertTrue(pieces.get(0).isBlack());
+        Assert.assertTrue(pieces.get(1).isBlack());
+        Assert.assertEquals(PieceType.STONE, pieces.get(0).getType());
+        Assert.assertEquals(PieceType.STONE, pieces.get(1).getType());
+        pieces = state.getBoard().getPosition(2,1).getPieces();
+        Assert.assertEquals(2, pieces.size());
+        Assert.assertTrue(pieces.get(0).isBlack());
+        Assert.assertTrue(pieces.get(1).isWhite());
+        Assert.assertEquals(PieceType.STONE, pieces.get(0).getType());
+        Assert.assertEquals(PieceType.CAPSTONE, pieces.get(1).getType());
+        Assert.assertFalse(state.isWhiteTurn());
+
+        //Test undoing last move
+        state.undoTurn();
+        Assert.assertTrue(state.getBoard().getPosition(2,1).getTopPiece().isBlack());
+        Assert.assertEquals(1, state.getBoard().getPosition(2,1).getHeight());
+        Assert.assertEquals(PieceType.WALL, state.getBoard().getPosition(2,1).getTopPiece().getType());
+        pieces = state.getBoard().getPosition(2,3).getPieces();
+        Assert.assertEquals(4, pieces.size());
+        Assert.assertTrue(pieces.get(0).isBlack());
+        Assert.assertTrue(pieces.get(1).isBlack());
+        Assert.assertTrue(pieces.get(2).isBlack());
+        Assert.assertTrue(pieces.get(3).isWhite());
+        Assert.assertEquals(PieceType.STONE, pieces.get(0).getType());
+        Assert.assertEquals(PieceType.STONE, pieces.get(1).getType());
+        Assert.assertEquals(PieceType.STONE, pieces.get(2).getType());
+        Assert.assertEquals(PieceType.CAPSTONE, pieces.get(3).getType());
+        Assert.assertTrue(state.isWhiteTurn());
     }
 
     //Makes sure the initial number of pieces are correct to the rules
