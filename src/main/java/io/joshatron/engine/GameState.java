@@ -1,6 +1,8 @@
 package io.joshatron.engine;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class GameState {
 
@@ -104,8 +106,7 @@ public class GameState {
             }
 
             // Check the location is valid
-            if(place.getLocation().getX() < 0 || place.getLocation().getX() >= board.getBoardSize() ||
-               place.getLocation().getY() < 0 || place.getLocation().getY() >= board.getBoardSize()) {
+            if(!board.onBoard(place.getLocation())) {
                 return false;
             }
 
@@ -151,7 +152,6 @@ public class GameState {
             // Check that each position of move is legal
             BoardLocation currentLocation = new BoardLocation(move.getStartLocation().getX(), move.getStartLocation().getY());
             int[] toPlace = move.getPlaced();
-            ArrayList<Piece> stuff = board.getPosition(currentLocation).getPieces();
             ArrayList<Piece> pieces = board.getPosition(currentLocation).getTopPieces(move.getPickedUp());
             for(int i = 0; i < toPlace.length; i++) {
                 // Check that at least one piece was placed
@@ -162,8 +162,7 @@ public class GameState {
                 currentLocation.move(move.getDirection());
 
                 //Check that location is legal
-                if(currentLocation.getX() < 0 || currentLocation.getX() >= board.getBoardSize() ||
-                   currentLocation.getY() < 0 || currentLocation.getY() >= board.getBoardSize()) {
+                if(!board.onBoard(currentLocation)) {
                     return false;
                 }
 
@@ -449,12 +448,122 @@ public class GameState {
         whiteTurn = !whiteTurn;
     }
 
-    //TODO: implement possible turns
     public ArrayList<Turn> getPossibleTurns() {
         ArrayList<Turn> turns = new ArrayList<>();
 
+        if(this.turns.size() < 2) {
+            for(int x = 0; x < getBoardSize(); x++) {
+                for(int y = 0; y < getBoardSize(); y++) {
+                    if(board.getPosition(x, y).getHeight() == 0) {
+                        turns.add(new PlaceTurn(x, y, PieceType.STONE));
+                    }
+                }
+            }
+
+        }
+        else {
+            //Iterate through each position to process possible moves
+            for (int x = 0; x < getBoardSize(); x++) {
+                for (int y = 0; y < getBoardSize(); y++) {
+                    //If it is empty, add possible places
+                    if (board.getPosition(x, y).getHeight() == 0) {
+                        if (whiteTurn) {
+                            if (whiteNormalPieces > 0) {
+                                turns.add(new PlaceTurn(x, y, PieceType.STONE));
+                                turns.add(new PlaceTurn(x, y, PieceType.WALL));
+                            }
+                            if (whiteCapstones > 0) {
+                                turns.add(new PlaceTurn(x, y, PieceType.CAPSTONE));
+                            }
+                        } else {
+                            if (blackNormalPieces > 0) {
+                                turns.add(new PlaceTurn(x, y, PieceType.STONE));
+                                turns.add(new PlaceTurn(x, y, PieceType.WALL));
+                            }
+                            if (blackCapstones > 0) {
+                                turns.add(new PlaceTurn(x, y, PieceType.CAPSTONE));
+                            }
+                        }
+                    }
+                    //Otherwise iterate through possible moves if player owns the stack
+                    else if (board.getPosition(x, y).getTopPiece().isWhite() == whiteTurn) {
+                        turns.addAll(getMoves(x, y, Direction.NORTH));
+                        turns.addAll(getMoves(x, y, Direction.SOUTH));
+                        turns.addAll(getMoves(x, y, Direction.EAST));
+                        turns.addAll(getMoves(x, y, Direction.WEST));
+                    }
+                }
+            }
+        }
+
         return turns;
     }
+
+
+    private ArrayList<Turn> getMoves(int x, int y, Direction dir) {
+        ArrayList<Turn> turns = new ArrayList<>();
+
+        int numPieces = Math.min(board.getPosition(x, y).getHeight(), getBoardSize());
+        int distToBlock = 0;
+        BoardLocation loc = new BoardLocation(x, y);
+        loc.move(dir);
+        while(board.onBoard(loc) &&
+              (board.getPosition(loc).getHeight() == 0 ||
+              board.getPosition(loc).getTopPiece().getType() == PieceType.STONE)) {
+            distToBlock++;
+            loc.move(dir);
+        }
+        boolean canFlatten = false;
+        if(board.onBoard(loc) && board.getPosition(loc).getHeight() > 0 &&
+           board.getPosition(loc).getTopPiece().getType() == PieceType.WALL &&
+           board.getPosition(x, y).getTopPiece().getType() == PieceType.CAPSTONE) {
+            canFlatten = true;
+        }
+
+        if(distToBlock > 0) {
+            while (numPieces > 0) {
+                turns.addAll(getMovesInner(distToBlock - 1, canFlatten, numPieces, new ArrayList<Integer>(), x, y, dir, numPieces));
+                numPieces--;
+            }
+        }
+
+        return turns;
+    }
+
+    private ArrayList<Turn> getMovesInner(int distToBlock, boolean canFlatten, int numPieces, ArrayList<Integer> drops, int x, int y, Direction dir, int pickup) {
+        ArrayList<Turn> turns = new ArrayList<>();
+        //at last spot
+        if(distToBlock == 0) {
+            turns.add(buildMove(x, y, pickup, dir, drops, numPieces));
+            if(canFlatten && numPieces > 1) {
+                drops.add(numPieces - 1);
+                turns.add(buildMove(x, y, pickup, dir, drops, 1));
+            }
+        }
+        //iterate through everything else
+        else {
+            turns.add(buildMove(x, y, pickup, dir, drops, numPieces));
+            int piecesLeft = numPieces - 1;
+            while(piecesLeft > 0) {
+                drops.add(piecesLeft);
+                turns.addAll(getMovesInner(distToBlock - 1, canFlatten, numPieces - piecesLeft, new ArrayList<Integer>(drops), x, y, dir, pickup));
+                drops.remove(drops.size() - 1);
+                piecesLeft--;
+            }
+        }
+
+        return turns;
+    }
+
+    private MoveTurn buildMove(int x, int y, int pickup, Direction dir, ArrayList<Integer> drops, int current) {
+        int[] drop = new int[drops.size() + 1];
+        for(int i = 0; i < drops.size(); i++) {
+            drop[i] = drops.get(i).intValue();
+        }
+        drop[drop.length - 1] = current;
+        return new MoveTurn(x, y, pickup, dir, drop);
+    }
+
 
     public GameBoard getBoard() {
         return board;

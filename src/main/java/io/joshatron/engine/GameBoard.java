@@ -34,6 +34,18 @@ public class GameBoard {
         }
     }
 
+    public boolean onBoard(int x, int y) {
+        if(x >= 0 && x < boardSize && y >= 0 && y < boardSize) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean onBoard(BoardLocation loc) {
+        return onBoard(loc.getX(), loc.getY());
+    }
+
     public void printBoard() {
         int maxSize = 0;
         for(int x = 0; x < boardSize; x++) {

@@ -24,4 +24,24 @@ public class PlaceTurn extends Turn {
     public PieceType getPieceType() {
         return pieceType;
     }
+
+    public String toString() {
+        String str = "p";
+        switch(pieceType) {
+            case STONE:
+                str += "s";
+                break;
+            case WALL:
+                str += "w";
+                break;
+            case CAPSTONE:
+                str += "c";
+                break;
+        }
+
+        str += " ";
+        str += location.toBoardString();
+
+        return str;
+    }
 }

@@ -51,4 +51,31 @@ public class MoveTurn extends Turn {
     public boolean didFlatten() {
         return flattened;
     }
+
+    public String toString() {
+        String str = "m";
+        switch(direction) {
+            case NORTH:
+                str += "n";
+                break;
+            case SOUTH:
+                str += "s";
+                break;
+            case EAST:
+                str += "e";
+                break;
+            case WEST:
+                str += "w";
+                break;
+        }
+
+        str += " " + startLocation.toBoardString();
+
+        str += " g" + pickedUp;
+        for(int i = 0; i < placed.length; i++) {
+            str += " " + placed[i];
+        }
+
+        return str;
+    }
 }

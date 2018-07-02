@@ -64,7 +64,7 @@ public class PieceStack {
     }
 
     public ArrayList<Piece> getPieces() {
-        return pieces;
+        return new ArrayList<Piece>(pieces);
     }
 
     public int getHeight() {
