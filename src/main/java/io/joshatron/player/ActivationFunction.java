@@ -1,4 +1,4 @@
-package io.joshatron.ai;
+package io.joshatron.player;
 
 public enum ActivationFunction
 {

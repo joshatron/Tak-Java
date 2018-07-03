@@ -1,4 +1,4 @@
-package io.joshatron.ai;
+package io.joshatron.player;
 
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;

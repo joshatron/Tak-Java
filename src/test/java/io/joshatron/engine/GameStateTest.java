@@ -827,4 +827,45 @@ public class GameStateTest {
         Assert.assertEquals(2, state.getBlackCapstonesLeft());
         Assert.assertEquals(8, state.getBoardSize());
     }
+
+    //For all tests of getPossibleTurns, verification is done by making sure
+    //all given turns are legal and that there are the right number of them.
+    //This gives reasonable certainty of correctness without building large
+    //lists and having to sort and compare them
+
+    //Tests basic operation of getPossibleTurns
+    @Test
+    public void getPossibleTurnsNormal() {
+
+    }
+
+    //Tests correct behavior when a move can go off the board
+    @Test
+    public void getPossibleTurnsBoardEdge() {
+
+    }
+
+    //Tests correct behavior when a move can interact with a capstone in the way
+    @Test
+    public void getPossibleTurnsCapstoneInWay() {
+
+    }
+
+    //Tests correct behavior when a move can interact with a wall in the way
+    @Test
+    public void getPossibleTurnsWallInWay() {
+
+    }
+
+    //Tests correct behavior when a player is out of a certain type of piece
+    @Test
+    public void getPossibleTurnsOutOfPieceType() {
+
+    }
+
+    //Tests correct behavior when it is the first 2 turns of the game
+    @Test
+    public void getPossibleTurnsFirstTurns() {
+
+    }
 }
