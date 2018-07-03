@@ -1,4 +1,4 @@
-package io.joshatron.player;
+package io.joshatron.neuralnet;
 
 public enum ActivationFunction
 {

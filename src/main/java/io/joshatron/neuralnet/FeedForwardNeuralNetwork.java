@@ -1,4 +1,4 @@
-package io.joshatron.player;
+package io.joshatron.neuralnet;
 
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
@@ -222,7 +222,7 @@ public class FeedForwardNeuralNetwork
      */
     public double[] compute(double[] inputs)
     {
-        inputs[inputs.length - 1] = inputs[inputs.length - 1] / 10000;
+        //inputs[inputs.length - 1] = inputs[inputs.length - 1] / 10000;
         //if input wrong size, return
         if(inputs.length != sizes[0])
         {
@@ -262,7 +262,12 @@ public class FeedForwardNeuralNetwork
             }
         }
 
-        return layerOut;
+        double[] toReturn = new double[sizes[sizes.length - 1]];
+        for(int i = 0; i < toReturn.length; i++) {
+            toReturn[i] = layerOut[i];
+        }
+
+        return toReturn;
     }
 
     /**
@@ -273,11 +278,7 @@ public class FeedForwardNeuralNetwork
     public void backprop(double[] inputs, double[] expectedOutputs)
     {
         inputs[inputs.length - 1] = inputs[inputs.length - 1] / 10000;
-        /*for(int k = 0; k < weights.length; k++)
-        {
-            System.out.print(weights[k] + ", ");
-        }
-        System.out.println();*/
+
         //if input or output wrong size, return
         if(inputs.length != sizes[0])
         {
@@ -301,7 +302,6 @@ public class FeedForwardNeuralNetwork
             allOutputs[0][k] = inputs[k];
         }
 
-        //System.out.println("outputs");
         //for each layer after the input
         for(int k = 1; k < hiddenLayers + 2; k++)
         {
@@ -472,5 +472,9 @@ public class FeedForwardNeuralNetwork
 
         System.out.println("Failed to apply activation function");
         return -9999;
+    }
+
+    public void setLearningRate(double learningRate) {
+        this.learningRate = learningRate;
     }
 }
