@@ -277,7 +277,7 @@ public class FeedForwardNeuralNetwork
      */
     public void backprop(double[] inputs, double[] expectedOutputs)
     {
-        inputs[inputs.length - 1] = inputs[inputs.length - 1] / 10000;
+        //inputs[inputs.length - 1] = inputs[inputs.length - 1] / 10000;
 
         //if input or output wrong size, return
         if(inputs.length != sizes[0])
@@ -313,14 +313,11 @@ public class FeedForwardNeuralNetwork
                 for(int t = 0; t < lastLayer; t++)
                 {
                     sum += allOutputs[k - 1][t] * getWeight(k - 1, t, k, a);
-                    //System.out.println(allOutputs[k - 1][t] + " * " + getWeight(k - 1, t, k, a));
                 }
                 sum += biasNum * getWeight(-1, 0, k, a);
                 allOutputs[k][a] = applyActivationFunction(sum);
                 allErrors[k][a] = applyActivationFunctionDerivative(sum);
-                //System.out.print("sum: " + sum + "(" + allOutputs[k][a] + "), ");
             }
-            //System.out.println();
             lastLayer = sizes[k];
         }
 
@@ -345,9 +342,6 @@ public class FeedForwardNeuralNetwork
                 else
                 {
                     allErrors[k][a] *= (expectedOutputs[a] - allOutputs[k][a]);
-                    /*System.out.println("expected: " + expectedOutputs[a]);
-                    System.out.println("all: " + allOutputs[k][a]);
-                    System.out.println("error" + allErrors[k][a]);*/
                 }
 
                 //for each weight node takes as input

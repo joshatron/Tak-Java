@@ -2,11 +2,8 @@ package io.joshatron.cli;
 
 import com.sun.xml.internal.ws.util.StringUtils;
 import io.joshatron.neuralnet.FeedForwardNeuralNetwork;
-import io.joshatron.player.HumanPlayer;
-import io.joshatron.player.Player;
-import io.joshatron.player.RandomPlayer;
+import io.joshatron.player.*;
 import io.joshatron.engine.*;
-import io.joshatron.player.SimpleNeuralPlayer;
 
 import java.io.File;
 import java.io.IOException;
@@ -75,6 +72,11 @@ public class App
                 break;
             }
             else if(input.charAt(0) == 'a') {
+                /*try {
+                    whitePlayer = new SimpleNeuralPlayer(new FeedForwardNeuralNetwork(new File("0.05_0.005_0.001_100_1000000.json")));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }*/
                 whitePlayer = new RandomPlayer();
                 break;
             }
@@ -90,11 +92,11 @@ public class App
                 break;
             }
             else if(input.charAt(0) == 'a') {
-                /* try {
-                    blackPlayer = new SimpleNeuralPlayer(new FeedForwardNeuralNetwork(new File("net.json")));
+                /*try {
+                    blackPlayer = new SimpleNeuralPlayer(new FeedForwardNeuralNetwork(new File("0.05_0.005_0.001_100_1000000.json")));
                 } catch (IOException e) {
                     e.printStackTrace();
-                } */
+                }*/
                 blackPlayer = new RandomPlayer();
                 break;
             }
@@ -159,6 +161,8 @@ public class App
                 state.executeTurn(turn);
             }
         }
+
+        state.printBoard();
 
         if(state.checkForWinner() == 1) {
             System.out.println("White wins!");
