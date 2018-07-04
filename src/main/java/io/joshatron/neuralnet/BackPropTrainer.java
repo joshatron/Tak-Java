@@ -8,14 +8,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Trainer {
+public class BackPropTrainer {
 
     public static void main(String[] args) {
-        double inGameRate = .1;
-        double afterGameRate = .01;
-        double momentum = .1;
+        double inGameRate = .05;
+        double afterGameRate = .005;
+        double momentum = .001;
         int hiddenSize = 100;
-        int games = 500000;
+        int games = 1000000;
 
         FeedForwardNeuralNetwork net = new FeedForwardNeuralNetwork(1, new int[]{81, hiddenSize, 2}, ActivationFunction.LOGISTIC, momentum, inGameRate);
 
@@ -27,7 +27,7 @@ public class Trainer {
         }
 
         try {
-            net.export(new File("net.json"));
+            net.export(new File(inGameRate + "_" + afterGameRate + "_" + momentum + "_" + hiddenSize + "_" + games + ".json"));
         } catch (IOException e) {
             e.printStackTrace();
         }

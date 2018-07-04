@@ -35,7 +35,7 @@ public class SimpleNeuralPlayer implements Player {
     }
 
     private double computeState(GameState state) {
-        double[] inputs = new double[(state.getBoardSize() * state.getBoardSize()) + 6];
+        double[] inputs = new double[(state.getBoardSize() * state.getBoardSize() * 3) + 6];
 
         int i = 0;
         int filled = 0;
