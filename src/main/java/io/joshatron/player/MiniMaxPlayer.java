@@ -15,13 +15,16 @@ public class MiniMaxPlayer implements Player {
 
     @Override
     public Turn getTurn(GameState state) {
-        int depth = 1;
+        int depth = 2;
+
+        double alpha = -9999;
+        double beta = 9999;
 
         double best = -9999;
         Turn bestTurn = null;
         for(Turn turn : state.getPossibleTurns()) {
             state.executeTurn(turn);
-            double value = getTurnValue(state, false, !state.isWhiteTurn(), depth);
+            double value = getTurnValue(state, false, !state.isWhiteTurn(), depth, alpha, beta);
 
             if(value > best) {
                 best = value;
@@ -34,7 +37,7 @@ public class MiniMaxPlayer implements Player {
         return bestTurn;
     }
 
-    private double getTurnValue(GameState state, boolean max, boolean white, int depth) {
+    private double getTurnValue(GameState state, boolean max, boolean white, int depth, double alpha, double beta) {
         int winner = state.checkForWinner();
         if(winner == 1) {
             if(white) {
@@ -64,7 +67,7 @@ public class MiniMaxPlayer implements Player {
             }
         }
 
-        double extreme = 0;
+        double extreme;
         if(max) {
             extreme = -9999;
         }
@@ -74,19 +77,25 @@ public class MiniMaxPlayer implements Player {
 
         for(Turn turn : state.getPossibleTurns()) {
             state.executeTurn(turn);
-            double value = getTurnValue(state, !max, white, depth - 1);
+            double value = getTurnValue(state, !max, white, depth - 1, alpha, beta);
             if(max) {
                 if(value > extreme) {
                     extreme = value;
+                    alpha = value;
                 }
             }
             else {
                 if(value < extreme) {
                     extreme = value;
+                    beta = value;
                 }
             }
 
             state.undoTurn();
+
+            if(alpha >= beta) {
+                return value;
+            }
         }
 
         return extreme;
