@@ -9,10 +9,10 @@ import java.io.IOException;
 public class BackPropTrainer {
 
     public static void main(String[] args) {
-        double inGameRate = .05;
-        double afterGameRate = .005;
+        double inGameRate = .005;
+        double afterGameRate = .05;
         double momentum = 0;
-        int hiddenSize = 100;
+        int hiddenSize = 50;
         int games = 5000000;
 
         FeedForwardNeuralNetwork net = new FeedForwardNeuralNetwork(1, new int[]{81, hiddenSize, 2}, ActivationFunction.LOGISTIC, momentum, inGameRate);
