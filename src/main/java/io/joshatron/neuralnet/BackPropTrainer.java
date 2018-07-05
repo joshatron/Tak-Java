@@ -11,9 +11,9 @@ public class BackPropTrainer {
     public static void main(String[] args) {
         double inGameRate = .05;
         double afterGameRate = .005;
-        double momentum = .001;
+        double momentum = 0;
         int hiddenSize = 100;
-        int games = 1000000;
+        int games = 5000000;
 
         FeedForwardNeuralNetwork net = new FeedForwardNeuralNetwork(1, new int[]{81, hiddenSize, 2}, ActivationFunction.LOGISTIC, momentum, inGameRate);
 
@@ -22,6 +22,14 @@ public class BackPropTrainer {
                 System.out.println("Game " + i);
             }
             playGame(net, inGameRate, afterGameRate);
+
+            if(i % 1000 == 0) {
+                try {
+                    net.export(new File(inGameRate + "_" + afterGameRate + "_" + momentum + "_" + hiddenSize + "_" + games + ".json"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         try {
@@ -57,7 +65,12 @@ public class BackPropTrainer {
                 state.undoTurn();
             }
 
-            state.executeTurn(maxTurn);
+            if(maxTurn != null) {
+                state.executeTurn(maxTurn);
+            }
+            else {
+                break;
+            }
             net.backprop(lastInputs, max);
         }
 
