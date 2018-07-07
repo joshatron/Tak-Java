@@ -5,6 +5,7 @@ import io.joshatron.engine.Turn;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 
 public class BackPropTrainer {
 
@@ -17,13 +18,17 @@ public class BackPropTrainer {
 
         FeedForwardNeuralNetwork net = new FeedForwardNeuralNetwork(1, new int[]{81, hiddenSize, 2}, ActivationFunction.LOGISTIC, momentum, inGameRate);
 
+        long firstTime = new Date().getTime();
+
+        System.out.println("Initializing training...");
+
         for(int i = 0; i < games; i++) {
-            if(i % 100 == 0) {
-                System.out.println("Game " + i);
-            }
             playGame(net, inGameRate, afterGameRate);
 
-            if(i % 1000 == 0) {
+            if(i % 1000 == 0 && i != 0) {
+                long thisTime = new Date().getTime();
+                long timeLeft = (games - i) * ((thisTime - firstTime) / i) / 1000 / 60;
+                System.out.printf("Game %d- %.2f hours left\n", i, timeLeft / 60.);
                 try {
                     net.export(new File(inGameRate + "_" + afterGameRate + "_" + momentum + "_" + hiddenSize + "_" + games + ".json"));
                 } catch (IOException e) {
