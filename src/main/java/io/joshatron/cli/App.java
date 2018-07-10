@@ -92,12 +92,12 @@ public class App
                 break;
             }
             else if(input.charAt(0) == 'a') {
-                /*try {
-                    blackPlayer = new SimpleNeuralPlayer(new FeedForwardNeuralNetwork(new File("0.05_0.005_0.001_100_1000000.json")));
+                try {
+                    blackPlayer = new MiniMaxPlayer(new FeedForwardNeuralNetwork(new File("0.005_0.05_0.0_50_5000000.json")));
                 } catch (IOException e) {
                     e.printStackTrace();
-                }*/
-                blackPlayer = new RandomPlayer();
+                }
+                //blackPlayer = new RandomPlayer();
                 break;
             }
             else {
@@ -151,6 +151,7 @@ public class App
                     return 0;
                 }
                 state.executeTurn(turn);
+                System.out.println("White played: " + turn.toString());
             }
             else {
                 Turn turn = blackPlayer.getTurn(state);
@@ -159,6 +160,7 @@ public class App
                     return 0;
                 }
                 state.executeTurn(turn);
+                System.out.println("Black played: " + turn.toString());
             }
         }
 

@@ -8,10 +8,11 @@ import java.util.ArrayList;
 public class NetUtils {
 
     public static double[] getInputs(GameState state) {
-        double[] inputs = new double[(state.getBoardSize() * state.getBoardSize() * 3) + 6];
+        double[] inputs = new double[(state.getBoardSize() * state.getBoardSize() * 3) + 7];
 
         int i = 0;
         int filled = 0;
+        int control = 0;
         for(int x = 0; x < state.getBoardSize(); x++) {
             for(int y = 0; y < state.getBoardSize(); y++) {
                 if(state.getBoard().getPosition(x, y).getHeight() == 0) {
@@ -29,26 +30,30 @@ public class NetUtils {
                     Piece piece = stack.get(stack.size() - 1);
                     if (piece.isWhite()) {
                         switch (piece.getType()) {
-                            case STONE:
+                            case WALL:
                                 inputs[i] = 1;
                                 break;
-                            case WALL:
+                            case STONE:
                                 inputs[i] = 2;
+                                control++;
                                 break;
                             case CAPSTONE:
                                 inputs[i] = 3;
+                                control++;
                                 break;
                         }
                     } else {
                         switch (piece.getType()) {
-                            case STONE:
+                            case WALL:
                                 inputs[i] = -1;
                                 break;
-                            case WALL:
+                            case STONE:
                                 inputs[i] = -2;
+                                control--;
                                 break;
                             case CAPSTONE:
                                 inputs[i] = -3;
+                                control--;
                                 break;
                         }
                     }
@@ -84,6 +89,8 @@ public class NetUtils {
         inputs[i] = state.getTurns().size();
         i++;
         inputs[i] = (double)filled / (state.getBoardSize() * state.getBoardSize());
+        i++;
+        inputs[i] = control;
 
         return inputs;
     }

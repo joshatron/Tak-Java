@@ -11,12 +11,12 @@ public class BackPropTrainer {
 
     public static void main(String[] args) {
         double inGameRate = .005;
-        double afterGameRate = .05;
-        double momentum = 0;
+        double afterGameRate = .1;
+        double momentum = .001;
         int hiddenSize = 50;
-        int games = 5000000;
+        int games = 10000000;
 
-        FeedForwardNeuralNetwork net = new FeedForwardNeuralNetwork(1, new int[]{81, hiddenSize, 2}, ActivationFunction.LOGISTIC, momentum, inGameRate);
+        FeedForwardNeuralNetwork net = new FeedForwardNeuralNetwork(1, new int[]{82, hiddenSize, 2}, ActivationFunction.LOGISTIC, momentum, inGameRate);
 
         long firstTime = new Date().getTime();
 
