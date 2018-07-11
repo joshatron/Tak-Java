@@ -31,7 +31,7 @@ public class BackPropTrainer {
                 System.out.printf("Game %d- %.2f hours left\n", i, timeLeft / 60.);
                 try {
                     net.export(new File(inGameRate + "_" + afterGameRate + "_" + momentum + "_" + hiddenSize + "_" + games + ".json"));
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -48,7 +48,12 @@ public class BackPropTrainer {
         net.setLearningRate(inGameRate);
         GameState state = new GameState(true, 5);
 
+        int round = 0;
         while(state.checkForWinner() == 0) {
+            if(round > 200) {
+                break;
+            }
+            round++;
             double[] lastInputs = NetUtils.getInputs(state);
             double[] max = new double[]{0,0};
             Turn maxTurn = null;

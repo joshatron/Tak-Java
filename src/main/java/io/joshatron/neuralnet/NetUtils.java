@@ -86,7 +86,7 @@ public class NetUtils {
         i++;
         inputs[i] = state.getBlackCapstonesLeft();
         i++;
-        inputs[i] = state.getTurns().size();
+        inputs[i] = state.getTurns().size() / 100.;
         i++;
         inputs[i] = (double)filled / (state.getBoardSize() * state.getBoardSize());
         i++;
