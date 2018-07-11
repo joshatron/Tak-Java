@@ -16,7 +16,7 @@ public class BackPropTrainer {
         int hiddenSize = 50;
         int games = 10000000;
 
-        FeedForwardNeuralNetwork net = new FeedForwardNeuralNetwork(1, new int[]{82, hiddenSize, 2}, ActivationFunction.LOGISTIC, momentum, inGameRate);
+        FeedForwardNeuralNetwork net = new FeedForwardNeuralNetwork(1, new int[]{84, hiddenSize, 2}, ActivationFunction.LOGISTIC, momentum, inGameRate);
 
         long firstTime = new Date().getTime();
 
