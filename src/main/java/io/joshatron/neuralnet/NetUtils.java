@@ -84,10 +84,12 @@ public class NetUtils {
 
                     if(x < state.getBoardSize() - 1) {
                         if(piece.isWhite() &&
+                           state.getBoard().getPosition(x + 1, y).getHeight() > 0 &&
                            state.getBoard().getPosition(x + 1, y).getTopPiece().isWhite()) {
                             whitePathPower++;
                         }
                         else if(piece.isBlack() &&
+                                state.getBoard().getPosition(x + 1, y).getHeight() > 0 &&
                                 state.getBoard().getPosition(x + 1, y).getTopPiece().isBlack()) {
                             blackPathPower++;
                         }
@@ -95,10 +97,12 @@ public class NetUtils {
 
                     if(y < state.getBoardSize() - 1) {
                         if(piece.isWhite() &&
+                                state.getBoard().getPosition(x, y + 1).getHeight() > 0 &&
                                 state.getBoard().getPosition(x, y + 1).getTopPiece().isWhite()) {
                             whitePathPower++;
                         }
                         else if(piece.isBlack() &&
+                                state.getBoard().getPosition(x, y + 1).getHeight() > 0 &&
                                 state.getBoard().getPosition(x, y + 1).getTopPiece().isBlack()) {
                             blackPathPower++;
                         }
