@@ -2,6 +2,7 @@ package io.joshatron.neuralnet;
 
 import io.joshatron.engine.GameState;
 import io.joshatron.engine.Piece;
+import io.joshatron.engine.PieceType;
 
 import java.util.ArrayList;
 
@@ -96,12 +97,12 @@ public class NetUtils {
                     }
 
                     if(y < state.getBoardSize() - 1) {
-                        if(piece.isWhite() &&
-                                state.getBoard().getPosition(x, y + 1).getHeight() > 0 &&
-                                state.getBoard().getPosition(x, y + 1).getTopPiece().isWhite()) {
+                        if(piece.isWhite() && piece.getType() != PieceType.WALL &&
+                           state.getBoard().getPosition(x, y + 1).getHeight() > 0 &&
+                           state.getBoard().getPosition(x, y + 1).getTopPiece().isWhite()) {
                             whitePathPower++;
                         }
-                        else if(piece.isBlack() &&
+                        else if(piece.isBlack() && piece.getType() != PieceType.WALL &&
                                 state.getBoard().getPosition(x, y + 1).getHeight() > 0 &&
                                 state.getBoard().getPosition(x, y + 1).getTopPiece().isBlack()) {
                             blackPathPower++;
