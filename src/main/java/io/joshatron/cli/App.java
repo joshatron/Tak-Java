@@ -20,8 +20,8 @@ public class App
         int games = -1;
         int size = -1;
         boolean whiteFirst = true;
-        Player whitePlayer = null;
-        Player blackPlayer = null;
+        TakPlayer whitePlayer = null;
+        TakPlayer blackPlayer = null;
 
         System.out.println("---------------------");
         System.out.println("| Welcome to TakCLI |");
@@ -93,7 +93,7 @@ public class App
             }
             else if(input.charAt(0) == 'a') {
                 try {
-                    blackPlayer = new MiniMaxPlayer(new FeedForwardNeuralNetwork(new File("0.005_0.05_0.0_50_5000000.json")));
+                    blackPlayer = new SimpleNeuralPlayer(new FeedForwardNeuralNetwork(new File("0.005_0.1_0.001_50_10000000.json")));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -111,16 +111,16 @@ public class App
             System.out.println("----------");
             System.out.println("| Game " + (i + 1) + " |");
             System.out.println("----------");
-            int result = -1;
-            result = playGame(whiteFirst, size, whitePlayer, blackPlayer);
-            if(result == 1) {
+            GameResult result = playGame(whiteFirst, size, whitePlayer, blackPlayer);
+            if(result.getReason() == WinReason.SURRENDER) {
+                System.exit(0);
                 whiteWins++;
             }
-            else if(result == 2) {
-                blackWins++;
+            else if(result.getWinner() == Player.WHITE) {
+                whiteWins++;
             }
-            else if(result == 0) {
-                System.exit(0);
+            else if(result.getWinner() == Player.BLACK) {
+                blackWins++;
             }
             whiteFirst = !whiteFirst;
         }
@@ -137,18 +137,17 @@ public class App
     }
 
     //Plays game with the given conditions
-    //Returns a boolean whether white won
-    private static int playGame(boolean whiteFirst, int size, Player whitePlayer, Player blackPlayer) {
+    private static GameResult playGame(boolean whiteFirst, int size, TakPlayer whitePlayer, TakPlayer blackPlayer) {
         System.out.println("Initializing game...");
         GameState state = new GameState(whiteFirst, size);
 
 
-        while(state.checkForWinner() == 0) {
+        while(!state.checkForWinner().isFinished()) {
             if(state.isWhiteTurn()) {
                 Turn turn = whitePlayer.getTurn(state);
                 if(turn == null) {
                     System.out.println("White surrenders!");
-                    return 0;
+                    return new GameResult(true, Player.BLACK, WinReason.SURRENDER);
                 }
                 state.executeTurn(turn);
                 System.out.println("White played: " + turn.toString());
@@ -157,7 +156,7 @@ public class App
                 Turn turn = blackPlayer.getTurn(state);
                 if(turn == null) {
                     System.out.println("Black surrenders!");
-                    return 0;
+                    return new GameResult(true, Player.WHITE, WinReason.SURRENDER);
                 }
                 state.executeTurn(turn);
                 System.out.println("Black played: " + turn.toString());
@@ -165,18 +164,45 @@ public class App
         }
 
         state.printBoard();
+        GameResult result = state.checkForWinner();
 
-        if(state.checkForWinner() == 1) {
-            System.out.println("White wins!");
-            return 1;
+        if(result.getWinner() == Player.WHITE) {
+            switch(result.getReason()) {
+                case OUT_OF_PIECES:
+                    System.out.println("White wins by out of pieces!");
+                    break;
+                case BOARD_FULL:
+                    System.out.println("White wins by board full!");
+                    break;
+                case PATH:
+                    System.out.println("White wins by path!");
+                    break;
+            }
         }
-        else if(state.checkForWinner() == 2) {
-            System.out.println("Black wins!");
-            return 2;
+        else if(result.getWinner() == Player.BLACK) {
+            switch(result.getReason()) {
+                case OUT_OF_PIECES:
+                    System.out.println("Black wins by out of pieces!");
+                    break;
+                case BOARD_FULL:
+                    System.out.println("Black wins by board full!");
+                    break;
+                case PATH:
+                    System.out.println("Black wins by path!");
+                    break;
+            }
         }
         else {
-            System.out.println("It's a tie!");
-            return 3;
+            switch(result.getReason()) {
+                case OUT_OF_PIECES:
+                    System.out.println("It's a tie by out of pieces!");
+                    break;
+                case BOARD_FULL:
+                    System.out.println("It's a tie by board full!");
+                    break;
+            }
         }
+
+        return result;
     }
 }

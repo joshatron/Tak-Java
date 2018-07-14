@@ -68,7 +68,7 @@ public class GameState {
 
     public boolean isLegalTurn(Turn turn) {
         // Make sure game isn't already over
-        if(checkForWinner() != 0) {
+        if(checkForWinner().isFinished()) {
             return false;
         }
 
@@ -195,7 +195,7 @@ public class GameState {
     2- black
     3- tie
      */
-    public int checkForWinner() {
+    public GameResult checkForWinner() {
         // Check if someone is out of pieces
         if((whiteNormalPieces == 0 && whiteCapstones == 0) ||
            (blackNormalPieces == 0 && blackCapstones == 0)) {
@@ -216,19 +216,19 @@ public class GameState {
             }
 
             if(white > black) {
-                return 1;
+                return new GameResult(true, Player.WHITE, WinReason.OUT_OF_PIECES);
             }
             else if(black > white) {
-                return 2;
+                return new GameResult(true, Player.BLACK, WinReason.OUT_OF_PIECES);
             }
             else if(whiteCapstones > blackCapstones) {
-                return 1;
+                return new GameResult(true, Player.WHITE, WinReason.OUT_OF_PIECES);
             }
             else if(blackCapstones > whiteCapstones) {
-                return 2;
+                return new GameResult(true, Player.BLACK, WinReason.OUT_OF_PIECES);
             }
             else {
-                return 3;
+                return new GameResult(true, Player.NONE, WinReason.OUT_OF_PIECES);
             }
         }
 
@@ -255,19 +255,19 @@ public class GameState {
 
         if(!empty) {
             if(white > black) {
-                return 1;
+                return new GameResult(true, Player.WHITE, WinReason.BOARD_FULL);
             }
             else if(black > white) {
-                return 2;
+                return new GameResult(true, Player.BLACK, WinReason.BOARD_FULL);
             }
             else if(whiteCapstones > blackCapstones) {
-                return 1;
+                return new GameResult(true, Player.WHITE, WinReason.BOARD_FULL);
             }
             else if(blackCapstones > whiteCapstones) {
-                return 2;
+                return new GameResult(true, Player.BLACK, WinReason.BOARD_FULL);
             }
             else {
-                return 3;
+                return new GameResult(true, Player.NONE, WinReason.BOARD_FULL);
             }
         }
 
@@ -297,19 +297,19 @@ public class GameState {
         }
 
         if(whitePath && !blackPath) {
-            return 1;
+            return new GameResult(true, Player.WHITE, WinReason.PATH);
         }
         else if(!whitePath && blackPath) {
-            return 2;
+            return new GameResult(true, Player.BLACK, WinReason.PATH);
         }
         else if(whitePath && blackPath && !whiteTurn) {
-            return 1;
+            return new GameResult(true, Player.WHITE, WinReason.PATH);
         }
         else if(whitePath && blackPath && whiteTurn) {
-            return 2;
+            return new GameResult(true, Player.BLACK, WinReason.PATH);
         }
 
-        return 0;
+        return new GameResult();
     }
 
     private boolean isWinPath(BoardLocation current, boolean[][] checked, boolean horizontal, boolean white) {

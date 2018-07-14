@@ -7,7 +7,7 @@ import io.joshatron.neuralnet.NetUtils;
 
 import java.util.ArrayList;
 
-public class SimpleNeuralPlayer implements Player {
+public class SimpleNeuralPlayer implements TakPlayer {
 
     FeedForwardNeuralNetwork net;
 

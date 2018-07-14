@@ -1,7 +1,6 @@
 package io.joshatron.neuralnet;
 
-import io.joshatron.engine.GameState;
-import io.joshatron.engine.Turn;
+import io.joshatron.engine.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +22,12 @@ public class BackPropTrainer {
         System.out.println("Initializing training...");
 
         for(int i = 0; i < games; i++) {
-            playGame(net, inGameRate, afterGameRate);
+            if(i < games / 3) {
+                playGame(net, inGameRate, afterGameRate, true);
+            }
+            else {
+                playGame(net, inGameRate, afterGameRate, false);
+            }
 
             if(i % 1000 == 0 && i != 0) {
                 long thisTime = new Date().getTime();
@@ -44,12 +48,12 @@ public class BackPropTrainer {
         }
     }
 
-    private static void playGame(FeedForwardNeuralNetwork net, double inGameRate, double afterGameRate) {
+    private static void playGame(FeedForwardNeuralNetwork net, double inGameRate, double afterGameRate, boolean pathOnly) {
         net.setLearningRate(inGameRate);
         GameState state = new GameState(true, 5);
 
         int round = 0;
-        while(state.checkForWinner() == 0) {
+        while(!state.checkForWinner().isFinished()) {
             if(round > 200) {
                 break;
             }
@@ -84,11 +88,13 @@ public class BackPropTrainer {
             net.backprop(lastInputs, max);
         }
 
+        GameResult result = state.checkForWinner();
+
         double[] finalOut = new double[]{0,0};
-        if(state.checkForWinner() == 1) {
+        if(result.getWinner() == Player.WHITE && (!pathOnly || result.getReason() == WinReason.PATH)) {
             finalOut[0] = 1;
         }
-        else if(state.checkForWinner() == 2) {
+        else if(result.getWinner() == Player.BLACK && (!pathOnly || result.getReason() == WinReason.PATH)) {
             finalOut[1] = 1;
         }
 

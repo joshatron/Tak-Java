@@ -1,11 +1,13 @@
 package io.joshatron.player;
 
+import io.joshatron.engine.GameResult;
 import io.joshatron.engine.GameState;
+import io.joshatron.engine.Player;
 import io.joshatron.engine.Turn;
 import io.joshatron.neuralnet.FeedForwardNeuralNetwork;
 import io.joshatron.neuralnet.NetUtils;
 
-public class MiniMaxPlayer implements Player {
+public class MiniMaxPlayer implements TakPlayer {
 
     FeedForwardNeuralNetwork net;
 
@@ -38,8 +40,8 @@ public class MiniMaxPlayer implements Player {
     }
 
     private double getTurnValue(GameState state, boolean max, boolean white, int depth, double alpha, double beta) {
-        int winner = state.checkForWinner();
-        if(winner == 1) {
+        GameResult result = state.checkForWinner();
+        if(result.isFinished() && result.getWinner() == Player.WHITE) {
             if(white) {
                 return 999;
             }
@@ -47,7 +49,7 @@ public class MiniMaxPlayer implements Player {
                 return -999;
             }
         }
-        else if(winner == 2) {
+        else if(result.isFinished() && result.getWinner() == Player.BLACK) {
             if(white) {
                 return -999;
             }

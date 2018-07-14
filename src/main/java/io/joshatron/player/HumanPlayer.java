@@ -4,7 +4,7 @@ import io.joshatron.engine.*;
 
 import java.util.Scanner;
 
-public class HumanPlayer implements Player
+public class HumanPlayer implements TakPlayer
 {
     private Scanner reader;
 

@@ -6,7 +6,7 @@ import io.joshatron.engine.Turn;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class RandomPlayer implements Player {
+public class RandomPlayer implements TakPlayer {
     Random rand;
 
     public RandomPlayer() {
