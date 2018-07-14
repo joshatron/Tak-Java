@@ -9,42 +9,55 @@ import java.util.Date;
 public class BackPropTrainer {
 
     public static void main(String[] args) {
-        double inGameRate = .005;
-        double afterGameRate = .1;
-        double momentum = .001;
-        int hiddenSize = 50;
-        int games = 10000000;
-
-        FeedForwardNeuralNetwork net = new FeedForwardNeuralNetwork(1, new int[]{84, hiddenSize, 2}, ActivationFunction.LOGISTIC, momentum, inGameRate);
-
-        long firstTime = new Date().getTime();
+        double[] inGameRate = {.005,.01,.015,.02,.025};
+        double[] afterGameRate = {.01,.05,.1};
+        double[] momentum = {0,.0001,.005,.01};
+        int[] hiddenSize = {25,50,75,100};
+        int games = 500000;
 
         System.out.println("Initializing training...");
 
-        for(int i = 0; i < games; i++) {
-            if(i < games / 3) {
-                playGame(net, inGameRate, afterGameRate, true);
-            }
-            else {
-                playGame(net, inGameRate, afterGameRate, false);
-            }
+        for(double inGame : inGameRate) {
+            for(double afterGame : afterGameRate) {
+                for(double mom : momentum) {
+                    for(int hidden : hiddenSize) {
+                        System.out.println("Training with the following parameters:");
+                        System.out.println("In game rate: " + inGame);
+                        System.out.println("After game rate: " + afterGame);
+                        System.out.println("Momentum: " + mom);
+                        System.out.println("Hidden size: " + hidden);
+                        System.out.println();
+                        FeedForwardNeuralNetwork net = new FeedForwardNeuralNetwork(1, new int[]{84, hidden, 2}, ActivationFunction.LOGISTIC, mom, inGame);
 
-            if(i % 1000 == 0 && i != 0) {
-                long thisTime = new Date().getTime();
-                long timeLeft = (games - i) * ((thisTime - firstTime) / i) / 1000 / 60;
-                System.out.printf("Game %d- %.2f hours left\n", i, timeLeft / 60.);
-                try {
-                    net.export(new File(inGameRate + "_" + afterGameRate + "_" + momentum + "_" + hiddenSize + "_" + games + ".json"));
-                } catch (Exception e) {
-                    e.printStackTrace();
+                        long firstTime = new Date().getTime();
+
+                        for (int i = 0; i < games; i++) {
+                            if (i < games / 2) {
+                                playGame(net, inGame, afterGame, true);
+                            } else {
+                                playGame(net, inGame, afterGame, false);
+                            }
+
+                            if (i % 1000 == 0 && i != 0) {
+                                long thisTime = new Date().getTime();
+                                long timeLeft = (games - i) * ((thisTime - firstTime) / i) / 1000 / 60;
+                                System.out.printf("Game %d- %.2f hours left\n", i, timeLeft / 60.);
+                                try {
+                                    net.export(new File(inGame + "_" + afterGame + "_" + mom + "_" + hidden + "_" + games + ".json"));
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+
+                        try {
+                            net.export(new File(inGame + "_" + afterGame + "_" + mom + "_" + hidden + "_" + games + ".json"));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }
-        }
-
-        try {
-            net.export(new File(inGameRate + "_" + afterGameRate + "_" + momentum + "_" + hiddenSize + "_" + games + ".json"));
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
