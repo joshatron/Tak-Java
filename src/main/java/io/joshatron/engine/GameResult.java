@@ -28,4 +28,19 @@ public class GameResult {
     public WinReason getReason() {
         return reason;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if(!(o instanceof GameResult)) {
+            return false;
+        }
+
+        if(((GameResult) o).finished == this.finished &&
+           ((GameResult) o).winner == this.winner &&
+           ((GameResult) o).reason == this.reason) {
+            return true;
+        }
+
+        return false;
+    }
 }
