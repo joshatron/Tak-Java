@@ -21,13 +21,14 @@ public class BackPropTrainer {
             for(double afterGame : afterGameRate) {
                 for(double mom : momentum) {
                     for(int hidden : hiddenSize) {
+                        FeedForwardNeuralNetwork net = new FeedForwardNeuralNetwork(1, new int[]{84, hidden, 2}, ActivationFunction.LOGISTIC, mom, inGame);
                         System.out.println("Training with the following parameters:");
                         System.out.println("In game rate: " + inGame);
                         System.out.println("After game rate: " + afterGame);
                         System.out.println("Momentum: " + mom);
                         System.out.println("Hidden size: " + hidden);
+                        System.out.println("Initial win rate: " + RateNet.getWinPercent(net) + "%");
                         System.out.println();
-                        FeedForwardNeuralNetwork net = new FeedForwardNeuralNetwork(1, new int[]{84, hidden, 2}, ActivationFunction.LOGISTIC, mom, inGame);
 
                         long firstTime = new Date().getTime();
 
@@ -41,7 +42,8 @@ public class BackPropTrainer {
                             if (i % 1000 == 0 && i != 0) {
                                 long thisTime = new Date().getTime();
                                 long timeLeft = (games - i) * ((thisTime - firstTime) / i) / 1000 / 60;
-                                System.out.printf("Game %d- %d:%02d remaining\n", i, timeLeft / 60, timeLeft % 60);
+                                int winPercent = RateNet.getWinPercent(net);
+                                System.out.printf("Game %d- %d%% win rate, %d:%02d remaining\n", i, winPercent, timeLeft / 60, timeLeft % 60);
                                 try {
                                     net.export(new File(inGame + "_" + afterGame + "_" + mom + "_" + hidden + "_" + games + ".json"));
                                 } catch (Exception e) {

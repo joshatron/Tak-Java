@@ -13,14 +13,19 @@ public class RateNet {
 
     public static void main(String[] args) {
         System.out.println("Beginning test...");
-
-        TakPlayer white = null;
         try {
-            white = new SimpleNeuralPlayer(new FeedForwardNeuralNetwork(new File("0.005_0.1_0.001_50_10000000.json")));
+            int netWin = getWinPercent(new FeedForwardNeuralNetwork(new File("0.005_0.01_0.0_25_500000.json")));
+            System.out.println("The net won " + netWin + "% of the time");
         } catch (IOException e) {
-            System.out.println("Can't read file");
-            System.exit(1);
+            System.out.println("Failed to find net");
+            e.printStackTrace();
         }
+    }
+
+    //Returns a value between 0 and 100
+    //Represents the win percentage against a random player
+    public static int getWinPercent(FeedForwardNeuralNetwork net) {
+        TakPlayer white = new SimpleNeuralPlayer(net);
         TakPlayer black = new RandomPlayer();
         boolean first = false;
         int netWin = 0;
@@ -42,6 +47,6 @@ public class RateNet {
             }
         }
 
-        System.out.println("The net won " + netWin + "% of the time");
+        return netWin;
     }
 }
