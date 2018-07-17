@@ -4,6 +4,8 @@ import io.joshatron.engine.GameState;
 import io.joshatron.engine.Piece;
 import io.joshatron.engine.PieceType;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class NetUtils {
@@ -131,5 +133,23 @@ public class NetUtils {
         inputs[i] = blackPathPower;
 
         return inputs;
+    }
+
+    public static NetWithStats getNetFromFile(File file) {
+         String name = file.getName();
+         name = name.substring(0,name.length() - 5);
+         String[] names = name.split("_");
+         double inGameRate = Double.parseDouble(names[0]);
+         double afterGameRate = Double.parseDouble(names[1]);
+         double momentum = Double.parseDouble(names[2]);
+         int hiddenSize = Integer.parseInt(names[3]);
+         int games = Integer.parseInt(names[4]);
+
+        try {
+            return new NetWithStats(inGameRate, afterGameRate, momentum, hiddenSize, games, new FeedForwardNeuralNetwork(file));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
