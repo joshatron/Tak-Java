@@ -352,9 +352,9 @@ public class GameStateTest {
         place = new PlaceTurn(1,1,PieceType.STONE);
         Assert.assertTrue(state.executeTurn(place));
         place = new PlaceTurn(2,0,PieceType.STONE);
-        Assert.assertEquals(0,state.checkForWinner());
+        Assert.assertEquals(new GameResult(),state.checkForWinner());
         Assert.assertTrue(state.executeTurn(place));
-        Assert.assertEquals(1,state.checkForWinner());
+        Assert.assertEquals(new GameResult(true,Player.WHITE,WinReason.PATH),state.checkForWinner());
     }
 
     //Tests a straight vertical win path
@@ -371,9 +371,9 @@ public class GameStateTest {
         place = new PlaceTurn(0,1,PieceType.STONE);
         Assert.assertTrue(state.executeTurn(place));
         place = new PlaceTurn(1,2,PieceType.STONE);
-        Assert.assertEquals(0,state.checkForWinner());
+        Assert.assertEquals(new GameResult(),state.checkForWinner());
         Assert.assertTrue(state.executeTurn(place));
-        Assert.assertEquals(2,state.checkForWinner());
+        Assert.assertEquals(new GameResult(true,Player.BLACK,WinReason.PATH),state.checkForWinner());
     }
 
     //Tests a non-straight horizontal win path
@@ -431,9 +431,9 @@ public class GameStateTest {
         Assert.assertTrue(state.executeTurn(place));
         Assert.assertTrue(state.executeTurn(moveUp));
         place = new PlaceTurn(5,4,PieceType.STONE);
-        Assert.assertEquals(0,state.checkForWinner());
+        Assert.assertEquals(new GameResult(),state.checkForWinner());
         Assert.assertTrue(state.executeTurn(place));
-        Assert.assertEquals(1,state.checkForWinner());
+        Assert.assertEquals(new GameResult(true,Player.WHITE,WinReason.PATH),state.checkForWinner());
     }
 
     //Tests a non-straight vertical win path
@@ -482,9 +482,9 @@ public class GameStateTest {
         Assert.assertTrue(state.executeTurn(place));
         Assert.assertTrue(state.executeTurn(moveDown));
         place = new PlaceTurn(1,5,PieceType.STONE);
-        Assert.assertEquals(0,state.checkForWinner());
+        Assert.assertEquals(new GameResult(),state.checkForWinner());
         Assert.assertTrue(state.executeTurn(place));
-        Assert.assertEquals(2,state.checkForWinner());
+        Assert.assertEquals(new GameResult(true,Player.BLACK,WinReason.PATH),state.checkForWinner());
     }
 
     //Tests that walls can't be in win paths
@@ -501,9 +501,9 @@ public class GameStateTest {
         place = new PlaceTurn(1,1,PieceType.STONE);
         Assert.assertTrue(state.executeTurn(place));
         place = new PlaceTurn(2,0,PieceType.WALL);
-        Assert.assertEquals(0,state.checkForWinner());
+        Assert.assertEquals(new GameResult(),state.checkForWinner());
         Assert.assertTrue(state.executeTurn(place));
-        Assert.assertEquals(0,state.checkForWinner());
+        Assert.assertEquals(new GameResult(),state.checkForWinner());
     }
 
     //Tests that capstones can be in win paths
@@ -528,9 +528,9 @@ public class GameStateTest {
         place = new PlaceTurn(3,1,PieceType.STONE);
         Assert.assertTrue(state.executeTurn(place));
         place = new PlaceTurn(4,0,PieceType.CAPSTONE);
-        Assert.assertEquals(0,state.checkForWinner());
+        Assert.assertEquals(new GameResult(),state.checkForWinner());
         Assert.assertTrue(state.executeTurn(place));
-        Assert.assertEquals(1,state.checkForWinner());
+        Assert.assertEquals(new GameResult(true,Player.WHITE,WinReason.PATH),state.checkForWinner());
     }
 
     //Tests that the top spot in a stack is the one counted
@@ -551,9 +551,9 @@ public class GameStateTest {
         place = new PlaceTurn(0,2,PieceType.STONE);
         Assert.assertTrue(state.executeTurn(place));
         MoveTurn move = new MoveTurn(1,0,1,Direction.SOUTH,new int[]{1});
-        Assert.assertEquals(0,state.checkForWinner());
+        Assert.assertEquals(new GameResult(),state.checkForWinner());
         Assert.assertTrue(state.executeTurn(move));
-        Assert.assertEquals(1,state.checkForWinner());
+        Assert.assertEquals(new GameResult(true,Player.WHITE,WinReason.PATH),state.checkForWinner());
     }
 
     //Tests that diagonals don't count toward win paths
@@ -573,7 +573,7 @@ public class GameStateTest {
         Assert.assertTrue(state.executeTurn(place));
         place = new PlaceTurn(2,2,PieceType.STONE);
         Assert.assertTrue(state.executeTurn(place));
-        Assert.assertEquals(0,state.checkForWinner());
+        Assert.assertEquals(new GameResult(),state.checkForWinner());
     }
 
     //Tests the win condition that happens with a full board
@@ -594,9 +594,9 @@ public class GameStateTest {
         place = new PlaceTurn(1,2,PieceType.STONE);
         Assert.assertTrue(state.executeTurn(place));
         place = new PlaceTurn(2,2,PieceType.STONE);
-        Assert.assertEquals(0, state.checkForWinner());
+        Assert.assertEquals(new GameResult(), state.checkForWinner());
         Assert.assertTrue(state.executeTurn(place));
-        Assert.assertEquals(1, state.checkForWinner());
+        Assert.assertEquals(new GameResult(true,Player.WHITE,WinReason.BOARD_FULL), state.checkForWinner());
     }
 
     //Tests the win condition that happens when a player runs out of pieces
@@ -630,9 +630,9 @@ public class GameStateTest {
         place = new PlaceTurn(0,2,PieceType.STONE);
         Assert.assertTrue(state.executeTurn(place));
         place = new PlaceTurn(1,1,PieceType.CAPSTONE);
-        Assert.assertEquals(0,state.checkForWinner());
+        Assert.assertEquals(new GameResult(),state.checkForWinner());
         Assert.assertTrue(state.executeTurn(place));
-        Assert.assertEquals(2,state.checkForWinner());
+        Assert.assertEquals(new GameResult(true,Player.BLACK,WinReason.OUT_OF_PIECES),state.checkForWinner());
     }
 
     //Makes sure the right player wins when both players get a road in the final move
@@ -657,9 +657,9 @@ public class GameStateTest {
         place = new PlaceTurn(0,2,PieceType.STONE);
         Assert.assertTrue(state.executeTurn(place));
         move = new MoveTurn(1,2,2,Direction.NORTH,new int[]{1,1});
-        Assert.assertEquals(0, state.checkForWinner());
+        Assert.assertEquals(new GameResult(), state.checkForWinner());
         Assert.assertTrue(state.executeTurn(move));
-        Assert.assertEquals(1, state.checkForWinner());
+        Assert.assertEquals(new GameResult(true,Player.WHITE,WinReason.PATH), state.checkForWinner());
     }
 
     //Tests that places end up with the right state and undo correctly

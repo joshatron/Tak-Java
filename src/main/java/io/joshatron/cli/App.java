@@ -92,12 +92,12 @@ public class App
                 break;
             }
             else if(input.charAt(0) == 'a') {
-                try {
+                /*try {
                     blackPlayer = new SimpleNeuralPlayer(new FeedForwardNeuralNetwork(new File("0.005_0.1_0.001_50_10000000.json")));
                 } catch (IOException e) {
                     e.printStackTrace();
-                }
-                //blackPlayer = new RandomPlayer();
+                }*/
+                blackPlayer = new RandomPlayer();
                 break;
             }
             else {
@@ -114,7 +114,6 @@ public class App
             GameResult result = playGame(whiteFirst, size, whitePlayer, blackPlayer);
             if(result.getReason() == WinReason.SURRENDER) {
                 System.exit(0);
-                whiteWins++;
             }
             else if(result.getWinner() == Player.WHITE) {
                 whiteWins++;
