@@ -443,6 +443,8 @@ public class FeedForwardNeuralNetwork
                 return linearSlope * sum;
             case LOGISTIC:
                 return 1.0 / (1.0 + Math.pow(Math.E, sum * -1.0));
+            case TANH:
+                return 2.0 / (1.0 + Math.pow(Math.E, sum * -2.0)) - 1;
         }
 
         System.out.println("Failed to apply activation function");
@@ -462,6 +464,8 @@ public class FeedForwardNeuralNetwork
                 return linearSlope;
             case LOGISTIC:
                 return (Math.pow(Math.E, sum) / Math.pow(Math.pow(Math.E, sum) + 1, 2));
+            case TANH:
+                return Math.pow(Math.E * 4.0, sum * -2.) / Math.pow(Math.pow(Math.E, sum * -2.0) + 1, 2);
         }
 
         System.out.println("Failed to apply activation function");

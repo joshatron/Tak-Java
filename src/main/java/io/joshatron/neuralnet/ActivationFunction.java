@@ -2,5 +2,7 @@ package io.joshatron.neuralnet;
 
 public enum ActivationFunction
 {
-    LINEAR, LOGISTIC
+    LINEAR,
+    LOGISTIC,
+    TANH
 }
