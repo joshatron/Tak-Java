@@ -11,8 +11,8 @@ public class BackPropTrainer {
     public static void main(String[] args) {
         double[] inGameRate = {.005,.01,.015,.02,.025};
         double[] afterGameRate = {.01,.05,.1};
-        double[] momentum = {0,.0001,.005,.01};
-        int[] hiddenSize = {25,50,75,100};
+        double[] momentum = {0};
+        int[] hiddenSize = {40};
         int games = 500000;
 
         System.out.println("Initializing training...");
@@ -21,7 +21,7 @@ public class BackPropTrainer {
             for(double afterGame : afterGameRate) {
                 for(double mom : momentum) {
                     for(int hidden : hiddenSize) {
-                        FeedForwardNeuralNetwork net = new FeedForwardNeuralNetwork(1, new int[]{84, hidden, 2}, ActivationFunction.LOGISTIC, mom, inGame);
+                        FeedForwardNeuralNetwork net = new FeedForwardNeuralNetwork(1, new int[]{84, hidden, 2}, ActivationFunction.TANH, mom, inGame);
                         System.out.println("Training with the following parameters:");
                         System.out.println("In game rate: " + inGame);
                         System.out.println("After game rate: " + afterGame);
@@ -73,12 +73,12 @@ public class BackPropTrainer {
                 break;
             }
             round++;
-            double[] lastInputs = NetUtils.getInputs(state);
+            double[] lastInputs = NetUtils.getInputs(state, state.isWhiteTurn());
             double[] max = new double[]{0,0};
             Turn maxTurn = null;
             for(Turn turn : state.getPossibleTurns()) {
                 state.executeTurn(turn);
-                double[] out = net.compute(NetUtils.getInputs(state));
+                double[] out = net.compute(NetUtils.getInputs(state, state.isWhiteTurn()));
                 if(state.isWhiteTurn()) {
                     if(out[0] > max[0]) {
                         max = out;
@@ -105,17 +105,23 @@ public class BackPropTrainer {
 
         GameResult result = state.checkForWinner();
 
-        double[] finalOut = new double[]{0,0};
-        if(result.getWinner() == Player.WHITE && (!pathOnly || result.getReason() == WinReason.PATH)) {
+        double[] finalOut = new double[]{-1,-1};
+        if(!pathOnly || result.getReason() == WinReason.PATH) {
             finalOut[0] = 1;
         }
-        else if(result.getWinner() == Player.BLACK && (!pathOnly || result.getReason() == WinReason.PATH)) {
+
+        double[] finalIn = NetUtils.getInputs(state, !state.isWhiteTurn());
+
+        net.setLearningRate(afterGameRate);
+        net.backprop(finalIn, finalOut);
+
+        finalOut[0] = -1;
+        if(!pathOnly || result.getReason() == WinReason.PATH) {
             finalOut[1] = 1;
         }
 
-        double[] finalIn = NetUtils.getInputs(state);
+        finalIn = NetUtils.getInputs(state, state.isWhiteTurn());
 
-        net.setLearningRate(afterGameRate);
         net.backprop(finalIn, finalOut);
     }
 }

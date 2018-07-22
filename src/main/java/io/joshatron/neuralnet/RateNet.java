@@ -2,6 +2,7 @@ package io.joshatron.neuralnet;
 
 import io.joshatron.engine.GameState;
 import io.joshatron.engine.Player;
+import io.joshatron.engine.Turn;
 import io.joshatron.player.RandomPlayer;
 import io.joshatron.player.SimpleNeuralPlayer;
 import io.joshatron.player.TakPlayer;
@@ -35,10 +36,12 @@ public class RateNet {
             GameState state = new GameState(first, 5);
             while(!state.checkForWinner().isFinished()) {
                 if(state.isWhiteTurn()) {
-                    state.executeTurn(white.getTurn(state));
+                    Turn turn = white.getTurn(state);
+                    state.executeTurn(turn);
                 }
                 else {
-                    state.executeTurn(black.getTurn(state));
+                    Turn turn = black.getTurn(state);
+                    state.executeTurn(turn);
                 }
             }
 

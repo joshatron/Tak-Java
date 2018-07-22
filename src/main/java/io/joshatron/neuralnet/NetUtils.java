@@ -10,8 +10,9 @@ import java.util.ArrayList;
 
 public class NetUtils {
 
-    public static double[] getInputs(GameState state) {
+    public static double[] getInputs(GameState state, boolean whitePlayer) {
         double[] inputs = new double[(state.getBoardSize() * state.getBoardSize() * 3) + 9];
+
 
         int i = 0;
         int filled = 0;
@@ -36,7 +37,7 @@ public class NetUtils {
                     //top piece
                     ArrayList<Piece> stack = state.getBoard().getPosition(x, y).getPieces();
                     Piece piece = stack.get(stack.size() - 1);
-                    if (piece.isWhite()) {
+                    if (piece.isWhite() == whitePlayer) {
                         switch (piece.getType()) {
                             case WALL:
                                 inputs[i] = 1;
@@ -82,7 +83,12 @@ public class NetUtils {
                         }
                     }
 
-                    inputs[i] = (((double) white / (white + black)) * 2) - 1;
+                    if(whitePlayer) {
+                        inputs[i] = (((double) white / (white + black)) * 2) - 1;
+                    }
+                    else {
+                        inputs[i] = (((double) black / (white + black)) * 2) - 1;
+                    }
                     i++;
 
                     if(x < state.getBoardSize() - 1) {
@@ -128,9 +134,16 @@ public class NetUtils {
         i++;
         inputs[i] = control;
         i++;
-        inputs[i] = whitePathPower;
-        i++;
-        inputs[i] = blackPathPower;
+        if(whitePlayer) {
+            inputs[i] = whitePathPower;
+            i++;
+            inputs[i] = blackPathPower;
+        }
+        else {
+            inputs[i] = blackPathPower;
+            i++;
+            inputs[i] = whitePathPower;
+        }
 
         return inputs;
     }

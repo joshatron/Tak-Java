@@ -59,7 +59,7 @@ public class MiniMaxPlayer implements TakPlayer {
         }
 
         if(depth == 0) {
-            double[] out = net.compute(NetUtils.getInputs(state));
+            double[] out = net.compute(NetUtils.getInputs(state, state.isWhiteTurn()));
 
             if(state.isWhiteTurn()) {
                 return out[0];
