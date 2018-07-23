@@ -21,7 +21,7 @@ public class BackPropTrainer {
             for(double afterGame : afterGameRate) {
                 for(double mom : momentum) {
                     for(int hidden : hiddenSize) {
-                        FeedForwardNeuralNetwork net = new FeedForwardNeuralNetwork(1, new int[]{84, hidden, 2}, ActivationFunction.TANH, mom, inGame);
+                        FeedForwardNeuralNetwork net = new FeedForwardNeuralNetwork(1, new int[]{94, hidden, 2}, ActivationFunction.LOGISTIC, mom, inGame);
                         System.out.println("Training with the following parameters:");
                         System.out.println("In game rate: " + inGame);
                         System.out.println("After game rate: " + afterGame);
@@ -105,7 +105,7 @@ public class BackPropTrainer {
 
         GameResult result = state.checkForWinner();
 
-        double[] finalOut = new double[]{-1,-1};
+        double[] finalOut = new double[]{0,0};
         if(!pathOnly || result.getReason() == WinReason.PATH) {
             finalOut[0] = 1;
         }
@@ -115,7 +115,7 @@ public class BackPropTrainer {
         net.setLearningRate(afterGameRate);
         net.backprop(finalIn, finalOut);
 
-        finalOut[0] = -1;
+        finalOut[0] = 0;
         if(!pathOnly || result.getReason() == WinReason.PATH) {
             finalOut[1] = 1;
         }

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class NetUtils {
 
     public static double[] getInputs(GameState state, boolean whitePlayer) {
-        double[] inputs = new double[(state.getBoardSize() * state.getBoardSize() * 3) + 9];
+        double[] inputs = new double[(state.getBoardSize() * state.getBoardSize() * 3) + (state.getBoardSize() * 2) + 9];
 
 
         int i = 0;
@@ -138,11 +138,86 @@ public class NetUtils {
             inputs[i] = whitePathPower;
             i++;
             inputs[i] = blackPathPower;
+            i++;
         }
         else {
             inputs[i] = blackPathPower;
             i++;
             inputs[i] = whitePathPower;
+            i++;
+        }
+
+        //horizontal and vertical power
+        for(int x = 0; x < state.getBoardSize(); x++) {
+            int horizontalPower = 0;
+            int verticalPower = 0;
+            for(int y = 0; y < state.getBoardSize(); y++) {
+                //horizontal power
+                if(state.getBoard().getPosition(x, y).getHeight() != 0) {
+                    ArrayList<Piece> stack = state.getBoard().getPosition(x, y).getPieces();
+                    Piece piece = stack.get(stack.size() - 1);
+                    if (piece.isWhite() == whitePlayer) {
+                        switch (piece.getType()) {
+                            case WALL:
+                                horizontalPower--;
+                                break;
+                            case STONE:
+                                horizontalPower++;
+                                break;
+                            case CAPSTONE:
+                                horizontalPower += 2;
+                                break;
+                        }
+                    } else {
+                        switch (piece.getType()) {
+                            case WALL:
+                                horizontalPower -= 2;
+                                break;
+                            case STONE:
+                                horizontalPower--;
+                                break;
+                            case CAPSTONE:
+                                horizontalPower -= 3;
+                                break;
+                        }
+                    }
+                }
+                //vertical power
+                if(state.getBoard().getPosition(y, x).getHeight() != 0) {
+                    ArrayList<Piece> stack = state.getBoard().getPosition(y, x).getPieces();
+                    Piece piece = stack.get(stack.size() - 1);
+                    if (piece.isWhite() == whitePlayer) {
+                        switch (piece.getType()) {
+                            case WALL:
+                                horizontalPower--;
+                                break;
+                            case STONE:
+                                horizontalPower++;
+                                break;
+                            case CAPSTONE:
+                                horizontalPower += 2;
+                                break;
+                        }
+                    } else {
+                        switch (piece.getType()) {
+                            case WALL:
+                                horizontalPower -= 2;
+                                break;
+                            case STONE:
+                                horizontalPower--;
+                                break;
+                            case CAPSTONE:
+                                horizontalPower -= 3;
+                                break;
+                        }
+                    }
+                }
+            }
+
+            inputs[i] = horizontalPower;
+            i++;
+            inputs[i] = verticalPower;
+            i++;
         }
 
         return inputs;
