@@ -19,7 +19,7 @@ public class SimpleNeuralPlayer implements TakPlayer {
     public Turn getTurn(GameState state) {
         ArrayList<Turn> turns = state.getPossibleTurns();
 
-        double max = 0;
+        double max = -1;
         Turn maxTurn = null;
         for(Turn turn : turns) {
             state.executeTurn(turn);
@@ -35,7 +35,7 @@ public class SimpleNeuralPlayer implements TakPlayer {
     }
 
     private double computeState(GameState state) {
-        double[] inputs = NetUtils.getInputs(state);
+        double[] inputs = NetUtils.getInputs(state, state.isWhiteTurn());
 
         double[] outputs = net.compute(inputs);
 
