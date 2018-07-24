@@ -6,6 +6,18 @@ It is trained in a similar scheme to TD-Gammon.
 
 #### AI Structure
 
+The AI runs the minimax algorithm with alpha beta pruning to determine the best move.
+Because of the branching factor of the game, a depth of 2 is used and the algorithm
+returns in about 2 seconds on a mid range laptop.
+
+For the evaluation of states that are not terminal, a fully connected
+feed forward neural network is used. It takes inputs from the game state,
+detailed below, based on who's turn it is. It has one hidden layer of size
+40, and an output layer of size 2.
+
+The output is an estimate of how well the current player is doing along with
+how well the opponent is doing, both in the range 0-1.
+
 #### Inputs
 
 #### Training
