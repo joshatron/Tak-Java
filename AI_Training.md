@@ -20,6 +20,48 @@ how well the opponent is doing, both in the range 0-1.
 
 #### Inputs
 
+The inputs to the neural network are as follows:
+
+ * For each board location, the identity of the top piece
+   * 1 for own wall
+   * 2 for own stone
+   * 3 for own capstone
+   * -1 for opponent wall
+   * -2 for opponent stone
+   * -3 for opponent capstone
+ * For each board location, the height of the stack
+ * For each board location, the percentage of the stack owned by the player
+   * -1 would be all the opponent
+   * 0 would be half and half
+   * 1 would be all their own
+ * The number of white stones left
+ * The number of white capstones left
+ * The number of black stones left
+ * The number of black capstones left
+ * The percentage of the board filled, from 0-1
+ * The number of turns played, divided by 100
+ * The control the player has
+   * +1 to control for every stack owned by the player that is a stone or capstone
+   * -1 to control for every stack owned by the opponent that is a stone or capstone
+ * Path power of the player
+   * +1 for each pair of stones or capstones connected either vertically or horizontally
+ * Path power of the opponent
+   * +1 for each pair of stones or capstones connected either vertically or horizontally
+ * Horizontal path power for each row
+   * +1 for each own stone in row
+   * -1 for each own wall in row
+   * +2 for each own capstone in row
+   * -1 for each opponent stone in row
+   * -2 for each opponent wall in row
+   * -3 for each opponent capstone in row
+ * Vertical path power for each column
+   * +1 for each own stone in column
+   * -1 for each own wall in column
+   * +2 for each own capstone in column
+   * -1 for each opponent stone in column
+   * -2 for each opponent wall in column
+   * -3 for each opponent capstone in column
+
 #### Training
 
 The trainer runs by looping through practice games with the AI playing itself.
