@@ -62,11 +62,22 @@ public class CompareNets {
             }
         }
 
+        int best = 0;
+        NetWithStats bestNet = nets.get(0);
         //display results
         for(NetWithStats net : nets) {
             System.out.println(net);
             System.out.println();
+
+            if(net.getWins() > best) {
+                best = net.getWins();
+                bestNet = net;
+            }
         }
+
+        System.out.println("Best net:");
+        System.out.println(bestNet);
+        System.out.println();
 
         //run the analysis
         ArrayList<Analysis> inGameRate = new ArrayList<>();
