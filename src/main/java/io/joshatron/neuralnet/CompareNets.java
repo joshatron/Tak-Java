@@ -97,9 +97,12 @@ public class CompareNets {
             }
         }
 
+        System.out.println("In game rates");
         for(Analysis inGame : inGameRate) {
             System.out.println(inGame.getName() + ": " + inGame.getAverage());
         }
+        System.out.println();
+        System.out.println("After game rates");
         for(Analysis afterGame : afterGameRate) {
             System.out.println(afterGame.getName() + ": " + afterGame.getAverage());
         }
