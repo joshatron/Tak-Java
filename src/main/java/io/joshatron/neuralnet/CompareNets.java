@@ -7,6 +7,7 @@ import io.joshatron.player.SimpleNeuralPlayer;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /*
  * The goal of this class is to compare the different nets to each other to see which is best
@@ -96,6 +97,8 @@ public class CompareNets {
                 afterGameRate.get(index).addValue(net.getWins());
             }
         }
+
+        inGameRate.sort(Comparator.comparing(Analysis::getName));
 
         for(Analysis inGame : inGameRate) {
             System.out.println(inGame.getName() + ": " + inGame.getAverage());
