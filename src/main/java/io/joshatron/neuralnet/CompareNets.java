@@ -61,12 +61,47 @@ public class CompareNets {
             }
         }
 
-        //TODO: run analysis on effect of different factors
-
         //display results
         for(NetWithStats net : nets) {
             System.out.println(net);
             System.out.println();
+        }
+
+        //run the analysis
+        ArrayList<Analysis> inGameRate = new ArrayList<>();
+        ArrayList<Analysis> afterGameRate = new ArrayList<>();
+
+        for(NetWithStats net : nets) {
+            //in game rate
+            int index = inGameRate.indexOf(new Analysis(Double.toString(net.getInGameRate())));
+
+            if(index == -1) {
+                Analysis a = new Analysis(Double.toString(net.getInGameRate()));
+                a.addValue(net.getWins());
+                inGameRate.add(a);
+            }
+            else {
+                inGameRate.get(index).addValue(net.getWins());
+            }
+
+            //after game rate
+            index = afterGameRate.indexOf(new Analysis(Double.toString(net.getAfterGameRate())));
+
+            if(index == -1) {
+                Analysis a = new Analysis(Double.toString(net.getAfterGameRate()));
+                a.addValue(net.getWins());
+                afterGameRate.add(a);
+            }
+            else {
+                afterGameRate.get(index).addValue(net.getWins());
+            }
+        }
+
+        for(Analysis inGame : inGameRate) {
+            System.out.println(inGame.getName() + ": " + inGame.getAverage());
+        }
+        for(Analysis afterGame : afterGameRate) {
+            System.out.println(afterGame.getName() + ": " + afterGame.getAverage());
         }
     }
 }
