@@ -3,124 +3,136 @@ package io.joshatron.engine;
 import io.joshatron.player.HumanPlayer;
 import io.joshatron.player.RandomPlayer;
 import io.joshatron.player.TakPlayer;
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.impl.completer.NullCompleter;
+import org.jline.reader.impl.completer.StringsCompleter;
+import org.jline.terminal.TerminalBuilder;
 
-import java.util.Scanner;
+import java.io.IOException;
 
 public class GamePlayer
 {
     public static void runGameSet() {
-        Scanner reader = new Scanner(System.in);
-        int games;
-        int size;
-        boolean whiteFirst;
-        TakPlayer whitePlayer;
-        TakPlayer blackPlayer;
+        try {
+            LineReader nullReader = LineReaderBuilder.builder()
+                    .terminal(TerminalBuilder.terminal())
+                    .completer(new NullCompleter())
+                    .build();
+            LineReader boardReader = LineReaderBuilder.builder()
+                    .terminal(TerminalBuilder.terminal())
+                    .completer(new StringsCompleter("3","4","5","6","8"))
+                    .build();
+            LineReader whiteReader = LineReaderBuilder.builder()
+                    .terminal(TerminalBuilder.terminal())
+                    .completer(new StringsCompleter("white","black"))
+                    .build();
+            LineReader playerReader = LineReaderBuilder.builder()
+                    .terminal(TerminalBuilder.terminal())
+                    .completer(new StringsCompleter("human","ai"))
+                    .build();
+            int games;
+            int size;
+            boolean whiteFirst;
+            TakPlayer whitePlayer;
+            TakPlayer blackPlayer;
 
-        while(true) {
-            System.out.print("How many games would you like to play? ");
-            String input = reader.nextLine();
-            try {
-                games = Integer.parseInt(input);
-                break;
+            while (true) {
+                String input = nullReader.readLine("How many games would you like to play? ").trim();
+                try {
+                    games = Integer.parseInt(input);
+                    break;
+                } catch (Exception e) {
+                    System.out.println("Invalid number. Please enter a valid number greater than 0.");
+                }
             }
-            catch(Exception e) {
-                System.out.println("Invalid number. Please enter a valid number greater than 0.");
+            while (true) {
+                String input = boardReader.readLine("What size board would you like to play on? ").trim();
+                try {
+                    size = Integer.parseInt(input);
+                    if(size == 3 || size == 4 || size == 5 || size == 6 || size == 8) {
+                        break;
+                    }
+                    else {
+                        System.out.println("Invalid number Please enter 3, 4, 5, 6, or 8.");
+                    }
+                } catch (Exception e) {
+                    System.out.println("Invalid number Please enter 3, 4, 5, 6, or 8.");
+                }
             }
-        }
-        while(true) {
-            System.out.print("What size board would you like to play on? ");
-            String input = reader.nextLine();
-            try {
-                size = Integer.parseInt(input);
-                break;
+            while (true) {
+                String input = whiteReader.readLine("Who goes first, white or black? ").trim().toLowerCase();
+                if (input.equals("white")) {
+                    whiteFirst = true;
+                    break;
+                } else if (input.equals("black")) {
+                    whiteFirst = false;
+                    break;
+                } else {
+                    System.out.println("Invalid input. Please enter black or white.");
+                }
             }
-            catch(Exception e) {
-                System.out.println("Invalid number Please enter 3, 4, 5, 6, or 8.");
+            while (true) {
+                String input = playerReader.readLine("Is white a human or AI? ").trim().toLowerCase();
+                if (input.equals("human")) {
+                    whitePlayer = new HumanPlayer();
+                    break;
+                } else if (input.equals("ai")) {
+                    /*try {
+                        whitePlayer = new SimpleNeuralPlayer(new FeedForwardNeuralNetwork(new File("0.05_0.005_0.001_100_1000000.json")));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }*/
+                    whitePlayer = new RandomPlayer();
+                    break;
+                } else {
+                    System.out.println("Invalid input. Please enter human or ai.");
+                }
             }
-        }
-        while(true) {
-            System.out.print("Who goes first, white or black? ");
-            String input = reader.nextLine().toLowerCase();
-            if(input.charAt(0) == 'w') {
-                whiteFirst = true;
-                break;
+            while (true) {
+                String input = playerReader.readLine("Is black a human or AI?").trim().toLowerCase();
+                if (input.equals("human")) {
+                    blackPlayer = new HumanPlayer();
+                    break;
+                } else if (input.equals("ai")) {
+                    /*try {
+                        blackPlayer = new SimpleNeuralPlayer(new FeedForwardNeuralNetwork(new File("0.005_0.1_0.001_50_10000000.json")));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }*/
+                    blackPlayer = new RandomPlayer();
+                    break;
+                } else {
+                    System.out.println("Invalid input. Please enter human or ai.");
+                }
             }
-            else if(input.charAt(0) == 'b') {
-                whiteFirst = false;
-                break;
-            }
-            else {
-                System.out.println("Invalid input. Please enter black or white.");
-            }
-        }
-        while(true) {
-            System.out.print("Is white a human or AI? ");
-            String input = reader.nextLine().toLowerCase();
-            if(input.charAt(0) == 'h') {
-                whitePlayer = new HumanPlayer(reader);
-                break;
-            }
-            else if(input.charAt(0) == 'a') {
-                /*try {
-                    whitePlayer = new SimpleNeuralPlayer(new FeedForwardNeuralNetwork(new File("0.05_0.005_0.001_100_1000000.json")));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }*/
-                whitePlayer = new RandomPlayer();
-                break;
-            }
-            else {
-                System.out.println("Invalid input. Please enter human or ai.");
-            }
-        }
-        while(true) {
-            System.out.print("Is black a human or AI? ");
-            String input = reader.nextLine().toLowerCase();
-            if(input.charAt(0) == 'h') {
-                blackPlayer = new HumanPlayer(reader);
-                break;
-            }
-            else if(input.charAt(0) == 'a') {
-                /*try {
-                    blackPlayer = new SimpleNeuralPlayer(new FeedForwardNeuralNetwork(new File("0.005_0.1_0.001_50_10000000.json")));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }*/
-                blackPlayer = new RandomPlayer();
-                break;
-            }
-            else {
-                System.out.println("Invalid input. Please enter human or ai.");
-            }
-        }
 
-        int whiteWins = 0;
-        int blackWins = 0;
-        for(int i = 0; i < games; i++) {
-            System.out.println("----------");
-            System.out.println("| Game " + (i + 1) + " |");
-            System.out.println("----------");
-            GameResult result = playGame(whiteFirst, size, whitePlayer, blackPlayer);
-            if(result.getReason() == WinReason.SURRENDER) {
-                System.exit(0);
+            int whiteWins = 0;
+            int blackWins = 0;
+            for (int i = 0; i < games; i++) {
+                System.out.println("----------");
+                System.out.println("| Game " + (i + 1) + " |");
+                System.out.println("----------");
+                GameResult result = playGame(whiteFirst, size, whitePlayer, blackPlayer);
+                if (result.getReason() == WinReason.SURRENDER) {
+                    System.exit(0);
+                } else if (result.getWinner() == Player.WHITE) {
+                    whiteWins++;
+                } else if (result.getWinner() == Player.BLACK) {
+                    blackWins++;
+                }
+                whiteFirst = !whiteFirst;
             }
-            else if(result.getWinner() == Player.WHITE) {
-                whiteWins++;
-            }
-            else if(result.getWinner() == Player.BLACK) {
-                blackWins++;
-            }
-            whiteFirst = !whiteFirst;
-        }
 
-        if(whiteWins > blackWins) {
-            System.out.println("White is the winner " + whiteWins + ":" + blackWins);
-        }
-        else if(whiteWins < blackWins) {
-            System.out.println("Black is the winner " + blackWins + ":" + whiteWins);
-        }
-        else {
-            System.out.println("It's a tie! Both players won the same number of games.");
+            if (whiteWins > blackWins) {
+                System.out.println("White is the winner " + whiteWins + ":" + blackWins);
+            } else if (whiteWins < blackWins) {
+                System.out.println("Black is the winner " + blackWins + ":" + whiteWins);
+            } else {
+                System.out.println("It's a tie! Both players won the same number of games.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
