@@ -1,7 +1,6 @@
 package io.joshatron.cli;
 
 import io.joshatron.neuralnet.BackPropTrainer;
-import io.joshatron.engine.*;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.impl.completer.StringsCompleter;

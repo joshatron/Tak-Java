@@ -2,20 +2,24 @@ package io.joshatron.engine;
 
 public class Piece {
 
-    private boolean white;
+    private Player player;
     private PieceType type;
 
-    public Piece(boolean white, PieceType type) {
-        this.white = white;
+    public Piece(Player player, PieceType type) {
+        this.player = player;
         this.type = type;
     }
 
     public boolean isWhite() {
-        return white;
+        return player == Player.WHITE;
     }
 
     public boolean isBlack() {
-        return !white;
+        return player == Player.BLACK;
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 
     public PieceType getType() {

@@ -1,5 +1,6 @@
-package io.joshatron.engine;
+package io.joshatron.cli;
 
+import io.joshatron.engine.*;
 import io.joshatron.player.HumanPlayer;
 import io.joshatron.player.RandomPlayer;
 import io.joshatron.player.TakPlayer;
@@ -33,7 +34,7 @@ public class GamePlayer
                     .build();
             int games;
             int size;
-            boolean whiteFirst;
+            Player firstPlayer;
             TakPlayer whitePlayer;
             TakPlayer blackPlayer;
 
@@ -63,10 +64,10 @@ public class GamePlayer
             while (true) {
                 String input = whiteReader.readLine("Who goes first, white or black? ").trim().toLowerCase();
                 if (input.equals("white")) {
-                    whiteFirst = true;
+                    firstPlayer = Player.WHITE;
                     break;
                 } else if (input.equals("black")) {
-                    whiteFirst = false;
+                    firstPlayer = Player.BLACK;
                     break;
                 } else {
                     System.out.println("Invalid input. Please enter black or white.");
@@ -90,7 +91,7 @@ public class GamePlayer
                 }
             }
             while (true) {
-                String input = playerReader.readLine("Is black a human or AI?").trim().toLowerCase();
+                String input = playerReader.readLine("Is black a human or AI? ").trim().toLowerCase();
                 if (input.equals("human")) {
                     blackPlayer = new HumanPlayer();
                     break;
@@ -113,7 +114,7 @@ public class GamePlayer
                 System.out.println("----------");
                 System.out.println("| Game " + (i + 1) + " |");
                 System.out.println("----------");
-                GameResult result = playGame(whiteFirst, size, whitePlayer, blackPlayer);
+                GameResult result = playGame(firstPlayer, size, whitePlayer, blackPlayer);
                 if (result.getReason() == WinReason.SURRENDER) {
                     System.exit(0);
                 } else if (result.getWinner() == Player.WHITE) {
@@ -121,7 +122,13 @@ public class GamePlayer
                 } else if (result.getWinner() == Player.BLACK) {
                     blackWins++;
                 }
-                whiteFirst = !whiteFirst;
+
+                if(firstPlayer == Player.WHITE) {
+                    firstPlayer = Player.BLACK;
+                }
+                else {
+                    firstPlayer = Player.WHITE;
+                }
             }
 
             if (whiteWins > blackWins) {
@@ -137,9 +144,9 @@ public class GamePlayer
     }
 
     //Plays game with the given conditions
-    public static GameResult playGame(boolean whiteFirst, int size, TakPlayer whitePlayer, TakPlayer blackPlayer) {
+    public static GameResult playGame(Player firstPlayer, int size, TakPlayer whitePlayer, TakPlayer blackPlayer) {
         System.out.println("Initializing game...");
-        GameState state = new GameState(whiteFirst, size);
+        GameState state = new GameState(firstPlayer, size);
 
 
         while(!state.checkForWinner().isFinished()) {

@@ -158,7 +158,7 @@ public class BackPropTrainer {
 
     private static void playGame(FeedForwardNeuralNetwork net, double inGameRate, double afterGameRate, boolean pathOnly) {
         net.setLearningRate(inGameRate);
-        GameState state = new GameState(true, 5);
+        GameState state = new GameState(Player.WHITE, 5);
 
         int round = 0;
         while(!state.checkForWinner().isFinished()) {

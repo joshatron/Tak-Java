@@ -28,11 +28,16 @@ public class RateNet {
     public static int getWinPercent(FeedForwardNeuralNetwork net) {
         TakPlayer white = new SimpleNeuralPlayer(net);
         TakPlayer black = new RandomPlayer();
-        boolean first = false;
+        Player first = Player.BLACK;
         int netWin = 0;
 
         for(int i = 0; i < 100; i++) {
-            first = !first;
+            if(first == Player.WHITE) {
+                first = Player.BLACK;
+            }
+            else {
+                first = Player.WHITE;
+            }
             GameState state = new GameState(first, 5);
             while(!state.checkForWinner().isFinished()) {
                 if(state.isWhiteTurn()) {

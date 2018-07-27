@@ -6,8 +6,8 @@ public class GameState {
 
     private GameBoard board;
 
-    private boolean whiteFirst;
-    private boolean whiteTurn;
+    private Player firstTurn;
+    private Player currentTurn;
 
     private ArrayList<Turn> turns;
 
@@ -16,16 +16,11 @@ public class GameState {
     private int blackNormalPieces;
     private int blackCapstones;
 
-    public GameState(boolean whiteFirst, int boardSize) {
-        this.whiteFirst = whiteFirst;
+    public GameState(Player firstTurn, int boardSize) {
+        this.firstTurn = firstTurn;
         this.turns = new ArrayList<>();
 
-        if(whiteFirst) {
-            this.whiteTurn = true;
-        }
-        else {
-            this.whiteTurn = false;
-        }
+        this.currentTurn = this.firstTurn;
 
         switch(boardSize) {
             case 3:
@@ -78,7 +73,7 @@ public class GameState {
             // Check if enough pieces.
             // Ignore first 2 turns because placing other's pieces and impossible to be out
             if(turns.size() >= 2) {
-                if(whiteTurn) {
+                if(currentTurn == Player.WHITE) {
                     if((place.getPieceType() == PieceType.STONE || place.getPieceType() == PieceType.WALL) &&
                        whiteNormalPieces == 0) {
                         return false;
@@ -136,7 +131,7 @@ public class GameState {
             }
 
             // Check that the player owns the stack
-            if(whiteTurn) {
+            if(currentTurn == Player.WHITE) {
                 if(board.getPosition(move.getStartLocation()).getTopPiece().isBlack()) {
                     return false;
                 }
@@ -302,10 +297,10 @@ public class GameState {
         else if(!whitePath && blackPath) {
             return new GameResult(true, Player.BLACK, WinReason.PATH);
         }
-        else if(whitePath && blackPath && !whiteTurn) {
+        else if(whitePath && blackPath && currentTurn == Player.BLACK) {
             return new GameResult(true, Player.WHITE, WinReason.PATH);
         }
-        else if(whitePath && blackPath && whiteTurn) {
+        else if(whitePath && blackPath && currentTurn == Player.WHITE) {
             return new GameResult(true, Player.BLACK, WinReason.PATH);
         }
 
@@ -345,13 +340,18 @@ public class GameState {
         if(isLegalTurn(turn)) {
             if(turn.getType() == TurnType.PLACE) {
                 PlaceTurn place = (PlaceTurn)turn;
-                boolean white = whiteTurn;
+                Player player = currentTurn;
                 if(turns.size() < 2) {
-                    white = !white;
+                    if(player == Player.WHITE) {
+                        player = Player.BLACK;
+                    }
+                    else {
+                        player = Player.WHITE;
+                    }
                 }
-                board.getPosition(place.getLocation()).addPiece(new Piece(white, place.getPieceType()));
+                board.getPosition(place.getLocation()).addPiece(new Piece(player, place.getPieceType()));
 
-                if(whiteTurn) {
+                if(player == Player.WHITE) {
                     if(place.getPieceType() == PieceType.CAPSTONE) {
                         whiteCapstones--;
                     }
@@ -388,7 +388,12 @@ public class GameState {
             }
 
             turns.add(turn);
-            whiteTurn = !whiteTurn;
+            if(currentTurn == Player.WHITE) {
+                currentTurn = Player.BLACK;
+            }
+            else {
+                currentTurn = Player.WHITE;
+            }
             return true;
         }
         else {
@@ -405,7 +410,7 @@ public class GameState {
 
             board.getPosition(place.getLocation()).removePieces(1);
             //white made last turn
-            if(!whiteTurn) {
+            if(currentTurn == Player.BLACK) {
                 if(place.getPieceType() == PieceType.STONE || place.getPieceType() == PieceType.WALL) {
                     whiteNormalPieces++;
                 }
@@ -443,7 +448,12 @@ public class GameState {
             board.getPosition(current).addPieces(pickedUp);
         }
 
-        whiteTurn = !whiteTurn;
+        if(currentTurn == Player.WHITE) {
+            currentTurn = Player.BLACK;
+        }
+        else {
+            currentTurn = Player.WHITE;
+        }
     }
 
     public ArrayList<Turn> getPossibleTurns() {
@@ -465,7 +475,7 @@ public class GameState {
                 for (int y = 0; y < getBoardSize(); y++) {
                     //If it is empty, add possible places
                     if (board.getPosition(x, y).getHeight() == 0) {
-                        if (whiteTurn) {
+                        if (currentTurn == Player.WHITE) {
                             if (whiteNormalPieces > 0) {
                                 turns.add(new PlaceTurn(x, y, PieceType.STONE));
                                 turns.add(new PlaceTurn(x, y, PieceType.WALL));
@@ -484,7 +494,7 @@ public class GameState {
                         }
                     }
                     //Otherwise iterate through possible moves if player owns the stack
-                    else if (board.getPosition(x, y).getTopPiece().isWhite() == whiteTurn) {
+                    else if (board.getPosition(x, y).getTopPiece().getPlayer() == currentTurn) {
                         turns.addAll(getMoves(x, y, Direction.NORTH));
                         turns.addAll(getMoves(x, y, Direction.SOUTH));
                         turns.addAll(getMoves(x, y, Direction.EAST));
@@ -575,12 +585,20 @@ public class GameState {
         return board.getBoardSize();
     }
 
+    public Player getFirstPlayer() {
+        return firstTurn;
+    }
+
     public boolean isWhiteFirst() {
-        return whiteFirst;
+        return firstTurn == Player.WHITE;
+    }
+
+    public Player getCurrentPlayer() {
+        return currentTurn;
     }
 
     public boolean isWhiteTurn() {
-        return whiteTurn;
+        return currentTurn == Player.WHITE;
     }
 
     public ArrayList<Turn> getTurns() {

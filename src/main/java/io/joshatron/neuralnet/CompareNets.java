@@ -35,7 +35,7 @@ public class CompareNets {
             for(NetWithStats black : nets) {
                 //don't play against yourself
                 if(white != black) {
-                    GameState state = new GameState(true, 5);
+                    GameState state = new GameState(Player.WHITE, 5);
                     SimpleNeuralPlayer whitePlayer = new SimpleNeuralPlayer(white.getNet());
                     SimpleNeuralPlayer blackPlayer = new SimpleNeuralPlayer(black.getNet());
                     while (!state.checkForWinner().isFinished()) {
