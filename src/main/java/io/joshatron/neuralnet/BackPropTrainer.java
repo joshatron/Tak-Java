@@ -143,7 +143,7 @@ public class BackPropTrainer {
         System.out.println("After game rate: " + afterGameRate);
         System.out.println("Momentum: " + momentum);
         System.out.println("Hidden size: " + hiddenSize);
-        System.out.println("Initial win rate: " + RateNet.getWinPercent(net) + "%");
+        System.out.println("Initial win rate: " + RateNet.getWinPercent(net).getWinPercentage() + "%");
         System.out.println();
 
         long firstTime = new Date().getTime();
@@ -158,8 +158,8 @@ public class BackPropTrainer {
             if (i % 1000 == 0 && i != 0) {
                 long thisTime = new Date().getTime();
                 long timeLeft = (games - i) * ((thisTime - firstTime) / i) / 1000 / 60;
-                int winPercent = RateNet.getWinPercent(net);
-                System.out.printf("Game %8d- %3d%% win rate, %3d:%02d remaining\n", i, winPercent, timeLeft / 60, timeLeft % 60);
+                RateNetResults results = RateNet.getWinPercent(net);
+                System.out.printf("Game %8d- %3d%% win rate, %3d%% of which by path, %3d:%02d remaining\n", i, (int)results.getWinPercentage(), (int)results.getPathPercentage(), timeLeft / 60, timeLeft % 60);
                 try {
                     net.export(new File( boardSize + "_" + inGameRate + "_" + afterGameRate + "_" + momentum + "_" + hiddenSize + "_" + games + "_" + label + ".json"));
                 } catch (Exception e) {
