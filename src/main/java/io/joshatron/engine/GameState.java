@@ -2,7 +2,7 @@ package io.joshatron.engine;
 
 import java.util.ArrayList;
 
-public class GameState {
+public class GameState implements Cloneable {
 
     private GameBoard board;
 
@@ -75,19 +75,19 @@ public class GameState {
             if(turns.size() >= 2) {
                 if(currentTurn == Player.WHITE) {
                     if((place.getPieceType() == PieceType.STONE || place.getPieceType() == PieceType.WALL) &&
-                       whiteNormalPieces == 0) {
+                       whiteNormalPieces < 1) {
                         return false;
                     }
-                    if(place.getPieceType() == PieceType.CAPSTONE && whiteCapstones == 0) {
+                    if(place.getPieceType() == PieceType.CAPSTONE && whiteCapstones < 1) {
                         return false;
                     }
                 }
                 else {
                     if((place.getPieceType() == PieceType.STONE || place.getPieceType() == PieceType.WALL) &&
-                            blackNormalPieces == 0) {
+                            blackNormalPieces < 1) {
                         return false;
                     }
-                    if(place.getPieceType() == PieceType.CAPSTONE && blackCapstones == 0) {
+                    if(place.getPieceType() == PieceType.CAPSTONE && blackCapstones < 1) {
                         return false;
                     }
                 }
@@ -184,12 +184,6 @@ public class GameState {
         }
     }
 
-    /*
-    0- no one
-    1- white
-    2- black
-    3- tie
-     */
     public GameResult checkForWinner() {
         // Check if someone is out of pieces
         if((whiteNormalPieces == 0 && whiteCapstones == 0) ||
@@ -578,6 +572,8 @@ public class GameState {
     }
 
     public void printBoard() {
+        System.out.println("WS: " + whiteNormalPieces + " WC: " + whiteCapstones +
+                           " BS: " + blackNormalPieces + " BC: " + blackCapstones);
         board.printBoard();
     }
 
@@ -619,5 +615,15 @@ public class GameState {
 
     public int getBlackCapstonesLeft() {
         return blackCapstones;
+    }
+
+    @Override
+    public Object clone() {
+        GameState state = new GameState(firstTurn, getBoardSize());
+        for(Turn turn : turns) {
+            state.executeTurn(turn);
+        }
+
+        return state;
     }
 }

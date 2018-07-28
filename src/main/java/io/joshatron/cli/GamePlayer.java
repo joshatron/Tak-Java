@@ -151,7 +151,7 @@ public class GamePlayer
 
         while(!state.checkForWinner().isFinished()) {
             if(state.isWhiteTurn()) {
-                Turn turn = whitePlayer.getTurn(state);
+                Turn turn = whitePlayer.getTurn((GameState)state.clone());
                 if(turn == null) {
                     System.out.println("White surrenders!");
                     return new GameResult(true, Player.BLACK, WinReason.SURRENDER);
@@ -160,7 +160,7 @@ public class GamePlayer
                 System.out.println("White played: " + turn.toString());
             }
             else {
-                Turn turn = blackPlayer.getTurn(state);
+                Turn turn = blackPlayer.getTurn((GameState)state.clone());
                 if(turn == null) {
                     System.out.println("Black surrenders!");
                     return new GameResult(true, Player.WHITE, WinReason.SURRENDER);

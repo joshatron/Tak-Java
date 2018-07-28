@@ -1,6 +1,7 @@
 package io.joshatron.neuralnet;
 
 import io.joshatron.engine.*;
+import io.joshatron.player.SimpleNeuralPlayer;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +18,22 @@ public class BackPropTrainer {
         ArrayList<Double> momentums = new ArrayList<>();
         ArrayList<Integer> hiddenSizes = new ArrayList<>();
         ArrayList<Integer> gameLengths = new ArrayList<>();
+        int boardSize;
+
+        while(true) {
+            System.out.print("What board size would you like? ");
+            String input = scanner.nextLine().trim();
+            try {
+                int size = Integer.parseInt(input);
+                if (size == 3 || size == 4 || size == 5 || size == 6 || size == 8) {
+                    boardSize = size;
+                    break;
+                }
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
         System.out.println("What in games rates do you want? (leave blank to move on)");
         while(true) {
@@ -100,7 +117,7 @@ public class BackPropTrainer {
                     for(double momentum : momentums) {
                         for(int hiddenSize : hiddenSizes) {
                             for(int games : gameLengths) {
-                                train(inGameRate, afterGameRate, momentum, hiddenSize, games);
+                                train(inGameRate, afterGameRate, momentum, hiddenSize, games, boardSize);
                             }
                         }
                     }
@@ -114,10 +131,12 @@ public class BackPropTrainer {
     }
 
     public static void train(double inGameRate, double afterGameRate, double momentum,
-                             int hiddenSize, int games) {
+                             int hiddenSize, int games, int boardSize) {
         System.out.println("Initializing training...");
+        String label = "master";
 
-        FeedForwardNeuralNetwork net = new FeedForwardNeuralNetwork(1, new int[]{94, hiddenSize, 2}, ActivationFunction.LOGISTIC, momentum, inGameRate);
+        int inputSize = (boardSize * boardSize * 3) + (boardSize * 2) + 9;
+        FeedForwardNeuralNetwork net = new FeedForwardNeuralNetwork(1, new int[]{inputSize, hiddenSize, 2}, ActivationFunction.LOGISTIC, momentum, inGameRate);
 
         System.out.println("Training with the following parameters:");
         System.out.println("In game rate: " + inGameRate);
@@ -140,9 +159,9 @@ public class BackPropTrainer {
                 long thisTime = new Date().getTime();
                 long timeLeft = (games - i) * ((thisTime - firstTime) / i) / 1000 / 60;
                 int winPercent = RateNet.getWinPercent(net);
-                System.out.printf("Game %d- %d%% win rate, %d:%02d remaining\n", i, winPercent, timeLeft / 60, timeLeft % 60);
+                System.out.printf("Game %8d- %3d%% win rate, %3d:%02d remaining\n", i, winPercent, timeLeft / 60, timeLeft % 60);
                 try {
-                    net.export(new File(inGameRate + "_" + afterGameRate + "_" + momentum + "_" + hiddenSize + "_" + games + ".json"));
+                    net.export(new File( boardSize + "_" + inGameRate + "_" + afterGameRate + "_" + momentum + "_" + hiddenSize + "_" + games + "_" + label + ".json"));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -150,7 +169,7 @@ public class BackPropTrainer {
         }
 
         try {
-            net.export(new File(inGameRate + "_" + afterGameRate + "_" + momentum + "_" + hiddenSize + "_" + games + ".json"));
+            net.export(new File(boardSize + "_" + inGameRate + "_" + afterGameRate + "_" + momentum + "_" + hiddenSize + "_" + games + "_" + label + ".json"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -159,6 +178,7 @@ public class BackPropTrainer {
     private static void playGame(FeedForwardNeuralNetwork net, double inGameRate, double afterGameRate, boolean pathOnly) {
         net.setLearningRate(inGameRate);
         GameState state = new GameState(Player.WHITE, 5);
+        SimpleNeuralPlayer player = new SimpleNeuralPlayer(net);
 
         int round = 0;
         while(!state.checkForWinner().isFinished()) {
@@ -167,33 +187,15 @@ public class BackPropTrainer {
             }
             round++;
             double[] lastInputs = NetUtils.getInputs(state, state.isWhiteTurn());
-            double[] max = new double[]{0,0};
-            Turn maxTurn = null;
-            for(Turn turn : state.getPossibleTurns()) {
-                state.executeTurn(turn);
-                double[] out = net.compute(NetUtils.getInputs(state, state.isWhiteTurn()));
-                if(state.isWhiteTurn()) {
-                    if(out[0] > max[0]) {
-                        max = out;
-                        maxTurn = turn;
-                    }
-                }
-                else {
-                    if(out[1] > max[1]) {
-                        max = out;
-                        maxTurn = turn;
-                    }
-                }
-                state.undoTurn();
-            }
+            Turn turn = player.getTurn((GameState)state.clone());
 
-            if(maxTurn != null) {
-                state.executeTurn(maxTurn);
+            if(turn != null) {
+                state.executeTurn(turn);
             }
             else {
                 break;
             }
-            net.backprop(lastInputs, max);
+            net.backprop(lastInputs, net.compute(NetUtils.getInputs(state, state.isWhiteTurn())));
         }
 
         GameResult result = state.checkForWinner();

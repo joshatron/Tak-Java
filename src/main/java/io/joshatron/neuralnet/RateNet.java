@@ -40,12 +40,15 @@ public class RateNet {
             }
             GameState state = new GameState(first, 5);
             while(!state.checkForWinner().isFinished()) {
+                state.printBoard();
                 if(state.isWhiteTurn()) {
-                    Turn turn = white.getTurn(state);
+                    Turn turn = white.getTurn((GameState)state.clone());
+                    System.out.println(turn);
                     state.executeTurn(turn);
                 }
                 else {
-                    Turn turn = black.getTurn(state);
+                    Turn turn = black.getTurn((GameState)state.clone());
+                    System.out.println(turn);
                     state.executeTurn(turn);
                 }
             }
