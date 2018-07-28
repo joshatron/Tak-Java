@@ -404,20 +404,34 @@ public class GameState implements Cloneable {
 
             board.getPosition(place.getLocation()).removePieces(1);
             //white made last turn
-            if(currentTurn == Player.BLACK) {
-                if(place.getPieceType() == PieceType.STONE || place.getPieceType() == PieceType.WALL) {
-                    whiteNormalPieces++;
-                }
-                else {
-                    whiteCapstones++;
+            if(turns.size() < 2) {
+                if (currentTurn == Player.WHITE) {
+                    if (place.getPieceType() == PieceType.STONE || place.getPieceType() == PieceType.WALL) {
+                        whiteNormalPieces++;
+                    } else {
+                        whiteCapstones++;
+                    }
+                } else {
+                    if (place.getPieceType() == PieceType.STONE || place.getPieceType() == PieceType.WALL) {
+                        blackNormalPieces++;
+                    } else {
+                        blackCapstones++;
+                    }
                 }
             }
             else {
-                if(place.getPieceType() == PieceType.STONE || place.getPieceType() == PieceType.WALL) {
-                    blackNormalPieces++;
-                }
-                else {
-                    blackCapstones++;
+                if (currentTurn == Player.BLACK) {
+                    if (place.getPieceType() == PieceType.STONE || place.getPieceType() == PieceType.WALL) {
+                        whiteNormalPieces++;
+                    } else {
+                        whiteCapstones++;
+                    }
+                } else {
+                    if (place.getPieceType() == PieceType.STONE || place.getPieceType() == PieceType.WALL) {
+                        blackNormalPieces++;
+                    } else {
+                        blackCapstones++;
+                    }
                 }
             }
         }

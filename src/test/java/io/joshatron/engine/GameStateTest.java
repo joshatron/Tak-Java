@@ -788,6 +788,27 @@ public class GameStateTest {
         Assert.assertTrue(state.isWhiteTurn());
     }
 
+    //Tests undo move on first 2 moves
+    @Test
+    public void undoMoveFirstTurns() {
+        GameState state = initializeState(3);
+        state.undoTurn();
+        Assert.assertTrue(state.getBoard().getPosition(0,0).getTopPiece().isBlack());
+        Assert.assertEquals(1, state.getBoard().getPosition(0,0).getHeight());
+        Assert.assertEquals(0,state.getBoard().getPosition(1,0).getHeight());
+        Assert.assertEquals(10,state.getWhiteNormalPiecesLeft());
+        Assert.assertEquals(0,state.getWhiteCapstonesLeft());
+        Assert.assertEquals(9,state.getBlackNormalPiecesLeft());
+        Assert.assertEquals(0,state.getBlackCapstonesLeft());
+        state.undoTurn();
+        Assert.assertEquals(0, state.getBoard().getPosition(0,0).getHeight());
+        Assert.assertEquals(0,state.getBoard().getPosition(1,0).getHeight());
+        Assert.assertEquals(10,state.getWhiteNormalPiecesLeft());
+        Assert.assertEquals(0,state.getWhiteCapstonesLeft());
+        Assert.assertEquals(10,state.getBlackNormalPiecesLeft());
+        Assert.assertEquals(0,state.getBlackCapstonesLeft());
+    }
+
     //Makes sure the initial number of pieces are correct to the rules
     @Test
     public void initializeTest() {
