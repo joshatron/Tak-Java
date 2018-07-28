@@ -6,13 +6,9 @@ import java.util.Scanner;
 
 public class HumanPlayer implements TakPlayer
 {
-    private Scanner reader;
-
-    public HumanPlayer(Scanner reader) {
-        this.reader = reader;
-    }
-
     public Turn getTurn(GameState state) {
+        Scanner reader = new Scanner(System.in);
+
         state.printBoard();
         while(true) {
             if (state.isWhiteTurn()) {

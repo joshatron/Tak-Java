@@ -48,12 +48,12 @@ public class PieceStack {
 
     public void collapseTopPiece() {
         int top = pieces.size() - 1;
-        pieces.set(top, new Piece(pieces.get(top).isWhite(), PieceType.STONE));
+        pieces.set(top, new Piece(pieces.get(top).getPlayer(), PieceType.STONE));
     }
 
     public void uncollapseTopPiece() {
         int top = pieces.size() - 1;
-        pieces.set(top, new Piece(pieces.get(top).isWhite(), PieceType.WALL));
+        pieces.set(top, new Piece(pieces.get(top).getPlayer(), PieceType.WALL));
     }
 
     public Piece getTopPiece() {

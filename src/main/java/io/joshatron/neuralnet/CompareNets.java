@@ -35,7 +35,7 @@ public class CompareNets {
             for(NetWithStats black : nets) {
                 //don't play against yourself
                 if(white != black) {
-                    GameState state = new GameState(true, 5);
+                    GameState state = new GameState(Player.WHITE, 5);
                     SimpleNeuralPlayer whitePlayer = new SimpleNeuralPlayer(white.getNet());
                     SimpleNeuralPlayer blackPlayer = new SimpleNeuralPlayer(black.getNet());
                     while (!state.checkForWinner().isFinished()) {
@@ -62,11 +62,22 @@ public class CompareNets {
             }
         }
 
+        int best = 0;
+        NetWithStats bestNet = nets.get(0);
         //display results
         for(NetWithStats net : nets) {
             System.out.println(net);
             System.out.println();
+
+            if(net.getWins() > best) {
+                best = net.getWins();
+                bestNet = net;
+            }
         }
+
+        System.out.println("Best net:");
+        System.out.println(bestNet);
+        System.out.println();
 
         //run the analysis
         ArrayList<Analysis> inGameRate = new ArrayList<>();

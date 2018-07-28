@@ -1,71 +1,184 @@
 package io.joshatron.neuralnet;
 
 import io.joshatron.engine.*;
+import io.joshatron.player.SimpleNeuralPlayer;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Scanner;
 
 public class BackPropTrainer {
 
-    public static void main(String[] args) {
-        double[] inGameRate = {.005,.01,.015,.02,.025};
-        double[] afterGameRate = {.01,.05,.1};
-        double[] momentum = {0};
-        int[] hiddenSize = {40};
-        int games = 500000;
+    public static void runTrainingSet() {
+        Scanner scanner = new Scanner(System.in);
+        ArrayList<Double> inGameRates = new ArrayList<>();
+        ArrayList<Double> afterGameRates = new ArrayList<>();
+        ArrayList<Double> momentums = new ArrayList<>();
+        ArrayList<Integer> hiddenSizes = new ArrayList<>();
+        ArrayList<Integer> gameLengths = new ArrayList<>();
+        int boardSize;
 
-        System.out.println("Initializing training...");
+        while(true) {
+            System.out.print("What board size would you like? ");
+            String input = scanner.nextLine().trim();
+            try {
+                int size = Integer.parseInt(input);
+                if (size == 3 || size == 4 || size == 5 || size == 6 || size == 8) {
+                    boardSize = size;
+                    break;
+                }
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
-        for(double inGame : inGameRate) {
-            for(double afterGame : afterGameRate) {
-                for(double mom : momentum) {
-                    for(int hidden : hiddenSize) {
-                        FeedForwardNeuralNetwork net = new FeedForwardNeuralNetwork(1, new int[]{94, hidden, 2}, ActivationFunction.LOGISTIC, mom, inGame);
-                        System.out.println("Training with the following parameters:");
-                        System.out.println("In game rate: " + inGame);
-                        System.out.println("After game rate: " + afterGame);
-                        System.out.println("Momentum: " + mom);
-                        System.out.println("Hidden size: " + hidden);
-                        System.out.println("Initial win rate: " + RateNet.getWinPercent(net) + "%");
-                        System.out.println();
-
-                        long firstTime = new Date().getTime();
-
-                        for (int i = 0; i < games; i++) {
-                            if (i < games / 2) {
-                                playGame(net, inGame, afterGame, true);
-                            } else {
-                                playGame(net, inGame, afterGame, false);
+        System.out.println("What in games rates do you want? (leave blank to move on)");
+        while(true) {
+            System.out.print("> ");
+            String input = scanner.nextLine();
+            if(input.length() == 0) {
+                break;
+            }
+            try {
+                double inGameRate = Double.parseDouble(input);
+                inGameRates.add(inGameRate);
+            }
+            catch(Exception e) {
+                System.out.println("Invalid number. Please enter a valid floating point number.");
+            }
+        }
+        System.out.println("What after games rates do you want? (leave blank to move on)");
+        while(true) {
+            System.out.print("> ");
+            String input = scanner.nextLine();
+            if(input.length() == 0) {
+                break;
+            }
+            try {
+                double afterGameRate = Double.parseDouble(input);
+                afterGameRates.add(afterGameRate);
+            }
+            catch(Exception e) {
+                System.out.println("Invalid number. Please enter a valid floating point number.");
+            }
+        }
+        System.out.println("What momentums do you want? (leave blank to move on)");
+        while(true) {
+            System.out.print("> ");
+            String input = scanner.nextLine();
+            if(input.length() == 0) {
+                break;
+            }
+            try {
+                double momentum = Double.parseDouble(input);
+                momentums.add(momentum);
+            }
+            catch(Exception e) {
+                System.out.println("Invalid number. Please enter a valid floating point number.");
+            }
+        }
+        System.out.println("What hidden layer sizes do you want? (leave blank to move on)");
+        while(true) {
+            System.out.print("> ");
+            String input = scanner.nextLine();
+            if(input.length() == 0) {
+                break;
+            }
+            try {
+                int hidden = Integer.parseInt(input);
+                hiddenSizes.add(hidden);
+            }
+            catch(Exception e) {
+                System.out.println("Invalid number. Please enter a valid integer.");
+            }
+        }
+        System.out.println("What game rounds do you want? (leave blank to move on)");
+        while(true) {
+            System.out.print("> ");
+            String input = scanner.nextLine();
+            if(input.length() == 0) {
+                break;
+            }
+            try {
+                int games = Integer.parseInt(input);
+                gameLengths.add(games);
+            }
+            catch(Exception e) {
+                System.out.println("Invalid number. Please enter a valid integer.");
+            }
+        }
+        if(inGameRates.size() > 0 && afterGameRates.size() > 0 && momentums.size() > 0 &&
+           hiddenSizes.size() > 0 && gameLengths.size() > 0) {
+            for(double inGameRate : inGameRates) {
+                for(double afterGameRate : afterGameRates) {
+                    for(double momentum : momentums) {
+                        for(int hiddenSize : hiddenSizes) {
+                            for(int games : gameLengths) {
+                                train(inGameRate, afterGameRate, momentum, hiddenSize, games, boardSize);
                             }
-
-                            if (i % 1000 == 0 && i != 0) {
-                                long thisTime = new Date().getTime();
-                                long timeLeft = (games - i) * ((thisTime - firstTime) / i) / 1000 / 60;
-                                int winPercent = RateNet.getWinPercent(net);
-                                System.out.printf("Game %d- %d%% win rate, %d:%02d remaining\n", i, winPercent, timeLeft / 60, timeLeft % 60);
-                                try {
-                                    net.export(new File(inGame + "_" + afterGame + "_" + mom + "_" + hidden + "_" + games + ".json"));
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-
-                        try {
-                            net.export(new File(inGame + "_" + afterGame + "_" + mom + "_" + hidden + "_" + games + ".json"));
-                        } catch (IOException e) {
-                            e.printStackTrace();
                         }
                     }
                 }
             }
         }
+        else {
+            System.out.println("Invalid parameters. Quitting.");
+        }
+
+    }
+
+    public static void train(double inGameRate, double afterGameRate, double momentum,
+                             int hiddenSize, int games, int boardSize) {
+        System.out.println("Initializing training...");
+        String label = "master";
+
+        int inputSize = (boardSize * boardSize * 3) + (boardSize * 2) + 9;
+        FeedForwardNeuralNetwork net = new FeedForwardNeuralNetwork(1, new int[]{inputSize, hiddenSize, 2}, ActivationFunction.LOGISTIC, momentum, inGameRate);
+
+        System.out.println("Training with the following parameters:");
+        System.out.println("In game rate: " + inGameRate);
+        System.out.println("After game rate: " + afterGameRate);
+        System.out.println("Momentum: " + momentum);
+        System.out.println("Hidden size: " + hiddenSize);
+        System.out.println("Initial win rate: " + RateNet.getWinPercent(net).getWinPercentage() + "%");
+        System.out.println();
+
+        long firstTime = new Date().getTime();
+
+        for (int i = 0; i < games; i++) {
+            if (i < (games * 3) / 4) {
+                playGame(net, inGameRate, afterGameRate, true);
+            } else {
+                playGame(net, inGameRate, afterGameRate, false);
+            }
+
+            if (i % 1000 == 0 && i != 0) {
+                long thisTime = new Date().getTime();
+                long timeLeft = (games - i) * ((thisTime - firstTime) / i) / 1000 / 60;
+                RateNetResults results = RateNet.getWinPercent(net);
+                System.out.printf("Game %8d- %3d%% win rate, %3d%% of which by path, %3d:%02d remaining\n", i, (int)results.getWinPercentage(), (int)results.getPathPercentage(), timeLeft / 60, timeLeft % 60);
+                try {
+                    net.export(new File( boardSize + "_" + inGameRate + "_" + afterGameRate + "_" + momentum + "_" + hiddenSize + "_" + games + "_" + label + ".json"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        try {
+            net.export(new File(boardSize + "_" + inGameRate + "_" + afterGameRate + "_" + momentum + "_" + hiddenSize + "_" + games + "_" + label + ".json"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void playGame(FeedForwardNeuralNetwork net, double inGameRate, double afterGameRate, boolean pathOnly) {
         net.setLearningRate(inGameRate);
-        GameState state = new GameState(true, 5);
+        GameState state = new GameState(Player.WHITE, 5);
+        SimpleNeuralPlayer player = new SimpleNeuralPlayer(net);
 
         int round = 0;
         while(!state.checkForWinner().isFinished()) {
@@ -74,33 +187,15 @@ public class BackPropTrainer {
             }
             round++;
             double[] lastInputs = NetUtils.getInputs(state, state.isWhiteTurn());
-            double[] max = new double[]{0,0};
-            Turn maxTurn = null;
-            for(Turn turn : state.getPossibleTurns()) {
-                state.executeTurn(turn);
-                double[] out = net.compute(NetUtils.getInputs(state, state.isWhiteTurn()));
-                if(state.isWhiteTurn()) {
-                    if(out[0] > max[0]) {
-                        max = out;
-                        maxTurn = turn;
-                    }
-                }
-                else {
-                    if(out[1] > max[1]) {
-                        max = out;
-                        maxTurn = turn;
-                    }
-                }
-                state.undoTurn();
-            }
+            Turn turn = player.getTurn((GameState)state.clone());
 
-            if(maxTurn != null) {
-                state.executeTurn(maxTurn);
+            if(turn != null) {
+                state.executeTurn(turn);
             }
             else {
                 break;
             }
-            net.backprop(lastInputs, max);
+            net.backprop(lastInputs, net.compute(NetUtils.getInputs(state, state.isWhiteTurn())));
         }
 
         GameResult result = state.checkForWinner();

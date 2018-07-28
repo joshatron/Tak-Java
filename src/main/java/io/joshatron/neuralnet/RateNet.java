@@ -1,5 +1,6 @@
 package io.joshatron.neuralnet;
 
+import io.joshatron.engine.GameResult;
 import io.joshatron.engine.GameState;
 import io.joshatron.engine.Player;
 import io.joshatron.engine.Turn;
@@ -15,8 +16,8 @@ public class RateNet {
     public static void main(String[] args) {
         System.out.println("Beginning test...");
         try {
-            int netWin = getWinPercent(new FeedForwardNeuralNetwork(new File("0.005_0.01_0.0_25_500000.json")));
-            System.out.println("The net won " + netWin + "% of the time");
+            RateNetResults results = getWinPercent(new FeedForwardNeuralNetwork(new File("0.005_0.01_0.0_25_500000.json")));
+            System.out.println("The net won " + (int)results.getWinPercentage() + "% of the time");
         } catch (IOException e) {
             System.out.println("Failed to find net");
             e.printStackTrace();
@@ -25,31 +26,40 @@ public class RateNet {
 
     //Returns a value between 0 and 100
     //Represents the win percentage against a random player
-    public static int getWinPercent(FeedForwardNeuralNetwork net) {
+    public static RateNetResults getWinPercent(FeedForwardNeuralNetwork net) {
         TakPlayer white = new SimpleNeuralPlayer(net);
         TakPlayer black = new RandomPlayer();
-        boolean first = false;
-        int netWin = 0;
+        Player first = Player.BLACK;
+        RateNetResults results = new RateNetResults();
 
         for(int i = 0; i < 100; i++) {
-            first = !first;
+            if(first == Player.WHITE) {
+                first = Player.BLACK;
+            }
+            else {
+                first = Player.WHITE;
+            }
             GameState state = new GameState(first, 5);
             while(!state.checkForWinner().isFinished()) {
                 if(state.isWhiteTurn()) {
-                    Turn turn = white.getTurn(state);
+                    Turn turn = white.getTurn((GameState)state.clone());
                     state.executeTurn(turn);
                 }
                 else {
-                    Turn turn = black.getTurn(state);
+                    Turn turn = black.getTurn((GameState)state.clone());
                     state.executeTurn(turn);
                 }
             }
 
-            if(state.checkForWinner().getWinner() == Player.WHITE) {
-                netWin++;
+            GameResult gameResult = state.checkForWinner();
+            if(gameResult.getWinner() == Player.WHITE) {
+                results.addWin(gameResult.getReason());
+            }
+            else {
+                results.addLoss();
             }
         }
 
-        return netWin;
+        return results;
     }
 }

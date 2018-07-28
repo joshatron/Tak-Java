@@ -13,7 +13,7 @@ public class GameStateTest {
 
     //Initialize state and get first 2 moves out of the way
     private GameState initializeState(int size) {
-        GameState state = new GameState(true, size);
+        GameState state = new GameState(Player.WHITE, size);
         PlaceTurn turn = new PlaceTurn(new BoardLocation(0,0), PieceType.STONE);
         Assert.assertTrue(state.executeTurn(turn));
         turn = new PlaceTurn(new BoardLocation(1,0), PieceType.STONE);
@@ -121,7 +121,7 @@ public class GameStateTest {
     //Tests that you can't place a piece off the board
     @Test
     public void isLegalTurnPlaceOffBoard() {
-        GameState state = new GameState(false, 3);
+        GameState state = new GameState(Player.BLACK, 3);
         //Black
         PlaceTurn turn = new PlaceTurn(new BoardLocation(-1,-1), PieceType.STONE);
         Assert.assertFalse(state.isLegalTurn(turn));
@@ -195,7 +195,7 @@ public class GameStateTest {
     //Makes sure you can't place anything besides stones for the first 2 turns
     @Test
     public void isLegalTurnPlaceBadFirstMoves() {
-        GameState state = new GameState(true, 5);
+        GameState state = new GameState(Player.WHITE, 5);
         //white illegal turns
         PlaceTurn turn = new PlaceTurn(0,0,PieceType.CAPSTONE);
         Assert.assertFalse(state.isLegalTurn(turn));
@@ -330,7 +330,7 @@ public class GameStateTest {
     //Tests if you try to do a move in the first 2 turns
     @Test
     public void isLegalTurnMoveBadFirstMoves() {
-        GameState state = new GameState(true,5);
+        GameState state = new GameState(Player.WHITE,5);
 
         PlaceTurn place = new PlaceTurn(0,0,PieceType.STONE);
         Assert.assertTrue(state.executeTurn(place));
@@ -341,7 +341,7 @@ public class GameStateTest {
     //Tests a straight horizontal win path
     @Test
     public void checkForWinnerStraightHorizontal() {
-        GameState state = new GameState(true,3);
+        GameState state = new GameState(Player.WHITE,3);
 
         PlaceTurn place = new PlaceTurn(0,1,PieceType.STONE);
         Assert.assertTrue(state.executeTurn(place));
@@ -360,7 +360,7 @@ public class GameStateTest {
     //Tests a straight vertical win path
     @Test
     public void checkForWinnerStraightVertical() {
-        GameState state = new GameState(false,3);
+        GameState state = new GameState(Player.BLACK,3);
 
         PlaceTurn place = new PlaceTurn(0,0,PieceType.STONE);
         Assert.assertTrue(state.executeTurn(place));
@@ -379,7 +379,7 @@ public class GameStateTest {
     //Tests a non-straight horizontal win path
     @Test
     public void checkForWinnerCurvyHorizontal() {
-        GameState state = new GameState(true,6);
+        GameState state = new GameState(Player.WHITE,6);
 
         MoveTurn moveDown = new MoveTurn(5,0,1,Direction.SOUTH,new int[]{1});
         MoveTurn moveUp = new MoveTurn(5,1,1,Direction.NORTH,new int[]{1});
@@ -439,7 +439,7 @@ public class GameStateTest {
     //Tests a non-straight vertical win path
     @Test
     public void checkForWinnerCurvyVertical() {
-        GameState state = new GameState(false,6);
+        GameState state = new GameState(Player.BLACK,6);
 
         MoveTurn moveDown = new MoveTurn(5,0,1,Direction.SOUTH,new int[]{1});
         MoveTurn moveUp = new MoveTurn(5,1,1,Direction.NORTH,new int[]{1});
@@ -490,7 +490,7 @@ public class GameStateTest {
     //Tests that walls can't be in win paths
     @Test
     public void checkForWinnerWallInPath() {
-        GameState state = new GameState(true,3);
+        GameState state = new GameState(Player.WHITE,3);
 
         PlaceTurn place = new PlaceTurn(0,1,PieceType.STONE);
         Assert.assertTrue(state.executeTurn(place));
@@ -509,7 +509,7 @@ public class GameStateTest {
     //Tests that capstones can be in win paths
     @Test
     public void checkForWinnerCapstoneInPath() {
-        GameState state = new GameState(true,5);
+        GameState state = new GameState(Player.WHITE,5);
 
         PlaceTurn place = new PlaceTurn(0,1,PieceType.STONE);
         Assert.assertTrue(state.executeTurn(place));
@@ -536,7 +536,7 @@ public class GameStateTest {
     //Tests that the top spot in a stack is the one counted
     @Test
     public void checkForWinnerStacks() {
-        GameState state = new GameState(true,3);
+        GameState state = new GameState(Player.WHITE,3);
 
         PlaceTurn place = new PlaceTurn(1,1,PieceType.STONE);
         Assert.assertTrue(state.executeTurn(place));
@@ -559,7 +559,7 @@ public class GameStateTest {
     //Tests that diagonals don't count toward win paths
     @Test
     public void checkForWinnerDiagonals() {
-        GameState state = new GameState(false,3);
+        GameState state = new GameState(Player.BLACK,3);
 
         PlaceTurn place = new PlaceTurn(0,1,PieceType.STONE);
         Assert.assertTrue(state.executeTurn(place));
@@ -602,7 +602,7 @@ public class GameStateTest {
     //Tests the win condition that happens when a player runs out of pieces
     @Test
     public void checkForWinnerOutOfPieces() {
-        GameState state = new GameState(true,5);
+        GameState state = new GameState(Player.WHITE,5);
 
         PlaceTurn place = new PlaceTurn(1,0,PieceType.STONE);
         Assert.assertTrue(state.executeTurn(place));
@@ -638,7 +638,7 @@ public class GameStateTest {
     //Makes sure the right player wins when both players get a road in the final move
     @Test
     public void checkForWinnerDoubleRoad() {
-        GameState state = new GameState(true,3);
+        GameState state = new GameState(Player.WHITE,3);
 
         PlaceTurn place = new PlaceTurn(0,1,PieceType.STONE);
         Assert.assertTrue(state.executeTurn(place));
@@ -788,39 +788,60 @@ public class GameStateTest {
         Assert.assertTrue(state.isWhiteTurn());
     }
 
+    //Tests undo move on first 2 moves
+    @Test
+    public void undoMoveFirstTurns() {
+        GameState state = initializeState(3);
+        state.undoTurn();
+        Assert.assertTrue(state.getBoard().getPosition(0,0).getTopPiece().isBlack());
+        Assert.assertEquals(1, state.getBoard().getPosition(0,0).getHeight());
+        Assert.assertEquals(0,state.getBoard().getPosition(1,0).getHeight());
+        Assert.assertEquals(10,state.getWhiteNormalPiecesLeft());
+        Assert.assertEquals(0,state.getWhiteCapstonesLeft());
+        Assert.assertEquals(9,state.getBlackNormalPiecesLeft());
+        Assert.assertEquals(0,state.getBlackCapstonesLeft());
+        state.undoTurn();
+        Assert.assertEquals(0, state.getBoard().getPosition(0,0).getHeight());
+        Assert.assertEquals(0,state.getBoard().getPosition(1,0).getHeight());
+        Assert.assertEquals(10,state.getWhiteNormalPiecesLeft());
+        Assert.assertEquals(0,state.getWhiteCapstonesLeft());
+        Assert.assertEquals(10,state.getBlackNormalPiecesLeft());
+        Assert.assertEquals(0,state.getBlackCapstonesLeft());
+    }
+
     //Makes sure the initial number of pieces are correct to the rules
     @Test
     public void initializeTest() {
         //3x3
-        GameState state = new GameState(true, 3);
+        GameState state = new GameState(Player.WHITE, 3);
         Assert.assertEquals(10, state.getWhiteNormalPiecesLeft());
         Assert.assertEquals(0, state.getWhiteCapstonesLeft());
         Assert.assertEquals(10, state.getBlackNormalPiecesLeft());
         Assert.assertEquals(0, state.getBlackCapstonesLeft());
         Assert.assertEquals(3, state.getBoardSize());
         //4x4
-        state = new GameState(true, 4);
+        state = new GameState(Player.WHITE, 4);
         Assert.assertEquals(15, state.getWhiteNormalPiecesLeft());
         Assert.assertEquals(0, state.getWhiteCapstonesLeft());
         Assert.assertEquals(15, state.getBlackNormalPiecesLeft());
         Assert.assertEquals(0, state.getBlackCapstonesLeft());
         Assert.assertEquals(4, state.getBoardSize());
         //5x5
-        state = new GameState(true, 5);
+        state = new GameState(Player.WHITE, 5);
         Assert.assertEquals(21, state.getWhiteNormalPiecesLeft());
         Assert.assertEquals(1, state.getWhiteCapstonesLeft());
         Assert.assertEquals(21, state.getBlackNormalPiecesLeft());
         Assert.assertEquals(1, state.getBlackCapstonesLeft());
         Assert.assertEquals(5, state.getBoardSize());
         //6x6
-        state = new GameState(true, 6);
+        state = new GameState(Player.WHITE, 6);
         Assert.assertEquals(30, state.getWhiteNormalPiecesLeft());
         Assert.assertEquals(1, state.getWhiteCapstonesLeft());
         Assert.assertEquals(30, state.getBlackNormalPiecesLeft());
         Assert.assertEquals(1, state.getBlackCapstonesLeft());
         Assert.assertEquals(6, state.getBoardSize());
         //8x8
-        state = new GameState(true, 8);
+        state = new GameState(Player.WHITE, 8);
         Assert.assertEquals(50, state.getWhiteNormalPiecesLeft());
         Assert.assertEquals(2, state.getWhiteCapstonesLeft());
         Assert.assertEquals(50, state.getBlackNormalPiecesLeft());
