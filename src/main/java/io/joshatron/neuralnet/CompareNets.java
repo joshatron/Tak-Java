@@ -99,6 +99,7 @@ public class CompareNets {
         }
 
         inGameRate.sort(Comparator.comparing(Analysis::getName));
+        afterGameRate.sort(Comparator.comparing(Analysis::getName));
 
         System.out.println("In game rates");
         for(Analysis inGame : inGameRate) {
