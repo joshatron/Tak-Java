@@ -853,6 +853,31 @@ public class GameStateTest {
     //all given turns are legal and that there are the right number of them.
     //This gives reasonable certainty of correctness without building large
     //lists and having to sort and compare them
+    private boolean verifyState(GameState state, int possible) {
+        ArrayList<Turn> turns = state.getPossibleTurns();
+
+        //makes sure there are the correct number of possible turns
+        if(turns.size() != possible) {
+            return false;
+        }
+
+        //verify each possible turn
+        for(int i = 0; i < turns.size(); i++) {
+            //make sure the possible turn is legal
+            if(!state.isLegalTurn(turns.get(i))) {
+                return false;
+            }
+
+            //verify that no two possible moves are the same
+            for(int j = i + 1; j < turns.size(); j++) {
+                if(turns.get(i).toString().equals(turns.get(j).toString())) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
 
     //Tests basic operation of getPossibleTurns
     @Test
@@ -887,6 +912,10 @@ public class GameStateTest {
     //Tests correct behavior when it is the first 2 turns of the game
     @Test
     public void getPossibleTurnsFirstTurns() {
-
+        GameState state = new GameState(Player.WHITE, 5);
+        Assert.assertTrue(verifyState(state, 25));
+        PlaceTurn place = new PlaceTurn(1,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(verifyState(state, 24));
     }
 }
