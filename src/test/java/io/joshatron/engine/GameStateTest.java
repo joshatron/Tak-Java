@@ -858,6 +858,7 @@ public class GameStateTest {
 
         //makes sure there are the correct number of possible turns
         if(turns.size() != possible) {
+            System.out.println("Verify getPossibleTurns failed on: illegal size (" + turns.size() + ")");
             return false;
         }
 
@@ -865,12 +866,14 @@ public class GameStateTest {
         for(int i = 0; i < turns.size(); i++) {
             //make sure the possible turn is legal
             if(!state.isLegalTurn(turns.get(i))) {
+                System.out.println("Verify getPossibleTurns failed on: illegal turn");
                 return false;
             }
 
             //verify that no two possible moves are the same
             for(int j = i + 1; j < turns.size(); j++) {
                 if(turns.get(i).toString().equals(turns.get(j).toString())) {
+                    System.out.println("Verify getPossibleTurns failed on: duplicate");
                     return false;
                 }
             }
@@ -882,7 +885,26 @@ public class GameStateTest {
     //Tests basic operation of getPossibleTurns
     @Test
     public void getPossibleTurnsNormal() {
-
+        GameState state = initializeState(5);
+        Assert.assertTrue(verifyState(state, 72));
+        PlaceTurn place = new PlaceTurn(2,2,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(verifyState(state, 68));
+        place = new PlaceTurn(1,2,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(verifyState(state, 70));
+        place = new PlaceTurn(2,1,PieceType.CAPSTONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(verifyState(state, 66));
+        place = new PlaceTurn(3,3,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(verifyState(state, 48));
+        MoveTurn move = new MoveTurn(2,1,1,Direction.SOUTH,new int[]{1});
+        Assert.assertTrue(state.executeTurn(move));
+        Assert.assertTrue(verifyState(state, 69));
+        place = new PlaceTurn(2,3,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(verifyState(state, 53));
     }
 
     //Tests correct behavior when a move can go off the board
@@ -891,15 +913,9 @@ public class GameStateTest {
 
     }
 
-    //Tests correct behavior when a move can interact with a capstone in the way
+    //Tests correct behavior when a move can interact with different pieces in the way
     @Test
-    public void getPossibleTurnsCapstoneInWay() {
-
-    }
-
-    //Tests correct behavior when a move can interact with a wall in the way
-    @Test
-    public void getPossibleTurnsWallInWay() {
+    public void getPossibleTurnsPieceInWay() {
 
     }
 

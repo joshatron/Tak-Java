@@ -47,7 +47,7 @@ public class GameBoard {
     }
 
     public void printBoard() {
-        int maxSize = 0;
+        int maxSize = 1;
         for(int x = 0; x < boardSize; x++) {
             for(int y = 0; y < boardSize; y++) {
                 if(board[x][y].getString().length() > maxSize) {
