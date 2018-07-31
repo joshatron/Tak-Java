@@ -926,16 +926,38 @@ public class GameStateTest {
         Assert.assertTrue(verifyState(state,26));
     }
 
-    //Tests correct behavior when a move can go off the board
+    //Tests correct behavior when a move can go off the board and when different
+    //pieces are in the way
     @Test
-    public void getPossibleTurnsBoardEdge() {
-
-    }
-
-    //Tests correct behavior when a move can interact with different pieces in the way
-    @Test
-    public void getPossibleTurnsPieceInWay() {
-
+    public void getPossibleTurnsBoardEdgeAndPieceInWay() {
+        GameState state = initializeState(5);
+        MoveTurn move = new MoveTurn(1,0,1,Direction.WEST,new int[]{1});
+        Assert.assertTrue(state.executeTurn(move));
+        PlaceTurn place = new PlaceTurn(0,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        move = new MoveTurn(0,0,2,Direction.SOUTH,new int[]{2});
+        Assert.assertTrue(state.executeTurn(move));
+        place = new PlaceTurn(1,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        move = new MoveTurn(0,1,3,Direction.EAST,new int[]{3});
+        Assert.assertTrue(state.executeTurn(move));
+        place = new PlaceTurn(4,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(verifyState(state,105));
+        place = new PlaceTurn(1,0,PieceType.CAPSTONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(1,3,PieceType.CAPSTONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(0,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(3,1,PieceType.WALL);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(verifyState(state,54));
+        move = new MoveTurn(1,0,1,Direction.SOUTH,new int[]{1});
+        Assert.assertTrue(state.executeTurn(move));
+        place = new PlaceTurn(4,4,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(verifyState(state,64));
     }
 
     //Tests correct behavior when a player is out of a certain type of piece
