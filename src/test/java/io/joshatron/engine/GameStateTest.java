@@ -907,6 +907,25 @@ public class GameStateTest {
         Assert.assertTrue(verifyState(state, 53));
     }
 
+    //Tests correct behavior when a stack is taller than the max pickup height
+    @Test
+    public void getPossibleTurnsMaxHeight() {
+        GameState state = initializeState(3);
+        MoveTurn move = new MoveTurn(1,0,1,Direction.WEST,new int[]{1});
+        Assert.assertTrue(state.executeTurn(move));
+        PlaceTurn place = new PlaceTurn(1,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        move = new MoveTurn(0,0,2,Direction.EAST,new int[]{2});
+        Assert.assertTrue(state.executeTurn(move));
+        place = new PlaceTurn(1,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        move = new MoveTurn(1,0,3,Direction.SOUTH,new int[]{3});
+        Assert.assertTrue(state.executeTurn(move));
+        place = new PlaceTurn(0,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(verifyState(state,26));
+    }
+
     //Tests correct behavior when a move can go off the board
     @Test
     public void getPossibleTurnsBoardEdge() {
