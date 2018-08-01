@@ -963,7 +963,34 @@ public class GameStateTest {
     //Tests correct behavior when a player is out of a certain type of piece
     @Test
     public void getPossibleTurnsOutOfPieceType() {
+        GameState state = new GameState(Player.WHITE,5);
 
+        PlaceTurn place = new PlaceTurn(1,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(0,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        for(int i = 0; i < 2; i++) {
+            for(int y = 1; y < 5; y++) {
+                place = new PlaceTurn(0,y,PieceType.STONE);
+                Assert.assertTrue(state.executeTurn(place));
+                for(int x = 1; x < 5 - i; x++) {
+                    place = new PlaceTurn(x,y,PieceType.STONE);
+                    Assert.assertTrue(state.executeTurn(place));
+                    MoveTurn move = new MoveTurn(x-1,y,x,Direction.EAST,new int[]{x});
+                    Assert.assertTrue(state.executeTurn(move));
+                }
+            }
+        }
+
+        place = new PlaceTurn(2,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(3,0,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(0,1,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        place = new PlaceTurn(0,2,PieceType.STONE);
+        Assert.assertTrue(state.executeTurn(place));
+        Assert.assertTrue(verifyState(state,211));
     }
 
     //Tests correct behavior when it is the first 2 turns of the game
