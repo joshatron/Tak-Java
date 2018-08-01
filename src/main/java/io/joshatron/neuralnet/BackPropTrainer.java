@@ -159,7 +159,7 @@ public class BackPropTrainer {
                 long thisTime = new Date().getTime();
                 long timeLeft = (games - i) * ((thisTime - firstTime) / i) / 1000 / 60;
                 RateNetResults results = RateNet.getWinPercent(net);
-                System.out.printf("Game %8d- %3d%% win rate, %3d%% of which by path, %3d:%02d remaining\n", i, (int)results.getWinPercentage(), (int)results.getPathPercentage(), timeLeft / 60, timeLeft % 60);
+                System.out.printf("Game %8d- %3d%% win rate, %3d%% of which by path, %3d:%02d remaining, label: %s\n", i, (int)results.getWinPercentage(), (int)results.getPathPercentage(), timeLeft / 60, timeLeft % 60, label);
                 try {
                     net.export(new File( boardSize + "_" + inGameRate + "_" + afterGameRate + "_" + momentum + "_" + hiddenSize + "_" + games + "_" + label + ".json"));
                 } catch (Exception e) {
