@@ -227,14 +227,16 @@ public class NetUtils {
          String name = file.getName();
          name = name.substring(0,name.length() - 5);
          String[] names = name.split("_");
-         double inGameRate = Double.parseDouble(names[0]);
-         double afterGameRate = Double.parseDouble(names[1]);
-         double momentum = Double.parseDouble(names[2]);
-         int hiddenSize = Integer.parseInt(names[3]);
-         int games = Integer.parseInt(names[4]);
+         int boardSize = Integer.parseInt(names[0]);
+         double inGameRate = Double.parseDouble(names[1]);
+         double afterGameRate = Double.parseDouble(names[2]);
+         double momentum = Double.parseDouble(names[3]);
+         int hiddenSize = Integer.parseInt(names[4]);
+         int games = Integer.parseInt(names[5]);
+         String label = names[6];
 
         try {
-            return new NetWithStats(inGameRate, afterGameRate, momentum, hiddenSize, games, new FeedForwardNeuralNetwork(file));
+            return new NetWithStats(inGameRate, afterGameRate, momentum, hiddenSize, games, boardSize, label, new FeedForwardNeuralNetwork(file));
         } catch (IOException e) {
             e.printStackTrace();
             return null;

@@ -15,7 +15,7 @@ import java.util.Comparator;
  */
 public class CompareNets {
 
-    public static void main(String[] args) {
+    public static void compareAllNets() {
         ArrayList<NetWithStats> nets = new ArrayList<>();
 
         //Collect all networks
@@ -30,12 +30,17 @@ public class CompareNets {
             }
         }
 
+        if(nets.size() == 0) {
+            System.out.println("No nets to test. Quitting");
+            return;
+        }
+
         //run round robin tournament each player plays each other as both black and white. White always goes first
         for(NetWithStats white : nets) {
             for(NetWithStats black : nets) {
                 //don't play against yourself
                 if(white != black) {
-                    GameState state = new GameState(Player.WHITE, 5);
+                    GameState state = new GameState(Player.WHITE, white.getBoardSize());
                     SimpleNeuralPlayer whitePlayer = new SimpleNeuralPlayer(white.getNet());
                     SimpleNeuralPlayer blackPlayer = new SimpleNeuralPlayer(black.getNet());
                     while (!state.checkForWinner().isFinished()) {

@@ -1,6 +1,5 @@
 package io.joshatron.cli;
 
-import io.joshatron.neuralnet.BackPropTrainer;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.impl.completer.StringsCompleter;
@@ -14,18 +13,18 @@ public class App
         try {
             LineReader lineReader = LineReaderBuilder.builder()
                     .terminal(TerminalBuilder.terminal())
-                    .completer(new StringsCompleter("training", "playing"))
+                    .completer(new StringsCompleter("trainer", "player"))
                     .build();
             System.out.println("---------------------");
             System.out.println("| Welcome to TakCLI |");
             System.out.println("---------------------");
             System.out.println();
             while (true) {
-                String input = lineReader.readLine("Are you training or playing? ").trim();
-                if (input.toLowerCase().equals("training")) {
-                    BackPropTrainer.runTrainingSet();
+                String input = lineReader.readLine("Are you trainer or player? ").trim();
+                if (input.toLowerCase().equals("trainer")) {
+                    Trainer.setupTraining();
                     break;
-                } else if (input.toLowerCase().equals("playing")) {
+                } else if (input.toLowerCase().equals("player")) {
                     GamePlayer.runGameSet();
                     break;
                 }
