@@ -16,7 +16,7 @@ public class RateNet {
     public static void main(String[] args) {
         System.out.println("Beginning test...");
         try {
-            RateNetResults results = getWinPercent(new FeedForwardNeuralNetwork(new File("0.005_0.01_0.0_25_500000.json")));
+            RateNetResults results = getWinPercent(new FeedForwardNeuralNetwork(new File("0.005_0.01_0.0_25_500000.json")), 5);
             System.out.println("The net won " + (int)results.getWinPercentage() + "% of the time");
         } catch (IOException e) {
             System.out.println("Failed to find net");
@@ -26,7 +26,7 @@ public class RateNet {
 
     //Returns a value between 0 and 100
     //Represents the win percentage against a random player
-    public static RateNetResults getWinPercent(FeedForwardNeuralNetwork net) {
+    public static RateNetResults getWinPercent(FeedForwardNeuralNetwork net, int boardSize) {
         TakPlayer white = new SimpleNeuralPlayer(net);
         TakPlayer black = new RandomPlayer();
         Player first = Player.BLACK;
@@ -39,7 +39,7 @@ public class RateNet {
             else {
                 first = Player.WHITE;
             }
-            GameState state = new GameState(first, 5);
+            GameState state = new GameState(first, boardSize);
             while(!state.checkForWinner().isFinished()) {
                 if(state.isWhiteTurn()) {
                     Turn turn = white.getTurn((GameState)state.clone());

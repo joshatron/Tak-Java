@@ -143,22 +143,22 @@ public class BackPropTrainer {
         System.out.println("After game rate: " + afterGameRate);
         System.out.println("Momentum: " + momentum);
         System.out.println("Hidden size: " + hiddenSize);
-        System.out.println("Initial win rate: " + RateNet.getWinPercent(net).getWinPercentage() + "%");
+        System.out.println("Initial win rate: " + RateNet.getWinPercent(net, boardSize).getWinPercentage() + "%");
         System.out.println();
 
         long firstTime = new Date().getTime();
 
         for (int i = 0; i < games; i++) {
             if (i < (games * 3) / 4) {
-                playGame(net, inGameRate, afterGameRate, true);
+                playGame(net, inGameRate, afterGameRate, true, boardSize);
             } else {
-                playGame(net, inGameRate, afterGameRate, false);
+                playGame(net, inGameRate, afterGameRate, false, boardSize);
             }
 
             if (i % 1000 == 0 && i != 0) {
                 long thisTime = new Date().getTime();
                 long timeLeft = (games - i) * ((thisTime - firstTime) / i) / 1000 / 60;
-                RateNetResults results = RateNet.getWinPercent(net);
+                RateNetResults results = RateNet.getWinPercent(net, boardSize);
                 System.out.printf("Game %8d- %3d%% win rate, %3d%% of which by path, %3d:%02d remaining, label: %s\n", i, (int)results.getWinPercentage(), (int)results.getPathPercentage(), timeLeft / 60, timeLeft % 60, label);
                 try {
                     net.export(new File( boardSize + "_" + inGameRate + "_" + afterGameRate + "_" + momentum + "_" + hiddenSize + "_" + games + "_" + label + ".json"));
@@ -175,9 +175,9 @@ public class BackPropTrainer {
         }
     }
 
-    private static void playGame(FeedForwardNeuralNetwork net, double inGameRate, double afterGameRate, boolean pathOnly) {
+    private static void playGame(FeedForwardNeuralNetwork net, double inGameRate, double afterGameRate, boolean pathOnly, int boardSize) {
         net.setLearningRate(inGameRate);
-        GameState state = new GameState(Player.WHITE, 5);
+        GameState state = new GameState(Player.WHITE, boardSize);
         SimpleNeuralPlayer player = new SimpleNeuralPlayer(net);
 
         int round = 0;
