@@ -13,17 +13,6 @@ import java.io.IOException;
 
 public class RateNet {
 
-    public static void main(String[] args) {
-        System.out.println("Beginning test...");
-        try {
-            RateNetResults results = getWinPercent(new FeedForwardNeuralNetwork(new File("0.005_0.01_0.0_25_500000.json")), 5);
-            System.out.println("The net won " + (int)results.getWinPercentage() + "% of the time");
-        } catch (IOException e) {
-            System.out.println("Failed to find net");
-            e.printStackTrace();
-        }
-    }
-
     //Returns a value between 0 and 100
     //Represents the win percentage against a random player
     public static RateNetResults getWinPercent(FeedForwardNeuralNetwork net, int boardSize) {

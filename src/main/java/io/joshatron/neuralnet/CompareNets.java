@@ -5,7 +5,6 @@ import io.joshatron.engine.Player;
 import io.joshatron.player.SimpleNeuralPlayer;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 

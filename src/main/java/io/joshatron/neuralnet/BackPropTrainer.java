@@ -30,11 +30,13 @@ public class BackPropTrainer {
         long firstTime = new Date().getTime();
 
         for (int i = 0; i < games; i++) {
-            if (i < (games * 3) / 4) {
+            //code for making it try for paths for the first 3/4 of the game
+            /*if (i < (games * 3) / 4) {
                 playGame(net, inGameRate, afterGameRate, true, boardSize);
             } else {
                 playGame(net, inGameRate, afterGameRate, false, boardSize);
-            }
+            }*/
+            playGame(net, inGameRate, afterGameRate, false, boardSize);
 
             if (i % 1000 == 0 && i != 0) {
                 long thisTime = new Date().getTime();

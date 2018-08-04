@@ -1,13 +1,14 @@
 package io.joshatron.cli;
 
-import io.joshatron.neuralnet.BackPropTrainer;
-import io.joshatron.neuralnet.CompareNets;
+import io.joshatron.neuralnet.*;
+import org.jline.builtins.Completers;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.impl.completer.NullCompleter;
 import org.jline.reader.impl.completer.StringsCompleter;
 import org.jline.terminal.TerminalBuilder;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -16,7 +17,7 @@ public class Trainer {
     public static void setupTraining() throws IOException {
         LineReader lineReader = LineReaderBuilder.builder()
                 .terminal(TerminalBuilder.terminal())
-                .completer(new StringsCompleter("train", "set train", "evaluate"))
+                .completer(new StringsCompleter("train", "set train", "rate", "compare"))
                 .build();
         while(true) {
             String input = lineReader.readLine("What would you like to do? ").trim().toLowerCase();
@@ -28,7 +29,11 @@ public class Trainer {
                 runTrainingSet();
                 break;
             }
-            else if(input.equals("evaluate")) {
+            else if(input.equals("rate")) {
+                rateNet();
+                break;
+            }
+            else if(input.equals("compare")) {
                 CompareNets.compareAllNets();
                 break;
             }
@@ -38,7 +43,23 @@ public class Trainer {
         }
     }
 
-    public static void runTraining() throws IOException {
+    private static void rateNet() throws IOException {
+        LineReader lineReader = LineReaderBuilder.builder()
+                .terminal(TerminalBuilder.terminal())
+                .completer(new Completers.FilesCompleter(new File("")))
+                .build();
+
+        while(true) {
+            String input = lineReader.readLine("What net would you like to rate (type exit to quit)? ").trim();
+            if(input.toLowerCase().equals("exit")) {
+                break;
+            }
+            RateNetResults results = RateNet.getWinPercent(new FeedForwardNeuralNetwork(new File(input)), Integer.parseInt(input.substring(0,1)));
+            System.out.println("The net won " + results.getWinPercentage() + "% of the time");
+        }
+    }
+
+    private static void runTraining() throws IOException {
         LineReader lineReader = LineReaderBuilder.builder()
                 .terminal(TerminalBuilder.terminal())
                 .completer(new NullCompleter())
@@ -117,7 +138,7 @@ public class Trainer {
         BackPropTrainer.train(inGameRate, afterGameRate, momentum, hiddenSize, games, boardSize);
     }
 
-    public static void runTrainingSet() throws IOException {
+    private static void runTrainingSet() throws IOException {
         LineReader lineReader = LineReaderBuilder.builder()
                 .terminal(TerminalBuilder.terminal())
                 .completer(new NullCompleter())
