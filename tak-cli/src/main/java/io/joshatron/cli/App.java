@@ -12,9 +12,9 @@ import org.jline.terminal.TerminalBuilder;
 
 import java.io.IOException;
 
-public class GamePlayer
+public class App
 {
-    public static void runGameSet() {
+    public static void main(String[] args) {
         try {
             LineReader nullReader = LineReaderBuilder.builder()
                     .terminal(TerminalBuilder.terminal())
@@ -37,6 +37,11 @@ public class GamePlayer
             Player firstPlayer;
             TakPlayer whitePlayer;
             TakPlayer blackPlayer;
+
+            System.out.println("---------------------");
+            System.out.println("| Welcome to TakCLI |");
+            System.out.println("---------------------");
+            System.out.println();
 
             while (true) {
                 String input = nullReader.readLine("How many games would you like to play? ").trim();

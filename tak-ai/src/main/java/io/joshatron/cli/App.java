@@ -12,34 +12,39 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Trainer {
+public class App {
 
-    public static void setupTraining() throws IOException {
-        LineReader lineReader = LineReaderBuilder.builder()
-                .terminal(TerminalBuilder.terminal())
-                .completer(new StringsCompleter("train", "set train", "rate", "compare"))
-                .build();
-        while(true) {
-            String input = lineReader.readLine("What would you like to do? ").trim().toLowerCase();
-            if(input.equals("train")) {
-                runTraining();
-                break;
+    public static void main(String[] args) {
+        try {
+            LineReader lineReader = LineReaderBuilder.builder()
+                    .terminal(TerminalBuilder.terminal())
+                    .completer(new StringsCompleter("train", "set train", "rate", "compare"))
+                    .build();
+            while(true) {
+                String input = lineReader.readLine("What would you like to do? ").trim().toLowerCase();
+                if(input.equals("train")) {
+                    runTraining();
+                    break;
+                }
+                else if(input.equals("set train")) {
+                    runTrainingSet();
+                    break;
+                }
+                else if(input.equals("rate")) {
+                    rateNet();
+                    break;
+                }
+                else if(input.equals("compare")) {
+                    CompareNets.compareAllNets();
+                    break;
+                }
+                else {
+                    System.out.println("Please choose a valid option.");
+                }
             }
-            else if(input.equals("set train")) {
-                runTrainingSet();
-                break;
-            }
-            else if(input.equals("rate")) {
-                rateNet();
-                break;
-            }
-            else if(input.equals("compare")) {
-                CompareNets.compareAllNets();
-                break;
-            }
-            else {
-                System.out.println("Please choose a valid option.");
-            }
+        }
+        catch(IOException e) {
+            e.printStackTrace();
         }
     }
 

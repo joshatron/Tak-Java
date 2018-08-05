@@ -2,4 +2,4 @@
 
 command -v java >/dev/null 2>&1 || { echo >&2 "Java 8 is required for running. Aborting."; exit 1; }
 
-java -jar target/tak-1.0-SNAPSHOT.jar
+java -jar tak-cli/target/tak-cli-1.0-SNAPSHOT.jar
