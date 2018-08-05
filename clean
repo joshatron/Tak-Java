@@ -1,0 +1,13 @@
+#!/bin/bash
+
+rm -r trainer/
+rm -r cli/
+cd tak-engine/
+mvn clean
+cd ../
+cd tak-ai/
+mvn clean
+cd ../
+cd tak-cli/
+mvn clean
+cd ../

@@ -1,4 +1,6 @@
 .idea/
 target/
+trainer/
+cli/
 *.json
 dependency-reduced-pom.xml
