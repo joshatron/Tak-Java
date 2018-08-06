@@ -2,21 +2,9 @@
 
 command -v mvn >/dev/null 2>&1 || { echo >&2 "Maven is required for setup. Aborting."; exit 1; }
 
-# engine
-cd tak-engine/
 mvn clean install
-cd ../
 
-# ai
-cd tak-ai/
-mvn clean install
-cd ..
-mkdir trainer
+mkdir trainer/
+mkdir cli/
 cp tak-ai/target/tak-ai*.jar trainer/
-
-# cli
-cd tak-cli/
-mvn clean install
-cd ..
-mkdir cli
 cp tak-cli/target/tak-cli*.jar cli/
