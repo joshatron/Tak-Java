@@ -39,7 +39,7 @@ public class BackPropTrainer {
 
             if (i % 1000 == 0 && i != 0) {
                 long thisTime = new Date().getTime();
-                long timeLeft = (games - i) * ((thisTime - firstTime) / i) / 1000 / 60;
+                int timeLeft = (int)((games - i) * ((thisTime - firstTime) / (double)i) / 1000 / 60);
                 RateNetResults results = RateNet.getWinPercent(net, boardSize);
                 System.out.printf("Game %8d- %3d%% win rate, %3d%% of which by path, %3d:%02d remaining, label: %s\n", i, (int)results.getWinPercentage(), (int)results.getPathPercentage(), timeLeft / 60, timeLeft % 60, label);
                 try {
