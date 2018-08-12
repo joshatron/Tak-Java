@@ -18,28 +18,43 @@ public class App {
         try {
             LineReader lineReader = LineReaderBuilder.builder()
                     .terminal(TerminalBuilder.terminal())
-                    .completer(new StringsCompleter("train", "set train", "rate", "compare"))
+                    .completer(new StringsCompleter("train", "set train", "rate", "compare", "help", "exit"))
                     .build();
+
+            System.out.println("--------------------");
+            System.out.println("| Welcome to TakAI |");
+            System.out.println("--------------------");
+            System.out.println();
+
             while(true) {
-                String input = lineReader.readLine("What would you like to do? ").trim().toLowerCase();
+                String input = lineReader.readLine("> ").trim().toLowerCase();
                 if(input.equals("train")) {
                     runTraining();
-                    break;
                 }
                 else if(input.equals("set train")) {
                     runTrainingSet();
-                    break;
                 }
                 else if(input.equals("rate")) {
                     rateNet();
-                    break;
                 }
                 else if(input.equals("compare")) {
                     CompareNets.compareAllNets();
-                    break;
+                }
+                else if(input.equals("help")) {
+                    System.out.println("The following is a list of what you can do:");
+                    System.out.println("  train- prompts for learning parameters, then runs the backprop trainer.");
+                    System.out.println("  set train- prompts for sets of learning parameters, then iterates through");
+                    System.out.println("    every possibility of those with the backprop trainer.");
+                    System.out.println("  rate- specify a net and it finds the percentage of the time it beats a random player.");
+                    System.out.println("  compare- runs all the nets against each other in a round robin tournament.");
+                    System.out.println("  help- displays this help message.");
+                    System.out.println("  exit- exits the program.");
+                }
+                else if(input.equals("exit")) {
+                    System.exit(0);
                 }
                 else {
-                    System.out.println("Please choose a valid option.");
+                    System.out.println("Please choose a valid option. Type help to see options.");
                 }
             }
         }
@@ -80,7 +95,10 @@ public class App {
         int boardSize;
 
         while(true) {
-            String input = lineReader.readLine("What board size would you like? ").trim();
+            String input = lineReader.readLine("What board size would you like? ").toLowerCase().trim();
+            if(input.equals("exit")) {
+                System.exit(0);
+            }
             try {
                 int size = Integer.parseInt(input);
                 if (size == 3 || size == 4 || size == 5 || size == 6 || size == 8) {
@@ -93,7 +111,10 @@ public class App {
             }
         }
         while(true) {
-            String input = lineReader.readLine("What in game rate would you like? ").trim();
+            String input = lineReader.readLine("What in game rate would you like? ").toLowerCase().trim();
+            if(input.equals("exit")) {
+                System.exit(0);
+            }
             try {
                 inGameRate = Double.parseDouble(input);
                 break;
@@ -103,7 +124,10 @@ public class App {
             }
         }
         while(true) {
-            String input = lineReader.readLine("What after game rate would you like? ").trim();
+            String input = lineReader.readLine("What after game rate would you like? ").toLowerCase().trim();
+            if(input.equals("exit")) {
+                System.exit(0);
+            }
             try {
                 afterGameRate = Double.parseDouble(input);
                 break;
@@ -113,7 +137,10 @@ public class App {
             }
         }
         while(true) {
-            String input = lineReader.readLine("What momentum would you like? ").trim();
+            String input = lineReader.readLine("What momentum would you like? ").toLowerCase().trim();
+            if(input.equals("exit")) {
+                System.exit(0);
+            }
             try {
                 momentum = Double.parseDouble(input);
                 break;
@@ -123,7 +150,10 @@ public class App {
             }
         }
         while(true) {
-            String input = lineReader.readLine("How many hidden nodes would you like? ").trim();
+            String input = lineReader.readLine("How many hidden nodes would you like? ").toLowerCase().trim();
+            if(input.equals("exit")) {
+                System.exit(0);
+            }
             try {
                 hiddenSize = Integer.parseInt(input);
                 break;
@@ -133,7 +163,10 @@ public class App {
             }
         }
         while(true) {
-            String input = lineReader.readLine("How many games do you want to run? ").trim();
+            String input = lineReader.readLine("How many games do you want to run? ").toLowerCase().trim();
+            if(input.equals("exit")) {
+                System.exit(0);
+            }
             try {
                 games = Integer.parseInt(input);
                 break;
@@ -159,7 +192,10 @@ public class App {
         int boardSize;
 
         while(true) {
-            String input = lineReader.readLine("What board size would you like? ").trim();
+            String input = lineReader.readLine("What board size would you like? ").toLowerCase().trim();
+            if(input.equals("exit")) {
+                System.exit(0);
+            }
             try {
                 int size = Integer.parseInt(input);
                 if (size == 3 || size == 4 || size == 5 || size == 6 || size == 8) {
@@ -174,7 +210,10 @@ public class App {
 
         System.out.println("What in games rates do you want? (leave blank to move on)");
         while(true) {
-            String input = lineReader.readLine("> ").trim();
+            String input = lineReader.readLine("> ").toLowerCase().trim();
+            if(input.equals("exit")) {
+                System.exit(0);
+            }
             if(input.length() == 0) {
                 break;
             }
@@ -188,7 +227,10 @@ public class App {
         }
         System.out.println("What after games rates do you want? (leave blank to move on)");
         while(true) {
-            String input = lineReader.readLine("> ").trim();
+            String input = lineReader.readLine("> ").toLowerCase().trim();
+            if(input.equals("exit")) {
+                System.exit(0);
+            }
             if(input.length() == 0) {
                 break;
             }
@@ -202,7 +244,10 @@ public class App {
         }
         System.out.println("What momentums do you want? (leave blank to move on)");
         while(true) {
-            String input = lineReader.readLine("> ").trim();
+            String input = lineReader.readLine("> ").toLowerCase().trim();
+            if(input.equals("exit")) {
+                System.exit(0);
+            }
             if(input.length() == 0) {
                 break;
             }
@@ -216,7 +261,10 @@ public class App {
         }
         System.out.println("What hidden layer sizes do you want? (leave blank to move on)");
         while(true) {
-            String input = lineReader.readLine("> ").trim();
+            String input = lineReader.readLine("> ").toLowerCase().trim();
+            if(input.equals("exit")) {
+                System.exit(0);
+            }
             if(input.length() == 0) {
                 break;
             }
@@ -230,7 +278,10 @@ public class App {
         }
         System.out.println("What game rounds do you want? (leave blank to move on)");
         while(true) {
-            String input = lineReader.readLine("> ").trim();
+            String input = lineReader.readLine("> ").toLowerCase().trim();
+            if(input.equals("exit")) {
+                System.exit(0);
+            }
             if(input.length() == 0) {
                 break;
             }
