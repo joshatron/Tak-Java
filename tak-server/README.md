@@ -10,7 +10,6 @@ It can also set up random games against random players.
 The API is as follows:
 
 
----------------------------------------------------------------------------------------------
 | Title           | Description                                                             |
 ---------------------------------------------------------------------------------------------
 | Register        | create a new user                                                       |
@@ -27,11 +26,9 @@ The API is as follows:
 | Play turn       | play turn on a game                                                     |
 | Send message    | send a message to a user                                                |
 | Get incoming    | get friend requests, messages, game invitations, and open games         |
----------------------------------------------------------------------------------------------
 
 Internally, there is a database with the following structure:
 
----------------------------------------------------------------------
 | Table     | Description                                           |
 ---------------------------------------------------------------------
 | Users     | id, username, auth                                    |
@@ -42,4 +39,3 @@ Internally, there is a database with the following structure:
 | Games     | id, white player, black player, is finished           |
 | Turns     | game id, order                                        |
 | Messages  | from, to, message, opened                             |
----------------------------------------------------------------------
