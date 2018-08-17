@@ -6,5 +6,7 @@ mvn clean install
 
 mkdir trainer/
 mkdir cli/
+mkdir server/
 cp tak-ai/target/tak-ai*.jar trainer/
 cp tak-cli/target/tak-cli*.jar cli/
+cp tak-server/target/tak-server*.jar server/

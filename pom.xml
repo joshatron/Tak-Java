@@ -15,5 +15,6 @@
     <module>tak-engine</module>
     <module>tak-ai</module>
     <module>tak-cli</module>
+    <module>tak-server</module>
   </modules>
 </project>

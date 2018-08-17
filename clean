@@ -2,4 +2,5 @@
 
 rm -r trainer/
 rm -r cli/
+rm -r server/
 mvn clean
