@@ -3,7 +3,7 @@ Tak
 
 CLI based tak game that will implement a neural net AI
 The details for the AI can be found [here](tak-ai/README.md).
-There will also be a server for people to play online.
+There is also be a server for people to play online, detailed [here](tak-server/README.md).
 
 To install:
 
