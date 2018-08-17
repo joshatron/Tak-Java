@@ -11,7 +11,7 @@ The API is as follows:
 
 
 | Title           | Description                                                             |
----------------------------------------------------------------------------------------------
+|-----------------|-------------------------------------------------------------------------|
 | Register        | create a new user                                                       |
 | Friend request  | request new friend                                                      |
 | Friend response | accept or deny friend request                                           |
@@ -30,7 +30,7 @@ The API is as follows:
 Internally, there is a database with the following structure:
 
 | Table     | Description                                           |
----------------------------------------------------------------------
+|-----------|-------------------------------------------------------|
 | Users     | id, username, auth                                    |
 | Friends   | pairs of users                                        |
 | Requests  | open friend requests                                  |
