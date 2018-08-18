@@ -7,25 +7,26 @@ The tak server is a RESTful api that allows people to play each other online.
 It can keep track of friends and allow them to play games against each other.
 It can also set up random games against random players.
 
-The API is as follows:
-
+The API is as follows (a more descriptive version can be found [here](api.md)):
 
 | Title           | Description                                                             |
 |-----------------|-------------------------------------------------------------------------|
-| Register        | create a new user                                                       |
-| Friend request  | request new friend                                                      |
-| Friend response | accept or deny friend request                                           |
-| Block user      | block everything from user                                              |
-| Unblock user    | unblock user from everything                                            |
-| List friends    | list all friends                                                        |
-| List blocked    | list all blocked users                                                  |
-| Request game    | request game with friend                                                |
-| Random game     | try starting a game with a random person                                |
-| List all games  | get list of all completed games                                         |
-| Get game        | get state of a game                                                     |
-| Play turn       | play turn on a game                                                     |
-| Send message    | send a message to a user                                                |
-| Get incoming    | get friend requests, messages, game invitations, and open games         |
+| Register        | Create a new user                                                       |
+| Change password | Change password for a user                                              |
+| Friend request  | Request new friend                                                      |
+| Friend response | Accept or deny friend request                                           |
+| Block user      | Block everything from user                                              |
+| Unblock user    | Unblock user from everything                                            |
+| List friends    | List all friends                                                        |
+| List blocked    | List all blocked users                                                  |
+| Request game    | Request game with friend                                                |
+| Random game     | Try starting a game with a random person                                |
+| List all games  | Get list of all completed games                                         |
+| Get game        | Get state of a game                                                     |
+| Play turn       | Play turn on a game                                                     |
+| Send message    | Send a message to a user                                                |
+| Read messages   | Read all messages with parameters                                       |
+| Get incoming    | Get friend requests, messages, game invitations, and open games         |
 
 Internally, there is a database with the following structure:
 
