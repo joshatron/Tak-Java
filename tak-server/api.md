@@ -53,105 +53,105 @@ User Actions
 
 #### Register
 
-| Description |                                                                             |
-| Return code |                                                                             |
-| Return body |                                                                             |
+| Description  | Registers a new user.                                                      |
+| Request Type | POST                                                                       |
+| Request Body | username, password                                                         |
 
 #### Change Password
 
-| Description |                                                                             |
-| Return code |                                                                             |
-| Return body |                                                                             |
+| Description  | Changes the password of a user.                                            |
+| Request Type | POST                                                                       |
+| Request Body | User credentials, new password                                             |
 
 Friend Actions
 --------------
 
 #### Friend Request
 
-| Description |                                                                             |
-| Return code |                                                                             |
-| Return body |                                                                             |
+| Description  | Request a new friend.                                                      |
+| Request Type | POST                                                                       |
+| Request Body | User credentials, username to request                                      |
 
 #### Friend Response
 
-| Description |                                                                             |
-| Return code |                                                                             |
-| Return body |                                                                             |
+| Description  | Accept or deny a friend request.                                           |
+| Request Type | POST                                                                       |
+| Request Body | User credentials, username of requester, accept or deny                    |
 
 #### Block User
 
-| Description |                                                                             |
-| Return code |                                                                             |
-| Return body |                                                                             |
+| Description  | Block a user.                                                              |
+| Request Type | POST                                                                       |
+| Request Body | User credentials, username to block                                        |
 
 #### Unblock User
 
-| Description |                                                                             |
-| Return code |                                                                             |
-| Return body |                                                                             |
+| Description  | Unblock a user.                                                            |
+| Request Type | POST                                                                       |
+| Request Body | User credentials, username to unblock                                      |
 
 #### List Friends
 
-| Description |                                                                             |
-| Return code |                                                                             |
-| Return body |                                                                             |
+| Description  | List all friends.                                                          |
+| Request Type | GET                                                                        |
+| Request Body | User credentials                                                           |
 
 #### List Blocked
 
-| Description |                                                                             |
-| Return code |                                                                             |
-| Return body |                                                                             |
+| Description  | List all blocked users.                                                    |
+| Request Type | GET                                                                        |
+| Request Body | User credentials                                                           |
 
 #### Send Message
 
-| Description |                                                                             |
-| Return code |                                                                             |
-| Return body |                                                                             |
+| Description  | Send a message to a user.                                                  |
+| Request Type | POST                                                                       |
+| Request Body | User credentials, recipient username, message                              |
 
 #### Read Messages
 
-| Description |                                                                             |
-| Return code |                                                                             |
-| Return body |                                                                             |
+| Description  | View all messages based on parameters.                                     |
+| Request Type | GET                                                                        |
+| Request Body | User credentials, from(optional), from time(optional), read(optional)      |
 
 Game Actions
 ------------
 
 #### Request Game
 
-| Description |                                                                             |
-| Return code |                                                                             |
-| Return body |                                                                             |
+| Description  | Request game with a friend.                                                |
+| Request Type | POST                                                                       |
+| Request Body | User credentials, other user, board size, your color, first player         |
 
 #### Random Game
 
-| Description |                                                                             |
-| Return code |                                                                             |
-| Return body |                                                                             |
+| Description  | Request a random game.                                                     |
+| Request Type | POST                                                                       |
+| Request Body | User credentials, board size                                               |
 
 #### List Completed Games
 
-| Description |                                                                             |
-| Return code |                                                                             |
-| Return body |                                                                             |
+| Description  | Get a list of all game IDs for completed games.                            |
+| Request Type | GET                                                                        |
+| Request Body | User credentials                                                           |
 
 #### Get Game
 
-| Description |                                                                             |
-| Return code |                                                                             |
-| Return body |                                                                             |
+| Description  | Get log of a game from the game ID.                                        |
+| Request Type | GET                                                                        |
+| Request Body | User credentials, game ID                                                  |
 
 #### Play Turn
 
-| Description |                                                                             |
-| Return code |                                                                             |
-| Return body |                                                                             |
+| Description  | Play a turn on a given game.                                               |
+| Request Type | POST                                                                       |
+| Request Body | User credentials, game ID, turn                                            |
 
 Notifications
 -------------
 
 #### Get Incoming
 
-| Description |                                                                             |
-| Return code |                                                                             |
-| Return body |                                                                             |
+| Description  | Get incoming friend requests, messages, game invitations, and open games   |
+| Request Type | GET                                                                        |
+| Request Body | User credentials                                                           |
