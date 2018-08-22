@@ -72,6 +72,8 @@ Responses:
 | Description | Success, user created.                                                      |
 | Return code | 204                                                                         |
 | Return body | Blank                                                                       |
+
+| Part        | Value                                                                       |
 |-------------|-----------------------------------------------------------------------------|
 | Description | Failure, username in use.                                                   |
 | Return code | 403                                                                         |
