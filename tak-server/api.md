@@ -67,6 +67,8 @@ User Actions
 
 Responses:
 
+Malformed fields
+
 | Part        | Value                                                                       |
 |-------------|-----------------------------------------------------------------------------|
 | Description | Success, user created.                                                      |
@@ -93,6 +95,16 @@ The response body for the username in use failure would look like this:
 | Request Type | POST                                                                       |
 | Request Body | User credentials, new password                                             |
 
+Responses:
+
+Malformed fields, invalid credentials
+
+| Part        | Value                                                                       |
+|-------------|-----------------------------------------------------------------------------|
+| Description | Success, pasword changed.                                                   |
+| Return code | 204                                                                         |
+| Return body | Blank                                                                       |
+
 Friend Actions
 --------------
 
@@ -104,6 +116,28 @@ Friend Actions
 | Request Type | POST                                                                       |
 | Request Body | User credentials, username to request                                      |
 
+Responses:
+
+Malformed fields, invalid credentials, blocked
+
+| Part        | Value                                                                       |
+|-------------|-----------------------------------------------------------------------------|
+| Description | Success, friend request sent.                                               |
+| Return code | 204                                                                         |
+| Return body | Blank                                                                       |
+
+| Part        | Value                                                                       |
+|-------------|-----------------------------------------------------------------------------|
+| Description | Failure, already a friend.                                                  |
+| Return code | 403                                                                         |
+| Return body | A string containing the reason.                                             |
+
+The response body for the already a friend failure would look like this:
+
+    {
+        "reason": "You are already friends with that user."
+    }
+
 #### Friend Response
 
 | Part         | Value                                                                      |
@@ -111,6 +145,28 @@ Friend Actions
 | Description  | Accept or deny a friend request.                                           |
 | Request Type | POST                                                                       |
 | Request Body | User credentials, username of requester, accept or deny                    |
+
+Responses:
+
+Malformed fields, invalid credentials
+
+| Part        | Value                                                                       |
+|-------------|-----------------------------------------------------------------------------|
+| Description | Success, friend response sent.                                              |
+| Return code | 204                                                                         |
+| Return body | Blank                                                                       |
+
+| Part        | Value                                                                       |
+|-------------|-----------------------------------------------------------------------------|
+| Description | Failure, not a current friend request.                                      |
+| Return code | 403                                                                         |
+| Return body | A string containing the reason.                                             |
+
+The response body for the not a current friend request failure would look like this:
+
+    {
+        "reason": "There is no friend request from that user."
+    }
 
 #### Block User
 
