@@ -57,6 +57,22 @@ User Actions
 | Request Type | POST                                                                       |
 | Request Body | username, password                                                         |
 
+Responses:
+
+| Description | Success, user created.                                                      |
+| Return code | 204                                                                         |
+| Return body | Blank                                                                       |
+|-------------|-----------------------------------------------------------------------------|
+| Description | Failure, username in use.                                                   |
+| Return code | 403                                                                         |
+| Return body | A string containing the reason.                                             |
+
+The response body for the username in use failure would look like this:
+
+    {
+        "reason": "Username is already registered."
+    }
+
 #### Change Password
 
 | Description  | Changes the password of a user.                                            |
