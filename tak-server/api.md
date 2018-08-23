@@ -13,11 +13,11 @@ Rather than copy them, they are detailed below.
 
 | Part        | Value                                                                       |
 |-------------|-----------------------------------------------------------------------------|
-| Description | This response is given if any fields are blank or missing.                  |
+| Description | This response is given if any fields are blank, missing, or invalid.        |
 | Return code | 400                                                                         |
 | Return body | Array of the bad fields.                                                    |
 
-ex: if the user and turn fields were malformed, the response body would be:
+ex: if the user was invalid and the turn field was malformed, the response body would be:
 
     {
         [
@@ -176,6 +176,28 @@ The response body for the not a current friend request failure would look like t
 | Request Type | POST                                                                       |
 | Request Body | User credentials, username to block                                        |
 
+Responses:
+
+Malformed fields, invalid credentials
+
+| Part        | Value                                                                       |
+|-------------|-----------------------------------------------------------------------------|
+| Description | Success, user blocked.                                                      |
+| Return code | 204                                                                         |
+| Return body | Blank                                                                       |
+
+| Part        | Value                                                                       |
+|-------------|-----------------------------------------------------------------------------|
+| Description | Failure, user has already been blocked.                                     |
+| Return code | 403                                                                         |
+| Return body | A string containing the reason.                                             |
+
+The response body for the not a current friend request failure would look like this:
+
+    {
+        "reason": "You have already blocked this user."
+    }
+
 #### Unblock User
 
 | Part         | Value                                                                      |
@@ -183,6 +205,28 @@ The response body for the not a current friend request failure would look like t
 | Description  | Unblock a user.                                                            |
 | Request Type | POST                                                                       |
 | Request Body | User credentials, username to unblock                                      |
+
+Responses:
+
+Malformed fields, invalid credentials
+
+| Part        | Value                                                                       |
+|-------------|-----------------------------------------------------------------------------|
+| Description | Success, user unblocked.                                                    |
+| Return code | 204                                                                         |
+| Return body | Blank                                                                       |
+
+| Part        | Value                                                                       |
+|-------------|-----------------------------------------------------------------------------|
+| Description | Failure, user is not currently blocked.                                     |
+| Return code | 403                                                                         |
+| Return body | A string containing the reason.                                             |
+
+The response body for the not a current friend request failure would look like this:
+
+    {
+        "reason": "The user is not currently blocked."
+    }
 
 #### List Friends
 
