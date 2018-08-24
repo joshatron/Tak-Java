@@ -236,6 +236,22 @@ The response body for the not a current friend request failure would look like t
 | Request Type | GET                                                                        |
 | Request Body | User credentials                                                           |
 
+Responses:
+
+Malformed fields, invalid credentials
+
+| Part        | Value                                                                       |
+|-------------|-----------------------------------------------------------------------------|
+| Description | Success, usernames listed.                                                  |
+| Return code | 200                                                                         |
+| Return body | Array of all friends.                                                       |
+
+The response body for the success case would look like this:
+
+    {
+        ["Joshatron", "Fred", "Mary"]
+    }
+
 #### List Blocked
 
 | Part         | Value                                                                      |
@@ -243,6 +259,22 @@ The response body for the not a current friend request failure would look like t
 | Description  | List all blocked users.                                                    |
 | Request Type | GET                                                                        |
 | Request Body | User credentials                                                           |
+
+Responses:
+
+Malformed fields, invalid credentials
+
+| Part        | Value                                                                       |
+|-------------|-----------------------------------------------------------------------------|
+| Description | Success, blocked users listed.                                              |
+| Return code | 200                                                                         |
+| Return body | Array of all blocked users.                                                 |
+
+The response body for the success case would look like this:
+
+    {
+        ["George", "Marissa"]
+    }
 
 #### Send Message
 
