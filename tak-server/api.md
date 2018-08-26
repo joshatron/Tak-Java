@@ -284,6 +284,16 @@ The response body for the success case would look like this:
 | Request Type | POST                                                                       |
 | Request Body | User credentials, recipient username, message                              |
 
+Responses:
+
+Malformed fields, invalid credentials, blocked
+
+| Part        | Value                                                                       |
+|-------------|-----------------------------------------------------------------------------|
+| Description | Success, message sent.                                                      |
+| Return code | 204                                                                         |
+| Return body | Blank                                                                       |
+
 #### Read Messages
 
 | Part         | Value                                                                      |
@@ -291,6 +301,33 @@ The response body for the success case would look like this:
 | Description  | View all messages based on parameters.                                     |
 | Request Type | GET                                                                        |
 | Request Body | User credentials, from(optional), from time(optional), read(optional)      |
+
+Responses:
+
+Malformed fields, invalid credentials
+
+| Part        | Value                                                                       |
+|-------------|-----------------------------------------------------------------------------|
+| Description | Success, messages listed.                                                   |
+| Return code | 200                                                                         |
+| Return body | List of the messages.                                                       |
+
+The response body for the success case would look like this:
+
+    {
+        [
+            {
+                "user": "George",
+                "timestamp": "Tuesday, Aug 10, 2018",
+                "message": "Hello!"
+            },
+            {
+                "user": "Marissa",
+                "timestamp": "Wednesday, Aug 11, 2018",
+                "message": "It's your turn"
+            }
+        ]
+    }
 
 Game Actions
 ------------
@@ -302,6 +339,34 @@ Game Actions
 | Description  | Request game with a friend.                                                |
 | Request Type | POST                                                                       |
 | Request Body | User credentials, other user, board size, your color, first player         |
+
+Responses:
+
+Malformed fields, invalid credentials, blocked
+
+| Part        | Value                                                                       |
+|-------------|-----------------------------------------------------------------------------|
+| Description | Success, game request sent.                                                 |
+| Return code | 204                                                                         |
+| Return body | Blank                                                                       |
+
+#### Respond to Game
+
+| Part         | Value                                                                      |
+|--------------|----------------------------------------------------------------------------|
+| Description  | Respond to a request for a game.                                           |
+| Request Type | POST                                                                       |
+| Request Body | User credentials, game id, accept or deny                                  |
+
+Responses:
+
+Malformed fields, invalid credentials
+
+| Part        | Value                                                                       |
+|-------------|-----------------------------------------------------------------------------|
+| Description | Success, game started.                                                      |
+| Return code | 204                                                                         |
+| Return body | Blank                                                                       |
 
 #### Random Game
 
