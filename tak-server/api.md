@@ -3,11 +3,37 @@ Tak API
 
 The following is a breakdown of the API spec of the tak server.
 
-Common Responses
-----------------
+Common Parts
+------------
 
-There are a few failure responses that are common to may calls.
+### Requests
+
+The following are common aspects of requests
+
+#### User Credentials
+
+Several calls use user credentials, an example of which is shown below.
+Future versions will have a better setup.
+
+    {
+        "auth": {
+            "username": "joshatron",
+            "password": "password"
+        }
+    }
+
+### Responses
+
+There are a few responses that are common to may calls.
 Rather than copy them, they are detailed below.
+
+#### Sucess
+
+| Part        | Value                                                                       |
+|-------------|-----------------------------------------------------------------------------|
+| Description | Success, no response body needed.                                           |
+| Return code | 204                                                                         |
+| Return body | Blank                                                                       |
 
 #### Malformed Fields
 
@@ -65,15 +91,16 @@ User Actions
 | Request Type | POST                                                                       |
 | Request Body | username, password                                                         |
 
+ex:
+
+    {
+        "username": "joshatron",
+        "password": "password"
+    }
+
 Responses:
 
-Malformed fields
-
-| Part        | Value                                                                       |
-|-------------|-----------------------------------------------------------------------------|
-| Description | Success, user created.                                                      |
-| Return code | 204                                                                         |
-| Return body | Blank                                                                       |
+Malformed fields, sucess
 
 | Part        | Value                                                                       |
 |-------------|-----------------------------------------------------------------------------|
@@ -95,15 +122,19 @@ The response body for the username in use failure would look like this:
 | Request Type | POST                                                                       |
 | Request Body | User credentials, new password                                             |
 
+ex:
+
+    {
+        "auth": {
+            "username": "joshatron",
+            "password": "password"
+        },
+        "password": "new-password"
+    }
+
 Responses:
 
-Malformed fields, invalid credentials
-
-| Part        | Value                                                                       |
-|-------------|-----------------------------------------------------------------------------|
-| Description | Success, pasword changed.                                                   |
-| Return code | 204                                                                         |
-| Return body | Blank                                                                       |
+Malformed fields, invalid credentials, success
 
 Friend Actions
 --------------
@@ -116,15 +147,19 @@ Friend Actions
 | Request Type | POST                                                                       |
 | Request Body | User credentials, username to request                                      |
 
+ex:
+
+    {
+        "auth": {
+            "username": "joshatron",
+            "password": "password"
+        },
+        "friend": "melissa"
+    }
+
 Responses:
 
-Malformed fields, invalid credentials, blocked
-
-| Part        | Value                                                                       |
-|-------------|-----------------------------------------------------------------------------|
-| Description | Success, friend request sent.                                               |
-| Return code | 204                                                                         |
-| Return body | Blank                                                                       |
+Malformed fields, invalid credentials, blocked, sucess
 
 | Part        | Value                                                                       |
 |-------------|-----------------------------------------------------------------------------|
@@ -146,15 +181,20 @@ The response body for the already a friend failure would look like this:
 | Request Type | POST                                                                       |
 | Request Body | User credentials, username of requester, accept or deny                    |
 
+ex:
+
+    {
+        "auth": {
+            "username": "melissa",
+            "password": "password"
+        },
+        "friend": "joshatron",
+        "response": "accept"
+    }
+
 Responses:
 
-Malformed fields, invalid credentials
-
-| Part        | Value                                                                       |
-|-------------|-----------------------------------------------------------------------------|
-| Description | Success, friend response sent.                                              |
-| Return code | 204                                                                         |
-| Return body | Blank                                                                       |
+Malformed fields, invalid credentials, sucess
 
 | Part        | Value                                                                       |
 |-------------|-----------------------------------------------------------------------------|
@@ -176,15 +216,19 @@ The response body for the not a current friend request failure would look like t
 | Request Type | POST                                                                       |
 | Request Body | User credentials, username to block                                        |
 
+ex:
+
+    {
+        "auth": {
+            "username": "joshatron",
+            "password": "password"
+        },
+        "block": "brian"
+    }
+
 Responses:
 
-Malformed fields, invalid credentials
-
-| Part        | Value                                                                       |
-|-------------|-----------------------------------------------------------------------------|
-| Description | Success, user blocked.                                                      |
-| Return code | 204                                                                         |
-| Return body | Blank                                                                       |
+Malformed fields, invalid credentials, sucess
 
 | Part        | Value                                                                       |
 |-------------|-----------------------------------------------------------------------------|
@@ -206,15 +250,19 @@ The response body for the not a current friend request failure would look like t
 | Request Type | POST                                                                       |
 | Request Body | User credentials, username to unblock                                      |
 
+ex:
+
+    {
+        "auth": {
+            "username": "joshatron",
+            "password": "password"
+        },
+        "unblock": "brian"
+    }
+
 Responses:
 
-Malformed fields, invalid credentials
-
-| Part        | Value                                                                       |
-|-------------|-----------------------------------------------------------------------------|
-| Description | Success, user unblocked.                                                    |
-| Return code | 204                                                                         |
-| Return body | Blank                                                                       |
+Malformed fields, invalid credentials, success
 
 | Part        | Value                                                                       |
 |-------------|-----------------------------------------------------------------------------|
@@ -235,6 +283,15 @@ The response body for the not a current friend request failure would look like t
 | Description  | List all friends.                                                          |
 | Request Type | GET                                                                        |
 | Request Body | User credentials                                                           |
+
+ex:
+
+    {
+        "auth": {
+            "username": "joshatron",
+            "password": "password"
+        }
+    }
 
 Responses:
 
@@ -260,6 +317,15 @@ The response body for the success case would look like this:
 | Request Type | GET                                                                        |
 | Request Body | User credentials                                                           |
 
+ex:
+
+    {
+        "auth": {
+            "username": "joshatron",
+            "password": "password"
+        }
+    }
+
 Responses:
 
 Malformed fields, invalid credentials
@@ -284,15 +350,20 @@ The response body for the success case would look like this:
 | Request Type | POST                                                                       |
 | Request Body | User credentials, recipient username, message                              |
 
+ex:
+
+    {
+        "auth": {
+            "username": "joshatron",
+            "password": "password"
+        },
+        "recipient": "melissa",
+        "message": "hi"
+    }
+
 Responses:
 
-Malformed fields, invalid credentials, blocked
-
-| Part        | Value                                                                       |
-|-------------|-----------------------------------------------------------------------------|
-| Description | Success, message sent.                                                      |
-| Return code | 204                                                                         |
-| Return body | Blank                                                                       |
+Malformed fields, invalid credentials, blocked, success
 
 #### Read Messages
 
@@ -301,6 +372,18 @@ Malformed fields, invalid credentials, blocked
 | Description  | View all messages based on parameters.                                     |
 | Request Type | GET                                                                        |
 | Request Body | User credentials, from(optional), from time(optional), read(optional)      |
+
+ex:
+
+    {
+        "auth": {
+            "username": "joshatron",
+            "password": "password"
+        },
+        "senders": ["melissa", "taryn"],
+        "start": "06/06/2018 10:00:56",
+        "read": "true"
+    }
 
 Responses:
 
@@ -317,13 +400,13 @@ The response body for the success case would look like this:
     {
         [
             {
-                "user": "George",
-                "timestamp": "Tuesday, Aug 10, 2018",
+                "user": "taryn",
+                "timestamp": "08/10/18 10:58:16",
                 "message": "Hello!"
             },
             {
-                "user": "Marissa",
-                "timestamp": "Wednesday, Aug 11, 2018",
+                "user": "melissa",
+                "timestamp": "09/01/18 16:03:05",
                 "message": "It's your turn"
             }
         ]
@@ -340,15 +423,22 @@ Game Actions
 | Request Type | POST                                                                       |
 | Request Body | User credentials, other user, board size, your color, first player         |
 
+ex:
+
+    {
+        "auth": {
+            "username": "joshatron",
+            "password": "password"
+        },
+        "opponent": "melissa",
+        "size": 5,
+        "color": "white",
+        "first": "true"
+    }
+
 Responses:
 
-Malformed fields, invalid credentials, blocked
-
-| Part        | Value                                                                       |
-|-------------|-----------------------------------------------------------------------------|
-| Description | Success, game request sent.                                                 |
-| Return code | 204                                                                         |
-| Return body | Blank                                                                       |
+Malformed fields, invalid credentials, blocked, success
 
 #### Respond to Game
 
@@ -358,15 +448,20 @@ Malformed fields, invalid credentials, blocked
 | Request Type | POST                                                                       |
 | Request Body | User credentials, game id, accept or deny                                  |
 
+ex:
+
+    {
+        "auth": {
+            "username": "melissa",
+            "password": "password"
+        },
+        "game_id": "12345",
+        "response": "deny"
+    }
+
 Responses:
 
-Malformed fields, invalid credentials
-
-| Part        | Value                                                                       |
-|-------------|-----------------------------------------------------------------------------|
-| Description | Success, game started.                                                      |
-| Return code | 204                                                                         |
-| Return body | Blank                                                                       |
+Malformed fields, invalid credentials, success
 
 #### Random Game
 
@@ -376,6 +471,16 @@ Malformed fields, invalid credentials
 | Request Type | POST                                                                       |
 | Request Body | User credentials, board size                                               |
 
+ex:
+
+    {
+        "auth": {
+            "username": "joshatron",
+            "password": "password"
+        },
+        "size": 3
+    }
+
 #### List Completed Games
 
 | Part         | Value                                                                      |
@@ -383,6 +488,32 @@ Malformed fields, invalid credentials
 | Description  | Get a list of all game IDs for completed games.                            |
 | Request Type | GET                                                                        |
 | Request Body | User credentials                                                           |
+
+ex:
+
+    {
+        "auth": {
+            "username": "joshatron",
+            "password": "password"
+        }
+    }
+
+#### List Incomplete Games
+
+| Part         | Value                                                                      |
+|--------------|----------------------------------------------------------------------------|
+| Description  | Get a list of all game IDs for incomplete games.                           |
+| Request Type | GET                                                                        |
+| Request Body | User credentials                                                           |
+
+ex:
+
+    {
+        "auth": {
+            "username": "joshatron",
+            "password": "password"
+        }
+    }
 
 #### Get Game
 
@@ -392,6 +523,16 @@ Malformed fields, invalid credentials
 | Request Type | GET                                                                        |
 | Request Body | User credentials, game ID                                                  |
 
+ex:
+
+    {
+        "auth": {
+            "username": "joshatron",
+            "password": "password"
+        },
+        "game_id": "12345"
+    }
+
 #### Play Turn
 
 | Part         | Value                                                                      |
@@ -400,13 +541,50 @@ Malformed fields, invalid credentials
 | Request Type | POST                                                                       |
 | Request Body | User credentials, game ID, turn                                            |
 
+ex:
+
+    {
+        "auth": {
+            "username": "joshatron",
+            "password": "password"
+        },
+        "game_id": "12345",
+        "turn": "pc a1"
+    }
+
 Notifications
 -------------
 
-#### Get Incoming
+#### Get Incoming Friend Requests
 
 | Part         | Value                                                                      |
 |--------------|----------------------------------------------------------------------------|
-| Description  | Get incoming friend requests, messages, game invitations, and open games   |
+| Description  | Get incoming friend requests                                               |
 | Request Type | GET                                                                        |
 | Request Body | User credentials                                                           |
+
+ex:
+
+    {
+        "auth": {
+            "username": "joshatron",
+            "password": "password"
+        }
+    }
+
+#### Get Incoming Game Invitations
+
+| Part         | Value                                                                      |
+|--------------|----------------------------------------------------------------------------|
+| Description  | Get incoming game invitations                                              |
+| Request Type | GET                                                                        |
+| Request Body | User credentials                                                           |
+
+ex:
+
+    {
+        "auth": {
+            "username": "joshatron",
+            "password": "password"
+        }
+    }
