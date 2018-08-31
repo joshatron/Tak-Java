@@ -60,7 +60,7 @@ ex: if the user was invalid and the turn field was malformed, the response body 
 | Return code | 401                                                                         |
 | Return body | A string containing the reason.                                             |
 
-The response body will look like this:
+ex:
 
     {
         "reason": "Invalid credentials"
@@ -74,10 +74,16 @@ The response body will look like this:
 | Return code | 403                                                                         |
 | Return body | A string containing the reason.                                             |
 
-The response body will look like this:
+ex:
 
     {
         "reason": "Tried to interact with blocked user"
+    }
+
+ex:
+
+    {
+        "reason": "You have blocked this user. Unblock them to interact"
     }
 
 User Actions
@@ -108,7 +114,7 @@ Malformed fields, sucess
 | Return code | 403                                                                         |
 | Return body | A string containing the reason.                                             |
 
-The response body for the username in use failure would look like this:
+ex:
 
     {
         "reason": "Username is already registered."
@@ -167,7 +173,7 @@ Malformed fields, invalid credentials, blocked, sucess
 | Return code | 403                                                                         |
 | Return body | A string containing the reason.                                             |
 
-The response body for the already a friend failure would look like this:
+ex:
 
     {
         "reason": "You are already friends with that user."
@@ -202,7 +208,7 @@ Malformed fields, invalid credentials, sucess
 | Return code | 403                                                                         |
 | Return body | A string containing the reason.                                             |
 
-The response body for the not a current friend request failure would look like this:
+ex:
 
     {
         "reason": "There is no friend request from that user."
@@ -236,7 +242,7 @@ Malformed fields, invalid credentials, sucess
 | Return code | 403                                                                         |
 | Return body | A string containing the reason.                                             |
 
-The response body for the not a current friend request failure would look like this:
+ex:
 
     {
         "reason": "You have already blocked this user."
@@ -270,7 +276,7 @@ Malformed fields, invalid credentials, success
 | Return code | 403                                                                         |
 | Return body | A string containing the reason.                                             |
 
-The response body for the not a current friend request failure would look like this:
+ex:
 
     {
         "reason": "The user is not currently blocked."
@@ -303,10 +309,10 @@ Malformed fields, invalid credentials
 | Return code | 200                                                                         |
 | Return body | Array of all friends.                                                       |
 
-The response body for the success case would look like this:
+ex:
 
     {
-        ["Joshatron", "Fred", "Mary"]
+        ["melissa", "taryn"]
     }
 
 #### List Blocked
@@ -336,10 +342,10 @@ Malformed fields, invalid credentials
 | Return code | 200                                                                         |
 | Return body | Array of all blocked users.                                                 |
 
-The response body for the success case would look like this:
+ex:
 
     {
-        ["George", "Marissa"]
+        ["brian", "george"]
     }
 
 #### Send Message
@@ -395,7 +401,7 @@ Malformed fields, invalid credentials
 | Return code | 200                                                                         |
 | Return body | List of the messages.                                                       |
 
-The response body for the success case would look like this:
+ex:
 
     {
         [
@@ -481,13 +487,17 @@ ex:
         "size": 3
     }
 
+Responses:
+
+Malformed fields, invalid credentials, success
+
 #### List Completed Games
 
 | Part         | Value                                                                      |
 |--------------|----------------------------------------------------------------------------|
-| Description  | Get a list of all game IDs for completed games.                            |
+| Description  | Get a list of all game IDs for completed games given the parameters.       |
 | Request Type | GET                                                                        |
-| Request Body | User credentials                                                           |
+| Request Body | User credentials, opponents(optional), from time(optional), size(optional) |
 
 ex:
 
@@ -496,6 +506,25 @@ ex:
             "username": "joshatron",
             "password": "password"
         }
+        "opponents": ["Melissa", "Taryn"],
+        "start": "06/23/18 00:00:00",
+        "size": 5
+    }
+
+Responses:
+
+Malformed fields, invalid credentials
+
+| Part        | Value                                                                       |
+|-------------|-----------------------------------------------------------------------------|
+| Description | Success, games listed.                                                      |
+| Return code | 200                                                                         |
+| Return body | List of the games.                                                          |
+
+ex:
+
+    {
+        ["12345", "98765", "00001"]
     }
 
 #### List Incomplete Games
@@ -513,6 +542,22 @@ ex:
             "username": "joshatron",
             "password": "password"
         }
+    }
+
+Responses:
+
+Malformed fields, invalid credentials
+
+| Part        | Value                                                                       |
+|-------------|-----------------------------------------------------------------------------|
+| Description | Success, games listed.                                                      |
+| Return code | 200                                                                         |
+| Return body | List of the games.                                                          |
+
+ex:
+
+    {
+        ["54321", "56789", "00005"]
     }
 
 #### Get Game
@@ -533,6 +578,29 @@ ex:
         "game_id": "12345"
     }
 
+Responses:
+
+Malformed fields, invalid credentials
+
+| Part        | Value                                                                       |
+|-------------|-----------------------------------------------------------------------------|
+| Description | Success, game listed.                                                       |
+| Return code | 200                                                                         |
+| Return body | Turns made so far in the game along with starting parameters.               |
+
+ex:
+
+    {
+        "first": "white",
+        "player": "black",
+        "size": 5,
+        [
+            "ps a1",
+            "ps b3",
+            "pc d5"
+        ]
+    }
+
 #### Play Turn
 
 | Part         | Value                                                                      |
@@ -550,6 +618,22 @@ ex:
         },
         "game_id": "12345",
         "turn": "pc a1"
+    }
+
+Responses:
+
+Malformed fields, invalid credentials, success
+
+| Part        | Value                                                                       |
+|-------------|-----------------------------------------------------------------------------|
+| Description | Failure, invalid move.                                                      |
+| Return code | 403                                                                         |
+| Return body | Reason for turn rejection.                                                  |
+
+ex:
+
+    {
+        "reason": "Username is already registered."
     }
 
 Notifications
@@ -572,6 +656,22 @@ ex:
         }
     }
 
+Responses:
+
+Malformed fields, invalid credentials
+
+| Part        | Value                                                                       |
+|-------------|-----------------------------------------------------------------------------|
+| Description | Success, friend requests listed.                                            |
+| Return code | 200                                                                         |
+| Return body | List of the friend requests.                                                |
+
+ex:
+
+    {
+        ["kirsten", "david"]
+    }
+
 #### Get Incoming Game Invitations
 
 | Part         | Value                                                                      |
@@ -588,3 +688,35 @@ ex:
             "password": "password"
         }
     }
+
+Responses:
+
+Malformed fields, invalid credentials
+
+| Part        | Value                                                                       |
+|-------------|-----------------------------------------------------------------------------|
+| Description | Success, incoming games listed.                                             |
+| Return code | 200                                                                         |
+| Return body | List of the incoming game requsts.                                          |
+
+ex:
+
+    {
+        [
+            {
+                "username": "melissa",
+                "player": "black",
+                "first": "white",
+                "size": 3,
+                "game_id": "11111"
+            },
+            {
+                "username": "kirsten",
+                "player": "black",
+                "first": "black",
+                "size": 6,
+                "game_id": "55555"
+            }
+        ]
+    }
+
