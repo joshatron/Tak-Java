@@ -17,7 +17,7 @@ Future versions will have a better setup.
 
     {
         "auth": {
-            "username": "joshatron",
+            "username": "Joshatron",
             "password": "password"
         }
     }
@@ -100,7 +100,7 @@ User Actions
 ex:
 
     {
-        "username": "joshatron",
+        "username": "Joshatron",
         "password": "password"
     }
 
@@ -132,7 +132,7 @@ ex:
 
     {
         "auth": {
-            "username": "joshatron",
+            "username": "Joshatron",
             "password": "password"
         },
         "password": "new-password"
@@ -157,10 +157,10 @@ ex:
 
     {
         "auth": {
-            "username": "joshatron",
+            "username": "Joshatron",
             "password": "password"
         },
-        "friend": "melissa"
+        "friend": "Melissa"
     }
 
 Responses:
@@ -191,10 +191,10 @@ ex:
 
     {
         "auth": {
-            "username": "melissa",
+            "username": "Melissa",
             "password": "password"
         },
-        "friend": "joshatron",
+        "friend": "Joshatron",
         "response": "accept"
     }
 
@@ -226,10 +226,10 @@ ex:
 
     {
         "auth": {
-            "username": "joshatron",
+            "username": "Joshatron",
             "password": "password"
         },
-        "block": "brian"
+        "block": "Brian"
     }
 
 Responses:
@@ -260,10 +260,10 @@ ex:
 
     {
         "auth": {
-            "username": "joshatron",
+            "username": "Joshatron",
             "password": "password"
         },
-        "unblock": "brian"
+        "unblock": "Brian"
     }
 
 Responses:
@@ -294,7 +294,7 @@ ex:
 
     {
         "auth": {
-            "username": "joshatron",
+            "username": "Joshatron",
             "password": "password"
         }
     }
@@ -312,7 +312,7 @@ Malformed fields, invalid credentials
 ex:
 
     {
-        ["melissa", "taryn"]
+        ["Melissa", "Taryn"]
     }
 
 #### List Blocked
@@ -327,7 +327,7 @@ ex:
 
     {
         "auth": {
-            "username": "joshatron",
+            "username": "Joshatron",
             "password": "password"
         }
     }
@@ -345,7 +345,7 @@ Malformed fields, invalid credentials
 ex:
 
     {
-        ["brian", "george"]
+        ["Brian", "Geoge"]
     }
 
 #### Send Message
@@ -360,10 +360,10 @@ ex:
 
     {
         "auth": {
-            "username": "joshatron",
+            "username": "Joshatron",
             "password": "password"
         },
-        "recipient": "melissa",
+        "recipient": "Melissa",
         "message": "hi"
     }
 
@@ -383,10 +383,10 @@ ex:
 
     {
         "auth": {
-            "username": "joshatron",
+            "username": "Joshatron",
             "password": "password"
         },
-        "senders": ["melissa", "taryn"],
+        "senders": ["Melissa", "Taryn"],
         "start": "06/06/2018 10:00:56",
         "read": "true"
     }
@@ -406,12 +406,12 @@ ex:
     {
         [
             {
-                "user": "taryn",
+                "user": "Taryn",
                 "timestamp": "08/10/18 10:58:16",
                 "message": "Hello!"
             },
             {
-                "user": "melissa",
+                "user": "Melissa",
                 "timestamp": "09/01/18 16:03:05",
                 "message": "It's your turn"
             }
@@ -433,10 +433,10 @@ ex:
 
     {
         "auth": {
-            "username": "joshatron",
+            "username": "Joshatron",
             "password": "password"
         },
-        "opponent": "melissa",
+        "opponent": "Melissa",
         "size": 5,
         "color": "white",
         "first": "true"
@@ -458,7 +458,7 @@ ex:
 
     {
         "auth": {
-            "username": "melissa",
+            "username": "Melissa",
             "password": "password"
         },
         "game_id": "12345",
@@ -481,7 +481,7 @@ ex:
 
     {
         "auth": {
-            "username": "joshatron",
+            "username": "Joshatron",
             "password": "password"
         },
         "size": 3
@@ -503,7 +503,7 @@ ex:
 
     {
         "auth": {
-            "username": "joshatron",
+            "username": "Joshatron",
             "password": "password"
         }
         "opponents": ["Melissa", "Taryn"],
@@ -539,7 +539,7 @@ ex:
 
     {
         "auth": {
-            "username": "joshatron",
+            "username": "Joshatron",
             "password": "password"
         }
     }
@@ -572,7 +572,7 @@ ex:
 
     {
         "auth": {
-            "username": "joshatron",
+            "username": "Joshatron",
             "password": "password"
         },
         "game_id": "12345"
@@ -613,7 +613,7 @@ ex:
 
     {
         "auth": {
-            "username": "joshatron",
+            "username": "Joshatron",
             "password": "password"
         },
         "game_id": "12345",
@@ -651,7 +651,7 @@ ex:
 
     {
         "auth": {
-            "username": "joshatron",
+            "username": "Joshatron",
             "password": "password"
         }
     }
@@ -669,7 +669,7 @@ Malformed fields, invalid credentials
 ex:
 
     {
-        ["kirsten", "david"]
+        ["Kirsten", "David"]
     }
 
 #### Get Incoming Game Invitations
@@ -684,7 +684,7 @@ ex:
 
     {
         "auth": {
-            "username": "joshatron",
+            "username": "Joshatron",
             "password": "password"
         }
     }
@@ -704,14 +704,14 @@ ex:
     {
         [
             {
-                "username": "melissa",
+                "username": "Melissa",
                 "player": "black",
                 "first": "white",
                 "size": 3,
                 "game_id": "11111"
             },
             {
-                "username": "kirsten",
+                "username": "Kirsten",
                 "player": "black",
                 "first": "black",
                 "size": 6,
