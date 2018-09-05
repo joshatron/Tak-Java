@@ -3,6 +3,10 @@ Tak API
 
 The following is a breakdown of the API spec of the tak server.
 
+POSTs are used for all the calls.
+The reason for this is because credentials are passed and some calls use parameters.
+All parameters are placed inside the body in a JSON format.
+
 Common Parts
 ------------
 
@@ -287,7 +291,7 @@ ex:
 | Part         | Value                                                                      |
 |--------------|----------------------------------------------------------------------------|
 | Description  | List all friends.                                                          |
-| Request Type | GET                                                                        |
+| Request Type | POST                                                                       |
 | Request Body | User credentials                                                           |
 
 ex:
@@ -320,7 +324,7 @@ ex:
 | Part         | Value                                                                      |
 |--------------|----------------------------------------------------------------------------|
 | Description  | List all blocked users.                                                    |
-| Request Type | GET                                                                        |
+| Request Type | POST                                                                       |
 | Request Body | User credentials                                                           |
 
 ex:
@@ -376,7 +380,7 @@ Malformed fields, invalid credentials, blocked, success
 | Part         | Value                                                                      |
 |--------------|----------------------------------------------------------------------------|
 | Description  | View all messages based on parameters.                                     |
-| Request Type | GET                                                                        |
+| Request Type | POST                                                                       |
 | Request Body | User credentials, from(optional), from time(optional), read(optional)      |
 
 ex:
@@ -496,7 +500,7 @@ Malformed fields, invalid credentials, success
 | Part         | Value                                                                      |
 |--------------|----------------------------------------------------------------------------|
 | Description  | Get a list of all game IDs for completed games given the parameters.       |
-| Request Type | GET                                                                        |
+| Request Type | POST                                                                       |
 | Request Body | User credentials, opponents(optional), from time(optional), size(optional) |
 
 ex:
@@ -532,7 +536,7 @@ ex:
 | Part         | Value                                                                      |
 |--------------|----------------------------------------------------------------------------|
 | Description  | Get a list of all game IDs for incomplete games.                           |
-| Request Type | GET                                                                        |
+| Request Type | POST                                                                       |
 | Request Body | User credentials                                                           |
 
 ex:
@@ -565,7 +569,7 @@ ex:
 | Part         | Value                                                                      |
 |--------------|----------------------------------------------------------------------------|
 | Description  | Get log of a game from the game ID.                                        |
-| Request Type | GET                                                                        |
+| Request Type | POST                                                                       |
 | Request Body | User credentials, game ID                                                  |
 
 ex:
@@ -644,7 +648,7 @@ Notifications
 | Part         | Value                                                                      |
 |--------------|----------------------------------------------------------------------------|
 | Description  | Get incoming friend requests                                               |
-| Request Type | GET                                                                        |
+| Request Type | POST                                                                       |
 | Request Body | User credentials                                                           |
 
 ex:
@@ -677,7 +681,7 @@ ex:
 | Part         | Value                                                                      |
 |--------------|----------------------------------------------------------------------------|
 | Description  | Get incoming game invitations                                              |
-| Request Type | GET                                                                        |
+| Request Type | POST                                                                       |
 | Request Body | User credentials                                                           |
 
 ex:
