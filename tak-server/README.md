@@ -7,7 +7,8 @@ The tak server is a RESTful api that allows people to play each other online.
 It can keep track of friends and allow them to play games against each other.
 It can also set up random games against random players.
 
-The API is described [here](api.md). A summary of the methods are mentioned below:
+The API is described [here](api.md).
+A summary of the methods are described below:
 
 | Call              | Description                                           |
 |-------------------|-------------------------------------------------------|
@@ -31,15 +32,17 @@ The API is described [here](api.md). A summary of the methods are mentioned belo
 | Incoming requests | View all incoming friend requests.                    |
 | Incoming games    | View all incoming game invitations.                   |
 
-Internally, there is a database with the following structure:
+Internally, there is a database which is defined [here](databse.md).
+Below is a summary of the tables:
 
-| Table     | Description                                           |
-|-----------|-------------------------------------------------------|
-| Users     | id, username, auth                                    |
-| Friends   | pairs of users                                        |
-| Requests  | open friend requests                                  |
-| Random    | list of users looking for a random game               |
-| Blocked   | denied friend requests and blocked users              |
-| Games     | id, white player, black player, is finished           |
-| Turns     | game id, order                                        |
-| Messages  | from, to, message, opened                             |
+| Table             | Description                                           |
+|-------------------|-------------------------------------------------------|
+| Users             | Information about each user.                          |
+| Friends           | Pairs of users who are friends.                       |
+| Blocked           | Blocked users.                                        |
+| Friend Requests   | Open friend requests.                                 |
+| Messages          | Messages sent between users.                          |
+| Random Requests   | Users looking for a random game.                      |
+| Game Requests     | Users challenging other users to a game.              |
+| Games             | Basic information about each game.                    |
+| Turns             | The turns made in every game.                         |
