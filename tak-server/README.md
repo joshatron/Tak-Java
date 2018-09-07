@@ -16,6 +16,7 @@ A summary of the methods are described below:
 | Change password   | Change your password.                                 |
 | Friend request    | Send friend request.                                  |
 | Friend response   | Respond to friend request.                            |
+| Outgoing requests | See all your outgoing friend requests.                |
 | Block user        | Block a user.                                         |
 | Unblock user      | Unblock a user.                                       |
 | List friends      | List all friends.                                     |

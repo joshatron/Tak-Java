@@ -218,6 +218,39 @@ ex:
         "reason": "There is no friend request from that user."
     }
 
+#### Outgoing Friend Requests
+
+| Part         | Value                                                                      |
+|--------------|----------------------------------------------------------------------------|
+| Description  | See all your outgoing friend requests.                                     |
+| Request Type | POST                                                                       |
+| Request Body | User credentials                                                           |
+
+ex:
+
+    {
+        "auth": {
+            "username": "Joshatron",
+            "password": "password"
+        }
+    }
+
+Responses:
+
+Malformed fields, invalid credentials
+
+| Part        | Value                                                                       |
+|-------------|-----------------------------------------------------------------------------|
+| Description | Success, friend requests listed.                                            |
+| Return code | 200                                                                         |
+| Return body | Array of all friend requests.                                               |
+
+ex:
+
+    {
+        ["Melissa", "Taryn"]
+    }
+
 #### Block User
 
 | Part         | Value                                                                      |
@@ -349,7 +382,7 @@ Malformed fields, invalid credentials
 ex:
 
     {
-        ["Brian", "Geoge"]
+        ["Brian", "George"]
     }
 
 #### Send Message
@@ -537,7 +570,7 @@ ex:
 |--------------|----------------------------------------------------------------------------|
 | Description  | Get a list of all game IDs for incomplete games.                           |
 | Request Type | POST                                                                       |
-| Request Body | User credentials                                                           |
+| Request Body | User credentials, my turn(optional)                                        |
 
 ex:
 
@@ -545,7 +578,8 @@ ex:
         "auth": {
             "username": "Joshatron",
             "password": "password"
-        }
+        },
+        "pending": "true"
     }
 
 Responses:
