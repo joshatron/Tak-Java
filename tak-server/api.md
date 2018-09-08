@@ -217,6 +217,39 @@ ex:
     {
         "reason": "There is no friend request from that user."
     }
+#### Get Incoming Friend Requests
+
+| Part         | Value                                                                      |
+|--------------|----------------------------------------------------------------------------|
+| Description  | Get incoming friend requests                                               |
+| Request Type | POST                                                                       |
+| Request Body | User credentials                                                           |
+
+ex:
+
+    {
+        "auth": {
+            "username": "Joshatron",
+            "password": "password"
+        }
+    }
+
+Responses:
+
+Malformed fields, invalid credentials
+
+| Part        | Value                                                                       |
+|-------------|-----------------------------------------------------------------------------|
+| Description | Success, friend requests listed.                                            |
+| Return code | 200                                                                         |
+| Return body | List of the friend requests.                                                |
+
+ex:
+
+    {
+        ["Kirsten", "David"]
+    }
+
 
 #### Outgoing Friend Requests
 
@@ -506,6 +539,102 @@ Responses:
 
 Malformed fields, invalid credentials, success
 
+#### Get Incoming Game Invitations
+
+| Part         | Value                                                                      |
+|--------------|----------------------------------------------------------------------------|
+| Description  | Get incoming game invitations                                              |
+| Request Type | POST                                                                       |
+| Request Body | User credentials                                                           |
+
+ex:
+
+    {
+        "auth": {
+            "username": "Joshatron",
+            "password": "password"
+        }
+    }
+
+Responses:
+
+Malformed fields, invalid credentials
+
+| Part        | Value                                                                       |
+|-------------|-----------------------------------------------------------------------------|
+| Description | Success, incoming games listed.                                             |
+| Return code | 200                                                                         |
+| Return body | List of the incoming game requsts.                                          |
+
+ex:
+
+    {
+        [
+            {
+                "username": "Melissa",
+                "player": "black",
+                "first": "white",
+                "size": 3,
+                "game_id": "11111"
+            },
+            {
+                "username": "Kirsten",
+                "player": "black",
+                "first": "black",
+                "size": 6,
+                "game_id": "55555"
+            }
+        ]
+    }
+
+#### Get Outgoing Game Invitations
+
+| Part         | Value                                                                      |
+|--------------|----------------------------------------------------------------------------|
+| Description  | Get outgoing game invitations                                              |
+| Request Type | POST                                                                       |
+| Request Body | User credentials                                                           |
+
+ex:
+
+    {
+        "auth": {
+            "username": "Joshatron",
+            "password": "password"
+        }
+    }
+
+Responses:
+
+Malformed fields, invalid credentials
+
+| Part        | Value                                                                       |
+|-------------|-----------------------------------------------------------------------------|
+| Description | Success, outgoing games listed.                                             |
+| Return code | 200                                                                         |
+| Return body | List of the outgoing game requsts.                                          |
+
+ex:
+
+    {
+        [
+            {
+                "username": "Melissa",
+                "player": "black",
+                "first": "white",
+                "size": 3,
+                "game_id": "11111"
+            },
+            {
+                "username": "Kirsten",
+                "player": "black",
+                "first": "black",
+                "size": 6,
+                "game_id": "55555"
+            }
+        ]
+    }
+
 #### Random Game
 
 | Part         | Value                                                                      |
@@ -673,88 +802,3 @@ ex:
     {
         "reason": "Username is already registered."
     }
-
-Notifications
--------------
-
-#### Get Incoming Friend Requests
-
-| Part         | Value                                                                      |
-|--------------|----------------------------------------------------------------------------|
-| Description  | Get incoming friend requests                                               |
-| Request Type | POST                                                                       |
-| Request Body | User credentials                                                           |
-
-ex:
-
-    {
-        "auth": {
-            "username": "Joshatron",
-            "password": "password"
-        }
-    }
-
-Responses:
-
-Malformed fields, invalid credentials
-
-| Part        | Value                                                                       |
-|-------------|-----------------------------------------------------------------------------|
-| Description | Success, friend requests listed.                                            |
-| Return code | 200                                                                         |
-| Return body | List of the friend requests.                                                |
-
-ex:
-
-    {
-        ["Kirsten", "David"]
-    }
-
-#### Get Incoming Game Invitations
-
-| Part         | Value                                                                      |
-|--------------|----------------------------------------------------------------------------|
-| Description  | Get incoming game invitations                                              |
-| Request Type | POST                                                                       |
-| Request Body | User credentials                                                           |
-
-ex:
-
-    {
-        "auth": {
-            "username": "Joshatron",
-            "password": "password"
-        }
-    }
-
-Responses:
-
-Malformed fields, invalid credentials
-
-| Part        | Value                                                                       |
-|-------------|-----------------------------------------------------------------------------|
-| Description | Success, incoming games listed.                                             |
-| Return code | 200                                                                         |
-| Return body | List of the incoming game requsts.                                          |
-
-ex:
-
-    {
-        [
-            {
-                "username": "Melissa",
-                "player": "black",
-                "first": "white",
-                "size": 3,
-                "game_id": "11111"
-            },
-            {
-                "username": "Kirsten",
-                "player": "black",
-                "first": "black",
-                "size": 6,
-                "game_id": "55555"
-            }
-        ]
-    }
-

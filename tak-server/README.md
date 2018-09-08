@@ -16,6 +16,7 @@ A summary of the methods are described below:
 | Change password   | Change your password.                                 |
 | Friend request    | Send friend request.                                  |
 | Friend response   | Respond to friend request.                            |
+| Incoming requests | View all incoming friend requests.                    |
 | Outgoing requests | See all your outgoing friend requests.                |
 | Block user        | Block a user.                                         |
 | Unblock user      | Unblock a user.                                       |
@@ -25,13 +26,13 @@ A summary of the methods are described below:
 | Read messages     | Read your message with parameters.                    |
 | Request game      | Request a game with a friend.                         |
 | Respond to game   | Respond to a game request.                            |
+| Incoming games    | View all incoming game invitations.                   |
+| Outgoing games    | View all outgoing game invitations.                   |
 | Random game       | Start a random game.                                  |
 | List completed    | List all completed games.                             |
 | List incomplete   | List all incomplete games.                            |
 | Get game          | Get the state of a game.                              |
 | Play turn         | Make a move in a game.                                |
-| Incoming requests | View all incoming friend requests.                    |
-| Incoming games    | View all incoming game invitations.                   |
 
 Internally, there is a database which is defined [here](databse.md).
 Below is a summary of the tables:
