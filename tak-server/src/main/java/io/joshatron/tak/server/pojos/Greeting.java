@@ -1,4 +1,4 @@
-package io.joshatron.tak.server;
+package io.joshatron.tak.server.pojos;
 
 public class Greeting {
 
