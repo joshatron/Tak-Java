@@ -139,7 +139,7 @@ ex:
             "username": "Joshatron",
             "password": "password"
         },
-        "password": "new-password"
+        "updated": "new-password"
     }
 
 Responses:
@@ -531,7 +531,7 @@ ex:
             "username": "Melissa",
             "password": "password"
         },
-        "game_id": "12345",
+        "id": "12345",
         "response": "deny"
     }
 
@@ -742,7 +742,7 @@ ex:
             "username": "Joshatron",
             "password": "password"
         },
-        "game_id": "12345"
+        "id": "12345"
     }
 
 Responses:
@@ -783,7 +783,7 @@ ex:
             "username": "Joshatron",
             "password": "password"
         },
-        "game_id": "12345",
+        "id": "12345",
         "turn": "pc a1"
     }
 

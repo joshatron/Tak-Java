@@ -1,6 +1,8 @@
 package io.joshatron.tak.server.controller;
 
+import io.joshatron.tak.server.pojos.*;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -9,47 +11,40 @@ import org.springframework.web.bind.annotation.RestController;
 public class GameController {
 
     @PostMapping("/request")
-    public void requestGame() {
-
+    public void requestGame(@RequestBody GameRequest gameRequest) {
     }
 
     @PostMapping("/response")
-    public void respondToGameRequest() {
-
+    public void respondToGameRequest(@RequestBody GameResponse gameResponse) {
     }
 
     @PostMapping("/checkincoming")
-    public void checkIncomingGames() {
-
+    public void checkIncomingGames(@RequestBody AuthWrapper authWrapper) {
+        Auth auth = authWrapper.getAuth();
     }
 
     @PostMapping("/checkoutgoing")
-    public void checkOutgoingGames() {
-
+    public void checkOutgoingGames(@RequestBody AuthWrapper authWrapper) {
+        Auth auth = authWrapper.getAuth();
     }
 
     @PostMapping("/random")
-    public void requestRandomGame() {
-
+    public void requestRandomGame(@RequestBody RandomGame randomGame) {
     }
 
     @PostMapping("/completed")
     public void listCompletedGames() {
-
     }
 
     @PostMapping("/incomplete")
     public void listIncompleteGames() {
-
     }
 
     @PostMapping("/game")
     public void getGame() {
-
     }
 
     @PostMapping("/play")
     public void playTurn() {
-
     }
 }
