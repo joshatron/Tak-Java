@@ -1,14 +1,15 @@
-package io.joshatron.tak.server.pojos;
+package io.joshatron.tak.server.requestbody;
 
-public class FriendResponse {
+public class GameResponse {
 
     private Auth auth;
-    private String friend;
+    private String id;
     private String response;
 
-    public FriendResponse(Auth auth, String friend, String response) {
+
+    public GameResponse(Auth auth, String id, String response) {
         this.auth = auth;
-        this.friend = friend;
+        this.id = id;
         this.response = response;
     }
 
@@ -20,12 +21,12 @@ public class FriendResponse {
         this.auth = auth;
     }
 
-    public String getFriend() {
-        return friend;
+    public String getId() {
+        return id;
     }
 
-    public void setFriend(String friend) {
-        this.friend = friend;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getResponse() {

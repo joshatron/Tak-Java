@@ -44,7 +44,7 @@ The following is a description of the tables in the database.
 | from      | int       | NOT NULL                  | ID of the sender.                         |
 | to        | int       | NOT NULL                  | ID of the recipient.                      |
 | message   | string    | NOT NULL                  | Message body.                             |
-| time      | string    | NOT NULL                  | Timestamp when it was sent.               |
+| time      | int       | NOT NULL                  | Timestamp when it was sent.               |
 | opened    | int       | NOT NULL                  | 0 for unopened, 1 for opened.             |
 
 ### Games
@@ -75,6 +75,8 @@ The following is a description of the tables in the database.
 | black     | int       | NOT NULL                  | User ID of the black player.              |
 | size      | int       | NOT NULL                  | Size of the board.                        |
 | first     | int       | NOT NULL                  | 0 if white is first, 1 for black.         |
+| start     | int       | NOT NULL                  | Timestamp when it was started.            |
+| end       | int       |                           | Timestamp when it was ended.              |
 | done      | int       | NOT NULL                  | 0 if not done yet, 1 if finished.         |
 
 #### Turns

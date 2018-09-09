@@ -1,4 +1,4 @@
-package io.joshatron.tak.server.pojos;
+package io.joshatron.tak.server.requestbody;
 
 public class ReadMessages {
 
