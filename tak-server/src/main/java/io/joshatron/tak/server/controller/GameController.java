@@ -33,18 +33,18 @@ public class GameController {
     }
 
     @PostMapping("/completed")
-    public void listCompletedGames() {
+    public void listCompletedGames(@RequestBody ListCompleted listCompleted) {
     }
 
     @PostMapping("/incomplete")
-    public void listIncompleteGames() {
+    public void listIncompleteGames(@RequestBody ListIncomplete listIncomplete) {
     }
 
     @PostMapping("/game")
-    public void getGame() {
+    public void getGame(@RequestBody GetGame getGame) {
     }
 
     @PostMapping("/play")
-    public void playTurn() {
+    public void playTurn(@RequestBody PlayTurn playTurn) {
     }
 }
