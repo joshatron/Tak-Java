@@ -1,10 +1,11 @@
 package io.joshatron.tak.server.database;
 
 import io.joshatron.tak.server.requestbody.Auth;
+import io.joshatron.tak.server.requestbody.PassChange;
 
 public interface AccountDAO {
 
-    boolean isAuthenticated(String username, String auth);
-    boolean registerUser(String username, String auth);
-    boolean updatePassword(Auth auth, String newAuth);
+    boolean isAuthenticated(Auth auth);
+    boolean registerUser(Auth auth);
+    boolean updatePassword(PassChange change);
 }

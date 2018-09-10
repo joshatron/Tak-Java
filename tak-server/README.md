@@ -15,6 +15,7 @@ A summary of the methods are described below:
 | Register          | Register a new user.                                  |
 | Change password   | Change your password.                                 |
 | Friend request    | Send friend request.                                  |
+| Cancel request    | Cancel a sent friend request.                         |
 | Friend response   | Respond to friend request.                            |
 | Incoming requests | View all incoming friend requests.                    |
 | Outgoing requests | See all your outgoing friend requests.                |

@@ -14,6 +14,10 @@ public class SocialController {
     public void requestFriend(@RequestBody FriendRequest friendRequest) {
     }
 
+    @PostMapping("/cancel")
+    public void cancelFriendRequest(@RequestBody CancelFriendRequest cancelFriendRequest) {
+    }
+
     @PostMapping("/response")
     public void respondToRequest(@RequestBody FriendResponse friendResponse) {
     }

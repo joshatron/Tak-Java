@@ -155,7 +155,7 @@ Friend Actions
 |--------------|----------------------------------------------------------------------------|
 | Description  | Request a new friend.                                                      |
 | Request Type | POST                                                                       |
-| Request Body | User credentials, username to request                                      |
+| Request Body | User credentials, username to request.                                     |
 
 ex:
 
@@ -169,7 +169,7 @@ ex:
 
 Responses:
 
-Malformed fields, invalid credentials, blocked, sucess
+Malformed fields, invalid credentials, blocked, success
 
 | Part        | Value                                                                       |
 |-------------|-----------------------------------------------------------------------------|
@@ -182,6 +182,28 @@ ex:
     {
         "reason": "You are already friends with that user."
     }
+
+#### Cancel Friend Request
+
+| Part         | Value                                                                      |
+|--------------|----------------------------------------------------------------------------|
+| Description  | Cancel a pending friend request                                            |
+| Request Type | POST                                                                       |
+| Request Body | User credentials, username to cancel.                                      |
+
+ex:
+
+    {
+        "auth": {
+            "username": "Joshatron",
+            "password": "password"
+        },
+        "friend": "Brian"
+    }
+
+Responses:
+
+Malformed fields, invalid credentials, blocked, success
 
 #### Friend Response
 
@@ -217,6 +239,7 @@ ex:
     {
         "reason": "There is no friend request from that user."
     }
+
 #### Get Incoming Friend Requests
 
 | Part         | Value                                                                      |
@@ -249,7 +272,6 @@ ex:
     {
         ["Kirsten", "David"]
     }
-
 
 #### Outgoing Friend Requests
 
