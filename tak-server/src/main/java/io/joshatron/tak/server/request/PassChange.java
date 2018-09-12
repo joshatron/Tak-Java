@@ -1,4 +1,4 @@
-package io.joshatron.tak.server.requestbody;
+package io.joshatron.tak.server.request;
 
 public class PassChange {
 

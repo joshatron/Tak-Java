@@ -1,6 +1,6 @@
 package io.joshatron.tak.server.controller;
 
-import io.joshatron.tak.server.requestbody.*;
+import io.joshatron.tak.server.request.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -4,9 +4,9 @@ command -v mvn >/dev/null 2>&1 || { echo >&2 "Maven is required for setup. Abort
 
 mvn clean install
 
-mkdir trainer/
-mkdir cli/
-mkdir server/
+mkdir -p trainer/
+mkdir -p cli/
+mkdir -p server/
 cp tak-ai/target/tak-ai*.jar trainer/
 cp tak-cli/target/tak-cli*.jar cli/
 cp tak-server/target/tak-server*.jar server/

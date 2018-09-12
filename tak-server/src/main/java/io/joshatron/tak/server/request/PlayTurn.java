@@ -1,16 +1,15 @@
-package io.joshatron.tak.server.requestbody;
+package io.joshatron.tak.server.request;
 
-public class GameResponse {
+public class PlayTurn {
 
     private Auth auth;
     private String id;
-    private String response;
+    private String turn;
 
-
-    public GameResponse(Auth auth, String id, String response) {
+    public PlayTurn(Auth auth, String id, String turn) {
         this.auth = auth;
         this.id = id;
-        this.response = response;
+        this.turn = turn;
     }
 
     public Auth getAuth() {
@@ -29,11 +28,11 @@ public class GameResponse {
         this.id = id;
     }
 
-    public String getResponse() {
-        return response;
+    public String getTurn() {
+        return turn;
     }
 
-    public void setResponse(String response) {
-        this.response = response;
+    public void setTurn(String turn) {
+        this.turn = turn;
     }
 }

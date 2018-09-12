@@ -1,6 +1,6 @@
 package io.joshatron.tak.server.database;
 
-import io.joshatron.tak.server.requestbody.*;
+import io.joshatron.tak.server.request.*;
 
 public interface SocialDAO {
 

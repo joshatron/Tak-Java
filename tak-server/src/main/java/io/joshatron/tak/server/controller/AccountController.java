@@ -1,7 +1,7 @@
 package io.joshatron.tak.server.controller;
 
-import io.joshatron.tak.server.requestbody.Auth;
-import io.joshatron.tak.server.requestbody.PassChange;
+import io.joshatron.tak.server.request.Auth;
+import io.joshatron.tak.server.request.PassChange;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
