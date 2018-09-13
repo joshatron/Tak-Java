@@ -38,9 +38,8 @@ public class AccountController {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return null;
     }
 
     @PostMapping("/changepass")
@@ -54,8 +53,7 @@ public class AccountController {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return null;
     }
 }

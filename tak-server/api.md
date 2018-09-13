@@ -270,7 +270,7 @@ Malformed fields, invalid credentials
 ex:
 
     {
-        ["Kirsten", "David"]
+        "users": ["Kirsten", "David"]
     }
 
 #### Outgoing Friend Requests
@@ -303,7 +303,7 @@ Malformed fields, invalid credentials
 ex:
 
     {
-        ["Melissa", "Taryn"]
+        "users": ["Melissa", "Taryn"]
     }
 
 #### Block User
@@ -404,7 +404,7 @@ Malformed fields, invalid credentials
 ex:
 
     {
-        ["Melissa", "Taryn"]
+        "users": ["Melissa", "Taryn"]
     }
 
 #### List Blocked
@@ -437,7 +437,7 @@ Malformed fields, invalid credentials
 ex:
 
     {
-        ["Brian", "George"]
+        "users": ["Brian", "George"]
     }
 
 #### Send Message
@@ -496,7 +496,7 @@ Malformed fields, invalid credentials
 ex:
 
     {
-        [
+        "messages": [
             {
                 "user": "Taryn",
                 "timestamp": "08/10/18 10:58:16",
@@ -597,14 +597,14 @@ ex:
                 "player": "black",
                 "first": "white",
                 "size": 3,
-                "game_id": "11111"
+                "id": "11111"
             },
             {
                 "username": "Kirsten",
                 "player": "black",
                 "first": "black",
                 "size": 6,
-                "game_id": "55555"
+                "id": "55555"
             }
         ]
     }
@@ -645,14 +645,14 @@ ex:
                 "player": "black",
                 "first": "white",
                 "size": 3,
-                "game_id": "11111"
+                "id": "11111"
             },
             {
                 "username": "Kirsten",
                 "player": "black",
                 "first": "black",
                 "size": 6,
-                "game_id": "55555"
+                "id": "55555"
             }
         ]
     }
@@ -712,7 +712,7 @@ Malformed fields, invalid credentials
 ex:
 
     {
-        ["12345", "98765", "00001"]
+        "games": ["12345", "98765", "00001"]
     }
 
 #### List Incomplete Games
@@ -746,7 +746,7 @@ Malformed fields, invalid credentials
 ex:
 
     {
-        ["54321", "56789", "00005"]
+        "games": ["54321", "56789", "00005"]
     }
 
 #### Get Game
@@ -783,7 +783,7 @@ ex:
         "first": "white",
         "player": "black",
         "size": 5,
-        [
+        "turns": [
             "ps a1",
             "ps b3",
             "pc d5"

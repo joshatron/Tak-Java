@@ -1,6 +1,8 @@
 package io.joshatron.tak.server.database;
 
 import io.joshatron.tak.server.request.*;
+import io.joshatron.tak.server.response.GameInfo;
+import io.joshatron.tak.server.response.RequestInfo;
 
 public interface GameDAO {
 
@@ -9,9 +11,9 @@ public interface GameDAO {
     boolean respondToGame(GameResponse response);
     boolean playTurn(PlayTurn turn);
 
-    int[] checkIncomingGames(Auth auth);
-    int[] checkOutgoingGames(Auth auth);
+    RequestInfo[] checkIncomingGames(Auth auth);
+    RequestInfo[] checkOutgoingGames(Auth auth);
     int[] listCompletedGames(ListCompleted completed);
     int[] listIncompleteGames(ListIncomplete incomplete);
-    String[] getGame(GetGame game);
+    GameInfo getGame(GetGame game);
 }
