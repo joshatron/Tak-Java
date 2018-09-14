@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class SocialDAOSqlite implements SocialDAO {
 
@@ -270,7 +271,36 @@ public class SocialDAOSqlite implements SocialDAO {
         if(!accountDAO.isAuthenticated(auth)) {
             return null;
         }
-        return new String[0];
+
+        String getFriendsRequester = "SELECT users.username as username " +
+                "FROM friends " +
+                "LEFT OUTER JOIN users on friends.acceptor = users.id " +
+                "WHERE requester = ?;";
+
+        String getFriendsAcceptor = "SELECT users.username as username " +
+                "FROM friends " +
+                "LEFT OUTER JOIN users on friends.requester = users.id " +
+                "WHERE acceptor = ?;";
+
+        PreparedStatement requesterStmt = conn.prepareStatement(getFriendsRequester);
+        requesterStmt.setInt(1, accountDAO.idFromUsername(auth.getUsername()));
+        ResultSet requestSet = requesterStmt.executeQuery();
+
+        PreparedStatement acceptorStmt = conn.prepareStatement(getFriendsAcceptor);
+        acceptorStmt.setInt(1, accountDAO.idFromUsername(auth.getUsername()));
+        ResultSet acceptSet = acceptorStmt.executeQuery();
+
+        ArrayList<String> names = new ArrayList<>();
+
+        while(requestSet.next()) {
+            names.add(requestSet.getString("username"));
+        }
+
+        while(acceptSet.next()) {
+            names.add(requestSet.getString("username"));
+        }
+
+        return names.toArray(new String[names.size()]);
     }
 
     @Override
@@ -279,7 +309,23 @@ public class SocialDAOSqlite implements SocialDAO {
         if(!accountDAO.isAuthenticated(auth)) {
             return null;
         }
-        return new String[0];
+
+        String getBlocked = "SELECT users.username as username " +
+                "FROM blocked " +
+                "LEFT OUTER JOIN users on blocked.blocked = users.id " +
+                "WHERE requester = ?;";
+
+        PreparedStatement blockedStmt = conn.prepareStatement(getBlocked);
+        blockedStmt.setInt(1, accountDAO.idFromUsername(auth.getUsername()));
+        ResultSet blockedSet = blockedStmt.executeQuery();
+
+        ArrayList<String> names = new ArrayList<>();
+
+        while(blockedSet.next()) {
+            names.add(blockedSet.getString("username"));
+        }
+
+        return names.toArray(new String[names.size()]);
     }
 
     @Override
@@ -288,7 +334,23 @@ public class SocialDAOSqlite implements SocialDAO {
         if(!accountDAO.isAuthenticated(auth)) {
             return null;
         }
-        return new String[0];
+
+        String getIncoming = "SELECT users.username as username " +
+                "FROM friend_requests " +
+                "LEFT OUTER JOIN users on friend_requests.requester = users.id " +
+                "WHERE acceptor = ?;";
+
+        PreparedStatement incomingStmt = conn.prepareStatement(getIncoming);
+        incomingStmt.setInt(1, accountDAO.idFromUsername(auth.getUsername()));
+        ResultSet incomingSet = incomingStmt.executeQuery();
+
+        ArrayList<String> names = new ArrayList<>();
+
+        while(incomingSet.next()) {
+            names.add(incomingSet.getString("username"));
+        }
+
+        return names.toArray(new String[names.size()]);
     }
 
     @Override
@@ -297,7 +359,23 @@ public class SocialDAOSqlite implements SocialDAO {
         if(!accountDAO.isAuthenticated(auth)) {
             return null;
         }
-        return new String[0];
+
+        String getOutgoing = "SELECT users.username as username " +
+                "FROM friend_requests " +
+                "LEFT OUTER JOIN users on friend_requests.acceptor = users.id " +
+                "WHERE requester = ?;";
+
+        PreparedStatement outgoingStmt = conn.prepareStatement(getOutgoing);
+        outgoingStmt.setInt(1, accountDAO.idFromUsername(auth.getUsername()));
+        ResultSet outgoingSet = outgoingStmt.executeQuery();
+
+        ArrayList<String> names = new ArrayList<>();
+
+        while(outgoingSet.next()) {
+            names.add(outgoingSet.getString("username"));
+        }
+
+        return names.toArray(new String[names.size()]);
     }
 
     @Override
@@ -306,6 +384,50 @@ public class SocialDAOSqlite implements SocialDAO {
         if(!accountDAO.isAuthenticated(readMessages.getAuth())) {
             return null;
         }
-        return new Message[0];
+
+        String getMessages = "SELECT from, message, time " +
+                "FROM messages " +
+                "WHERE to = ?";
+
+        if(readMessages.getRead() != null) {
+            if(readMessages.getRead().toLowerCase().equals("true")) {
+                getMessages += " AND read = 1";
+            }
+            else {
+                getMessages += " AND read = 0";
+            }
+        }
+        if(readMessages.getStart() != null) {
+            getMessages += " AND time > ?";
+        }
+        if(readMessages.getSenders() != null && readMessages.getSenders().length > 0) {
+            getMessages += " AND (from = ?";
+            for(int i = 1; i < readMessages.getSenders().length; i++) {
+                getMessages += " OR from = ?";
+            }
+            getMessages += ")";
+        }
+        getMessages += ";";
+
+        PreparedStatement messageStmt = conn.prepareStatement(getMessages);
+        messageStmt.setInt(1, accountDAO.idFromUsername(readMessages.getAuth().getUsername()));
+        int i = 2;
+        if(readMessages.getStart() != null) {
+            messageStmt.setString(2, readMessages.getStart());
+            i++;
+        }
+        for(String user : readMessages.getSenders()) {
+            messageStmt.setInt(i, accountDAO.idFromUsername(user));
+            i++;
+        }
+        ResultSet messageSet = messageStmt.executeQuery();
+
+        ArrayList<Message> messages = new ArrayList<>();
+
+        while(messageSet.next()) {
+            messages.add(new Message(messageSet.getString("from"), messageSet.getString("time"), messageSet.getString("message")));
+        }
+
+        return messages.toArray(new Message[messages.size()]);
     }
 }
