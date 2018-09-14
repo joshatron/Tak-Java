@@ -13,7 +13,7 @@ public interface SocialDAO {
     boolean blockUser(Block block) throws SQLException;
     boolean unblockUser(Unblock unblock) throws SQLException;
     boolean sendMessage(SendMessage sendMessage) throws SQLException;
-    boolean isBlocked(String requester, String other);
+    boolean isBlocked(String requester, String other) throws SQLException;
 
     String[] listFriends(Auth auth) throws SQLException;
     String[] listBlocked(Auth auth) throws SQLException;

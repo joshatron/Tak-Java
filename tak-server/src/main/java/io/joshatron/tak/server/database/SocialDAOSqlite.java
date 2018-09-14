@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 public class SocialDAOSqlite implements SocialDAO {
 
@@ -40,10 +41,10 @@ public class SocialDAOSqlite implements SocialDAO {
                 "WHERE (requester = ? AND acceptor = ?) OR (requester = ? AND acceptor = ?);";
 
         PreparedStatement checkFriendsStmt = conn.prepareStatement(checkFriends);
-        checkFriendsStmt.setString(1, request.getAuth().getUsername());
-        checkFriendsStmt.setString(2, request.getFriend());
-        checkFriendsStmt.setString(3, request.getFriend());
-        checkFriendsStmt.setString(4, request.getAuth().getUsername());
+        checkFriendsStmt.setInt(1, accountDAO.idFromUsername(request.getAuth().getUsername()));
+        checkFriendsStmt.setInt(2, accountDAO.idFromUsername(request.getFriend()));
+        checkFriendsStmt.setInt(3, accountDAO.idFromUsername(request.getFriend()));
+        checkFriendsStmt.setInt(4, accountDAO.idFromUsername(request.getAuth().getUsername()));
         ResultSet rs = checkFriendsStmt.executeQuery();
 
         if(rs.next()) {
@@ -56,10 +57,10 @@ public class SocialDAOSqlite implements SocialDAO {
                 "WHERE (requester = ? AND acceptor = ?) OR (requester = ? AND acceptor = ?);";
 
         PreparedStatement checkStmt = conn.prepareStatement(checkRequest);
-        checkStmt.setString(1, request.getAuth().getUsername());
-        checkStmt.setString(2, request.getFriend());
-        checkStmt.setString(3, request.getFriend());
-        checkStmt.setString(4, request.getAuth().getUsername());
+        checkStmt.setInt(1, accountDAO.idFromUsername(request.getAuth().getUsername()));
+        checkStmt.setInt(2, accountDAO.idFromUsername(request.getFriend()));
+        checkStmt.setInt(3, accountDAO.idFromUsername(request.getFriend()));
+        checkStmt.setInt(4, accountDAO.idFromUsername(request.getAuth().getUsername()));
         rs = checkStmt.executeQuery();
 
         if(rs.next()) {
@@ -71,8 +72,8 @@ public class SocialDAOSqlite implements SocialDAO {
                 "VALUES (?,?);";
 
         PreparedStatement insertStmt = conn.prepareStatement(insertRequest);
-        insertStmt.setString(1, request.getAuth().getUsername());
-        insertStmt.setString(2, request.getFriend());
+        insertStmt.setInt(1, accountDAO.idFromUsername(request.getAuth().getUsername()));
+        insertStmt.setInt(2, accountDAO.idFromUsername(request.getFriend()));
         insertStmt.executeUpdate();
 
         return true;
@@ -91,8 +92,8 @@ public class SocialDAOSqlite implements SocialDAO {
                 "WHERE requester = ? AND acceptor = ?;";
 
         PreparedStatement checkStmt = conn.prepareStatement(checkRequest);
-        checkStmt.setString(1, request.getAuth().getUsername());
-        checkStmt.setString(2, request.getAcceptor());
+        checkStmt.setInt(1, accountDAO.idFromUsername(request.getAuth().getUsername()));
+        checkStmt.setInt(2, accountDAO.idFromUsername(request.getAcceptor()));
         ResultSet rs = checkStmt.executeQuery();
 
         if(!rs.next()) {
@@ -104,8 +105,8 @@ public class SocialDAOSqlite implements SocialDAO {
                 "WHERE requester = ? AND acceptor = ?;";
 
         PreparedStatement deleteStmt = conn.prepareStatement(deleteRequest);
-        deleteStmt.setString(1, request.getAuth().getUsername());
-        deleteStmt.setString(2, request.getAcceptor());
+        deleteStmt.setInt(1, accountDAO.idFromUsername(request.getAuth().getUsername()));
+        deleteStmt.setInt(2, accountDAO.idFromUsername(request.getAcceptor()));
         deleteStmt.executeUpdate();
 
         return true;
@@ -124,8 +125,8 @@ public class SocialDAOSqlite implements SocialDAO {
                 "WHERE requester = ? AND acceptor = ?;";
 
         PreparedStatement checkStmt = conn.prepareStatement(checkRequest);
-        checkStmt.setString(1, response.getFriend());
-        checkStmt.setString(2, response.getAuth().getUsername());
+        checkStmt.setInt(1, accountDAO.idFromUsername(response.getFriend()));
+        checkStmt.setInt(2, accountDAO.idFromUsername(response.getAuth().getUsername()));
         ResultSet rs = checkStmt.executeQuery();
 
         if(!rs.next()) {
@@ -137,8 +138,8 @@ public class SocialDAOSqlite implements SocialDAO {
                 "WHERE requester = ? AND acceptor = ?;";
 
         PreparedStatement deleteStmt = conn.prepareStatement(deleteRequest);
-        deleteStmt.setString(1, response.getFriend());
-        deleteStmt.setString(2, response.getAuth().getUsername());
+        deleteStmt.setInt(1, accountDAO.idFromUsername(response.getFriend()));
+        deleteStmt.setInt(2, accountDAO.idFromUsername(response.getAuth().getUsername()));
         deleteStmt.executeUpdate();
 
         if(response.getResponse().toLowerCase().equals("accept")) {
@@ -146,8 +147,8 @@ public class SocialDAOSqlite implements SocialDAO {
                     "VALUES (?,?);";
 
             PreparedStatement insertStmt = conn.prepareStatement(insertFriend);
-            insertStmt.setString(1, response.getFriend());
-            insertStmt.setString(2, response.getAuth().getUsername());
+            insertStmt.setInt(1, accountDAO.idFromUsername(response.getFriend()));
+            insertStmt.setInt(2, accountDAO.idFromUsername(response.getAuth().getUsername()));
             insertStmt.executeUpdate();
         }
 
@@ -166,20 +167,20 @@ public class SocialDAOSqlite implements SocialDAO {
                 "WHERE (requester = ? AND acceptor = ?) OR (requester = ? AND acceptor = ?);";
 
         PreparedStatement deleteRequestStmt = conn.prepareStatement(deleteRequest);
-        deleteRequestStmt.setString(1, block.getAuth().getUsername());
-        deleteRequestStmt.setString(2, block.getBlock());
-        deleteRequestStmt.setString(3, block.getBlock());
-        deleteRequestStmt.setString(4, block.getAuth().getUsername());
+        deleteRequestStmt.setInt(1, accountDAO.idFromUsername(block.getAuth().getUsername()));
+        deleteRequestStmt.setInt(2, accountDAO.idFromUsername(block.getBlock()));
+        deleteRequestStmt.setInt(3, accountDAO.idFromUsername(block.getBlock()));
+        deleteRequestStmt.setInt(4, accountDAO.idFromUsername(block.getAuth().getUsername()));
         deleteRequestStmt.executeUpdate();
 
         String deleteFriend = "DELETE FROM friends " +
                 "WHERE (requester = ? AND acceptor = ?) OR (requester = ? AND acceptor = ?);";
 
         PreparedStatement deleteStmt = conn.prepareStatement(deleteFriend);
-        deleteStmt.setString(1, block.getAuth().getUsername());
-        deleteStmt.setString(2, block.getBlock());
-        deleteStmt.setString(3, block.getBlock());
-        deleteStmt.setString(4, block.getAuth().getUsername());
+        deleteStmt.setInt(1, accountDAO.idFromUsername(block.getAuth().getUsername()));
+        deleteStmt.setInt(2, accountDAO.idFromUsername(block.getBlock()));
+        deleteStmt.setInt(3, accountDAO.idFromUsername(block.getBlock()));
+        deleteStmt.setInt(4, accountDAO.idFromUsername(block.getAuth().getUsername()));
         deleteStmt.executeUpdate();
 
         //add block
@@ -187,8 +188,8 @@ public class SocialDAOSqlite implements SocialDAO {
                 "VALUES (?,?);";
 
         PreparedStatement insertStmt = conn.prepareStatement(insertBlock);
-        insertStmt.setString(1, block.getAuth().getUsername());
-        insertStmt.setString(2, block.getBlock());
+        insertStmt.setInt(1, accountDAO.idFromUsername(block.getAuth().getUsername()));
+        insertStmt.setInt(2, accountDAO.idFromUsername(block.getBlock()));
         insertStmt.executeUpdate();
 
         return false;
@@ -200,7 +201,22 @@ public class SocialDAOSqlite implements SocialDAO {
         if(!accountDAO.isAuthenticated(unblock.getAuth())) {
             return false;
         }
-        return false;
+
+        //if block doesn't exist, return false
+        if(!isBlocked(unblock.getAuth().getUsername(), unblock.getUnblock())) {
+            return false;
+        }
+
+        //remove block
+        String deleteBlock = "DELETE FROM blocked " +
+                "WHERE requester = ? AND blocked = ?;";
+
+        PreparedStatement deleteStmt = conn.prepareStatement(deleteBlock);
+        deleteStmt.setInt(1, accountDAO.idFromUsername(unblock.getAuth().getUsername()));
+        deleteStmt.setInt(2, accountDAO.idFromUsername(unblock.getUnblock()));
+        deleteStmt.executeUpdate();
+
+        return true;
     }
 
     @Override
@@ -209,11 +225,42 @@ public class SocialDAOSqlite implements SocialDAO {
         if(!accountDAO.isAuthenticated(sendMessage.getAuth())) {
             return false;
         }
+        //if blocked, return false
+        if(isBlocked(sendMessage.getAuth().getUsername(), sendMessage.getRecipient())) {
+            return false;
+        }
+
+        //Add message
+        LocalDate date = LocalDate.now();
+        String insertRequest = "INSERT INTO messages (from, to, message, time, opened) " +
+                "VALUES (?,?,?,?,0);";
+
+        PreparedStatement insertStmt = conn.prepareStatement(insertRequest);
+        insertStmt.setInt(1, accountDAO.idFromUsername(sendMessage.getAuth().getUsername()));
+        insertStmt.setInt(2, accountDAO.idFromUsername(sendMessage.getRecipient()));
+        insertStmt.setString(3, sendMessage.getMessage());
+        insertStmt.setString(4, date.toString());
+        insertStmt.executeUpdate();
+
         return false;
     }
 
     @Override
-    public boolean isBlocked(String requester, String other) {
+    public boolean isBlocked(String requester, String other) throws SQLException {
+        //if request already exists, return false
+        String checkRequest = "SELECT requester, blocked " +
+                "FROM blocked " +
+                "WHERE requester = ? AND blocked = ?;";
+
+        PreparedStatement checkStmt = conn.prepareStatement(checkRequest);
+        checkStmt.setInt(1, accountDAO.idFromUsername(requester));
+        checkStmt.setInt(2, accountDAO.idFromUsername(other));
+        ResultSet rs = checkStmt.executeQuery();
+
+        if(rs.next()) {
+            return true;
+        }
+
         return false;
     }
 

@@ -84,4 +84,20 @@ public class AccountDAOSqlite implements AccountDAO {
 
         return true;
     }
+
+    public int idFromUsername(String username) throws SQLException {
+        String checkUsername = "SELECT id " +
+                "FROM users " +
+                "WHERE username = ?;";
+
+        PreparedStatement selectStmt = conn.prepareStatement(checkUsername);
+        selectStmt.setString(1, username);
+        ResultSet rs = selectStmt.executeQuery();
+
+        if(rs.next()) {
+            return rs.getInt("id");
+        }
+
+        return -9999;
+    }
 }
