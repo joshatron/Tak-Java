@@ -1,6 +1,6 @@
 package io.joshatron.tak.server.response;
 
-public class GameRequest {
+public class RequestInfo {
 
     private String username;
     private String player;
@@ -8,7 +8,7 @@ public class GameRequest {
     private int size;
     private String id;
 
-    public GameRequest(String username, String player, String first, int size, String id) {
+    public RequestInfo(String username, String player, String first, int size, String id) {
         this.username = username;
         this.player = player;
         this.first = first;
