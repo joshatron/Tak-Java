@@ -2,6 +2,7 @@ package io.joshatron.tak.server.controller;
 
 import io.joshatron.tak.server.database.AccountDAO;
 import io.joshatron.tak.server.database.SocialDAO;
+import io.joshatron.tak.server.database.SocialDAOSqlite;
 import io.joshatron.tak.server.request.*;
 import io.joshatron.tak.server.response.Message;
 import io.joshatron.tak.server.response.Messages;
@@ -20,6 +21,7 @@ public class SocialController {
     private SocialDAO socialDAO;
 
     public SocialController() {
+        socialDAO = new SocialDAOSqlite();
     }
 
     public SocialController(AccountDAO accountDAO, SocialDAO socialDAO) {

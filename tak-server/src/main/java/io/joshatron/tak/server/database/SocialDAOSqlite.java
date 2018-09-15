@@ -428,6 +428,15 @@ public class SocialDAOSqlite implements SocialDAO {
             messages.add(new Message(messageSet.getString("from"), messageSet.getString("time"), messageSet.getString("message")));
         }
 
+
+        String markRead = "UPDATE messages " +
+                "SET read = 1 " +
+                "WHERE to = ?;";
+
+        PreparedStatement readStmt = conn.prepareStatement(markRead);
+        readStmt.setInt(1, accountDAO.idFromUsername(readMessages.getAuth().getUsername()));
+        readStmt.executeUpdate();
+
         return messages.toArray(new Message[messages.size()]);
     }
 }

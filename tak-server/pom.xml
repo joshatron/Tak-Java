@@ -33,6 +33,11 @@
             <artifactId>sqlite-jdbc</artifactId>
             <version>3.23.1</version>
         </dependency>
+        <dependency>
+            <groupId>io.joshatron</groupId>
+            <artifactId>tak-engine</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
     <properties>
