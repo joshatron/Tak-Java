@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class GameDAOSqlite implements GameDAO {
 
@@ -120,8 +121,28 @@ public class GameDAOSqlite implements GameDAO {
         if(!accountDAO.isAuthenticated(auth)) {
             return null;
         }
+
         //select all requests and convert to request infos
-        return new RequestInfo[0];
+        String incoming = "SELECT users.username as username, size, white, first " +
+                "FROM game_requests " +
+                "LEFT OUTER JOIN users on game_requests.requester = users.id " +
+                "WHERE acceptor = ?;";
+
+        PreparedStatement requestStmt = conn.prepareStatement(incoming);
+        requestStmt.setInt(1, accountDAO.idFromUsername(auth.getUsername()));
+        ResultSet requestSet = requestStmt.executeQuery();
+
+        ArrayList<RequestInfo> requests = new ArrayList<>();
+
+        while(requestSet.next()) {
+            String user = requestSet.getString("username");
+            boolean white = requestSet.getInt("white") == 0;
+            boolean first = requestSet.getInt("first") == 0;
+            int size = requestSet.getInt("size");
+            requests.add(new RequestInfo(user, white, first, size));
+        }
+
+        return requests.toArray(new RequestInfo[requests.size()]);
     }
 
     @Override
@@ -130,8 +151,28 @@ public class GameDAOSqlite implements GameDAO {
         if(!accountDAO.isAuthenticated(auth)) {
             return null;
         }
+
         //select all requests and convert to request infos
-        return new RequestInfo[0];
+        String incoming = "SELECT users.username as username, size, white, first " +
+                "FROM game_requests " +
+                "LEFT OUTER JOIN users on game_requests.acceptor = users.id " +
+                "WHERE requester = ?;";
+
+        PreparedStatement requestStmt = conn.prepareStatement(incoming);
+        requestStmt.setInt(1, accountDAO.idFromUsername(auth.getUsername()));
+        ResultSet requestSet = requestStmt.executeQuery();
+
+        ArrayList<RequestInfo> requests = new ArrayList<>();
+
+        while(requestSet.next()) {
+            String user = requestSet.getString("username");
+            boolean white = requestSet.getInt("white") == 1;
+            boolean first = requestSet.getInt("first") == 1;
+            int size = requestSet.getInt("size");
+            requests.add(new RequestInfo(user, white, first, size));
+        }
+
+        return requests.toArray(new RequestInfo[requests.size()]);
     }
 
     @Override
@@ -140,8 +181,30 @@ public class GameDAOSqlite implements GameDAO {
         if(!accountDAO.isAuthenticated(completed.getAuth())) {
             return null;
         }
+
         //find all completed games and get ids
-        return new int[0];
+        String games = "SELECT id " +
+                "FROM games " +
+                "WHERE done = 1 AND (white = ? or black = ?);";
+
+        PreparedStatement gameStmt = conn.prepareStatement(games);
+        gameStmt.setInt(1, accountDAO.idFromUsername(completed.getAuth().getUsername()));
+        gameStmt.setInt(2, accountDAO.idFromUsername(completed.getAuth().getUsername()));
+        ResultSet gameSet = gameStmt.executeQuery();
+
+        ArrayList<Integer> ints = new ArrayList<>();
+
+        while(gameSet.next()) {
+            ints.add(gameSet.getInt("id"));
+        }
+
+        int[] toReturn = new int[ints.size()];
+
+        for(int i = 0; i < toReturn.length; i++) {
+            toReturn[i] = ints.get(i).intValue();
+        }
+
+        return toReturn;
     }
 
     @Override
@@ -150,8 +213,30 @@ public class GameDAOSqlite implements GameDAO {
         if(!accountDAO.isAuthenticated(incomplete.getAuth())) {
             return null;
         }
-        //find all incomplete games and get ids
-        return new int[0];
+
+        //find all completed games and get ids
+        String games = "SELECT id " +
+                "FROM games " +
+                "WHERE done = 0 AND (white = ? or black = ?);";
+
+        PreparedStatement gameStmt = conn.prepareStatement(games);
+        gameStmt.setInt(1, accountDAO.idFromUsername(incomplete.getAuth().getUsername()));
+        gameStmt.setInt(2, accountDAO.idFromUsername(incomplete.getAuth().getUsername()));
+        ResultSet gameSet = gameStmt.executeQuery();
+
+        ArrayList<Integer> ints = new ArrayList<>();
+
+        while(gameSet.next()) {
+            ints.add(gameSet.getInt("id"));
+        }
+
+        int[] toReturn = new int[ints.size()];
+
+        for(int i = 0; i < toReturn.length; i++) {
+            toReturn[i] = ints.get(i).intValue();
+        }
+
+        return toReturn;
     }
 
     @Override

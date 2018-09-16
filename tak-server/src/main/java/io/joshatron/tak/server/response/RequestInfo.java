@@ -3,17 +3,15 @@ package io.joshatron.tak.server.response;
 public class RequestInfo {
 
     private String username;
-    private String player;
-    private String first;
+    private boolean white;
+    private boolean first;
     private int size;
-    private String id;
 
-    public RequestInfo(String username, String player, String first, int size, String id) {
+    public RequestInfo(String username, boolean white, boolean first, int size) {
         this.username = username;
-        this.player = player;
+        this.white = white;
         this.first = first;
         this.size = size;
-        this.id = id;
     }
 
     public String getUsername() {
@@ -24,19 +22,19 @@ public class RequestInfo {
         this.username = username;
     }
 
-    public String getPlayer() {
-        return player;
+    public boolean getWhite() {
+        return white;
     }
 
-    public void setPlayer(String player) {
-        this.player = player;
+    public void setWhite(boolean white) {
+        this.white = white;
     }
 
-    public String getFirst() {
+    public boolean getFirst() {
         return first;
     }
 
-    public void setFirst(String first) {
+    public void setFirst(boolean first) {
         this.first = first;
     }
 
@@ -46,13 +44,5 @@ public class RequestInfo {
 
     public void setSize(int size) {
         this.size = size;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 }
