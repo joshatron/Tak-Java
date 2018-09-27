@@ -2,6 +2,7 @@ package io.joshatron.tak.server.database;
 
 import io.joshatron.tak.server.request.Auth;
 import io.joshatron.tak.server.request.PassChange;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -32,7 +33,7 @@ public class AccountDAOSqlite implements AccountDAO {
 
         if(rs.next()) {
             if(auth.getUsername().equals(rs.getString("username")) &&
-               auth.getPassword().equals(rs.getString("auth"))) {
+                BCrypt.checkpw(auth.getPassword(), rs.getString("auth"))) {
                 return true;
             }
         }
@@ -61,7 +62,7 @@ public class AccountDAOSqlite implements AccountDAO {
 
         PreparedStatement stmt = conn.prepareStatement(insertUser);
         stmt.setString(1, auth.getUsername());
-        stmt.setString(2, auth.getPassword());
+        stmt.setString(2, BCrypt.hashpw(auth.getPassword(), BCrypt.gensalt()));
         stmt.executeUpdate();
 
         return true;
@@ -78,7 +79,7 @@ public class AccountDAOSqlite implements AccountDAO {
                 "WHERE username = ?;";
 
         PreparedStatement stmt = conn.prepareStatement(changePass);
-        stmt.setString(1, change.getUpdated());
+        stmt.setString(1, BCrypt.hashpw(change.getUpdated(), BCrypt.gensalt()));
         stmt.setString(2, change.getAuth().getUsername());
         stmt.executeUpdate();
 
