@@ -49,3 +49,26 @@ Below is a summary of the tables:
 | Game Requests     | Users challenging other users to a game.              |
 | Games             | Basic information about each game.                    |
 | Turns             | The turns made in every game.                         |
+
+Todo
+----
+
+ * General
+   * Set up testing suite
+   * Have better methodology for return codes
+   * Add logging
+   * Add dependency injection
+   * Add https
+     * Add creating ssl self signed certificate to install script
+   * Redesign request and response objects
+   * Use spring security?
+   * Add config for how rubust to make password hashing
+ * GameDAOSqlite
+   * Implement requestRandomGame
+   * Implement respondToGame
+   * Implement playTurn
+   * Implement getGame
+   * Use filters on listCompletedGames
+   * Use filters on listIncompleteGames
+   * Make game ids random alphanumeric
+   * Test all the api calls

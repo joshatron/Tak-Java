@@ -31,21 +31,24 @@ public class DatabaseManager {
                 "auth text NOT NULL);";
 
         String friendTable = "CREATE TABLE IF NOT EXISTS friends (" +
-                "requester integer PRIMARY KEY," +
-                "acceptor integer PRIMARY KEY);";
+                "id integer PRIMARY KEY AUTOINCREMENT," +
+                "requester integer NOT NULL," +
+                "acceptor integer NOT NULL);";
 
         String blockedTable = "CREATE TABLE IF NOT EXISTS blocked (" +
-                "requester integer PRIMARY KEY," +
-                "blocked integer PRIMARY KEY);";
+                "id integer PRIMARY KEY AUTOINCREMENT," +
+                "requester integer NOT NULL," +
+                "blocked integer NOT NULL);";
 
         String friendRequestsTable = "CREATE TABLE IF NOT EXISTS friend_requests (" +
-                "requester integer PRIMARY KEY," +
-                "acceptor integer PRIMARY KEY);";
+                "id integer PRIMARY KEY AUTOINCREMENT," +
+                "requester integer NOT NULL," +
+                "acceptor integer NOT NULL);";
 
         String messagesTable = "CREATE TABLE IF NOT EXISTS messages(" +
                 "id integer PRIMARY KEY AUTOINCREMENT," +
-                "from integer NOT NULL," +
-                "to integer NOT NULL," +
+                "sender integer NOT NULL," +
+                "recipient integer NOT NULL," +
                 "message text NOT NULL," +
                 "time integer NOT NULL," +
                 "opened integer NOT NULL);";
@@ -55,8 +58,9 @@ public class DatabaseManager {
                 "size integer NOT NULL);";
 
         String gameRequestsTable = "CREATE TABLE IF NOT EXISTS game_requests (" +
-                "requester integer PRIMARY KEY," +
-                "acceptor integer PRIMARY KEY," +
+                "id integer PRIMARY KEY AUTOINCREMENT," +
+                "requester integer NOT NULL," +
+                "acceptor integer NOT NULL," +
                 "size integer NOT NULL," +
                 "white integer NOT NULL," +
                 "first integer NOT NULL);";
@@ -72,8 +76,9 @@ public class DatabaseManager {
                 "done integer NOT NULL);";
 
         String turnsTable = "CREATE TABLE IF NOT EXISTS turns (" +
-                "id integer PRIMARY KEY," +
-                "order integer PRIMARY KEY," +
+                "id integer PRIMARY KEY AUTOINCREMENT," +
+                "game_id integer NOT NULL," +
+                "turn_order integer NOT NULL," +
                 "turn text NOT NULL);";
 
         try {

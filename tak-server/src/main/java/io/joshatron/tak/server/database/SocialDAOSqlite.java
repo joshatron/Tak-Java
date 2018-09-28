@@ -233,7 +233,7 @@ public class SocialDAOSqlite implements SocialDAO {
 
         //Add message
         LocalDate date = LocalDate.now();
-        String insertRequest = "INSERT INTO messages (from, to, message, time, opened) " +
+        String insertRequest = "INSERT INTO messages (sender, recipient, message, time, opened) " +
                 "VALUES (?,?,?,?,0);";
 
         PreparedStatement insertStmt = conn.prepareStatement(insertRequest);
@@ -385,9 +385,9 @@ public class SocialDAOSqlite implements SocialDAO {
             return null;
         }
 
-        String getMessages = "SELECT from, message, time " +
+        String getMessages = "SELECT sender, message, time " +
                 "FROM messages " +
-                "WHERE to = ?";
+                "WHERE recipient = ?";
 
         if(readMessages.getRead() != null) {
             if(readMessages.getRead().toLowerCase().equals("true")) {
@@ -401,9 +401,9 @@ public class SocialDAOSqlite implements SocialDAO {
             getMessages += " AND time > ?";
         }
         if(readMessages.getSenders() != null && readMessages.getSenders().length > 0) {
-            getMessages += " AND (from = ?";
+            getMessages += " AND (sender = ?";
             for(int i = 1; i < readMessages.getSenders().length; i++) {
-                getMessages += " OR from = ?";
+                getMessages += " OR sender = ?";
             }
             getMessages += ")";
         }
@@ -425,13 +425,13 @@ public class SocialDAOSqlite implements SocialDAO {
         ArrayList<Message> messages = new ArrayList<>();
 
         while(messageSet.next()) {
-            messages.add(new Message(messageSet.getString("from"), messageSet.getString("time"), messageSet.getString("message")));
+            messages.add(new Message(messageSet.getString("sender"), messageSet.getString("time"), messageSet.getString("message")));
         }
 
 
         String markRead = "UPDATE messages " +
                 "SET read = 1 " +
-                "WHERE to = ?;";
+                "WHERE recipient = ?;";
 
         PreparedStatement readStmt = conn.prepareStatement(markRead);
         readStmt.setInt(1, accountDAO.idFromUsername(readMessages.getAuth().getUsername()));
