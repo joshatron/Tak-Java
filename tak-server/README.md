@@ -58,8 +58,6 @@ Todo
    * Have better methodology for return codes
    * Add logging
    * Add dependency injection
-   * Add https
-     * Add creating ssl self signed certificate to install script
    * Redesign request and response objects
    * Use spring security?
    * Add config for how rubust to make password hashing
