@@ -66,7 +66,7 @@ public class DatabaseManager {
                 "first integer NOT NULL);";
 
         String gamesTable = "CREATE TABLE IF NOT EXISTS games (" +
-                "id integer PRIMARY KEY AUTOINCREMENT," +
+                "id text PRIMARY KEY," +
                 "white integer NOT NULL," +
                 "black integer NOT NULL," +
                 "size integer NOT NULL," +
@@ -77,7 +77,7 @@ public class DatabaseManager {
 
         String turnsTable = "CREATE TABLE IF NOT EXISTS turns (" +
                 "id integer PRIMARY KEY AUTOINCREMENT," +
-                "game_id integer NOT NULL," +
+                "game_id text NOT NULL," +
                 "turn_order integer NOT NULL," +
                 "turn text NOT NULL);";
 

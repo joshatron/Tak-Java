@@ -2,6 +2,7 @@ package io.joshatron.tak.server.database;
 
 import io.joshatron.tak.server.request.*;
 import io.joshatron.tak.server.response.GameInfo;
+import io.joshatron.tak.server.response.GameTurn;
 import io.joshatron.tak.server.response.RequestInfo;
 
 import java.sql.Connection;
@@ -249,8 +250,44 @@ public class GameDAOSqlite implements GameDAO {
         if(!authorizedForGame(game.getAuth().getUsername(), game.getId())) {
             return null;
         }
+
         //get info on game
-        return null;
+        GameInfo gameInfo = new GameInfo();
+        String getGame = "SELECT white, black, size, first, start, end, done " +
+                "FROM games " +
+                "WHERE id = ?;";
+
+        PreparedStatement gameStmt = conn.prepareStatement(getGame);
+        gameStmt.setString(1, game.getId());
+        ResultSet gameSet = gameStmt.executeQuery();
+        if(gameSet.next()) {
+            String white = accountDAO.usernameFromId(gameSet.getInt("white"));
+            String black = accountDAO.usernameFromId(gameSet.getInt("black"));
+            int size = gameSet.getInt("size");
+            String first = gameSet.getInt("first") == 0 ? "white" : "black";
+            String start = gameSet.getString("start");
+            String end = gameSet.getString("end");
+            boolean done = gameSet.getInt("done") == 1;
+            gameInfo = new GameInfo(white, black, size, first, start, end, done);
+        }
+
+        //get turns for game
+        String getTurn = "SELECT turn_order, turn " +
+                "FROM turns " +
+                "WHERE game_id = ? " +
+                "ORDER BY turn_order ASC;";
+
+        PreparedStatement turnStmt = conn.prepareStatement(getTurn);
+        turnStmt.setString(1, game.getId());
+        ResultSet turnSet = turnStmt.executeQuery();
+        ArrayList<GameTurn> turns = new ArrayList<>();
+        while(turnSet.next()) {
+            turns.add(new GameTurn(turnSet.getString("turn"), turnSet.getInt("turn_order")));
+        }
+
+        gameInfo.setTurns(turns.toArray(new GameTurn[turns.size()]));
+
+        return gameInfo;
     }
 
     private boolean authorizedForGame(String username, String gameID) throws SQLException {

@@ -70,7 +70,7 @@ The following is a description of the tables in the database.
 
 | Name      | Data Type | Parameters                | Description                               |
 |-----------|-----------|---------------------------|-------------------------------------------|
-| id        | int       | PRIMARY KEY AUTOINCREMENT | Game ID.                                  |
+| id        | string    | PRIMARY KEY AUTOINCREMENT | Game ID.                                  |
 | white     | int       | NOT NULL                  | User ID of the white player.              |
 | black     | int       | NOT NULL                  | User ID of the black player.              |
 | size      | int       | NOT NULL                  | Size of the board.                        |

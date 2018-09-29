@@ -65,7 +65,6 @@ Todo
    * Implement requestRandomGame
    * Implement respondToGame
    * Implement playTurn
-   * Implement getGame
    * Use filters on listCompletedGames
    * Use filters on listIncompleteGames
    * Make game ids random alphanumeric
