@@ -29,7 +29,7 @@ public class SocialController {
     }
 
     @PostMapping("/request")
-    public ResponseEntity requestFriend(@RequestBody FriendRequest friendRequest) {
+    public ResponseEntity requestFriend(@RequestBody UserInteraction friendRequest) {
         try {
             if(socialDAO.createFriendRequest(friendRequest)) {
                 return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -44,7 +44,7 @@ public class SocialController {
     }
 
     @PostMapping("/cancel")
-    public ResponseEntity cancelFriendRequest(@RequestBody CancelFriendRequest cancelFriendRequest) {
+    public ResponseEntity cancelFriendRequest(@RequestBody UserInteraction cancelFriendRequest) {
         try {
             if(socialDAO.deleteFriendRequest(cancelFriendRequest)) {
                 return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -110,7 +110,7 @@ public class SocialController {
     }
 
     @PostMapping("/block")
-    public ResponseEntity blockUser(@RequestBody Block block) {
+    public ResponseEntity blockUser(@RequestBody UserInteraction block) {
         try {
             if(socialDAO.blockUser(block)) {
                 return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -125,7 +125,7 @@ public class SocialController {
     }
 
     @PostMapping("/unblock")
-    public ResponseEntity unblockUser(@RequestBody Unblock unblock) {
+    public ResponseEntity unblockUser(@RequestBody UserInteraction unblock) {
         try {
             if(socialDAO.unblockUser(unblock)) {
                 return new ResponseEntity(HttpStatus.NO_CONTENT);

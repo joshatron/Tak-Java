@@ -7,11 +7,11 @@ import java.sql.SQLException;
 
 public interface SocialDAO {
 
-    boolean createFriendRequest(FriendRequest request) throws SQLException;
-    boolean deleteFriendRequest(CancelFriendRequest request) throws SQLException;
+    boolean createFriendRequest(UserInteraction request) throws SQLException;
+    boolean deleteFriendRequest(UserInteraction request) throws SQLException;
     boolean respondToFriendRequest(FriendResponse response) throws SQLException;
-    boolean blockUser(Block block) throws SQLException;
-    boolean unblockUser(Unblock unblock) throws SQLException;
+    boolean blockUser(UserInteraction block) throws SQLException;
+    boolean unblockUser(UserInteraction unblock) throws SQLException;
     boolean sendMessage(SendMessage sendMessage) throws SQLException;
     boolean isBlocked(String requester, String other) throws SQLException;
 

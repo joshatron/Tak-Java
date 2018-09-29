@@ -26,13 +26,13 @@ public class SocialDAOSqlite implements SocialDAO {
     }
 
     @Override
-    public boolean createFriendRequest(FriendRequest request) throws SQLException {
+    public boolean createFriendRequest(UserInteraction request) throws SQLException {
         //if no auth, return false
         if(!accountDAO.isAuthenticated(request.getAuth())) {
             return false;
         }
         //if user blocked, return false
-        if(isBlocked(request.getAuth().getUsername(), request.getFriend())) {
+        if(isBlocked(request.getAuth().getUsername(), request.getOther())) {
             return false;
         }
 
@@ -43,8 +43,8 @@ public class SocialDAOSqlite implements SocialDAO {
 
         PreparedStatement checkFriendsStmt = conn.prepareStatement(checkFriends);
         checkFriendsStmt.setInt(1, accountDAO.idFromUsername(request.getAuth().getUsername()));
-        checkFriendsStmt.setInt(2, accountDAO.idFromUsername(request.getFriend()));
-        checkFriendsStmt.setInt(3, accountDAO.idFromUsername(request.getFriend()));
+        checkFriendsStmt.setInt(2, accountDAO.idFromUsername(request.getOther()));
+        checkFriendsStmt.setInt(3, accountDAO.idFromUsername(request.getOther()));
         checkFriendsStmt.setInt(4, accountDAO.idFromUsername(request.getAuth().getUsername()));
         ResultSet rs = checkFriendsStmt.executeQuery();
 
@@ -59,8 +59,8 @@ public class SocialDAOSqlite implements SocialDAO {
 
         PreparedStatement checkStmt = conn.prepareStatement(checkRequest);
         checkStmt.setInt(1, accountDAO.idFromUsername(request.getAuth().getUsername()));
-        checkStmt.setInt(2, accountDAO.idFromUsername(request.getFriend()));
-        checkStmt.setInt(3, accountDAO.idFromUsername(request.getFriend()));
+        checkStmt.setInt(2, accountDAO.idFromUsername(request.getOther()));
+        checkStmt.setInt(3, accountDAO.idFromUsername(request.getOther()));
         checkStmt.setInt(4, accountDAO.idFromUsername(request.getAuth().getUsername()));
         rs = checkStmt.executeQuery();
 
@@ -74,14 +74,14 @@ public class SocialDAOSqlite implements SocialDAO {
 
         PreparedStatement insertStmt = conn.prepareStatement(insertRequest);
         insertStmt.setInt(1, accountDAO.idFromUsername(request.getAuth().getUsername()));
-        insertStmt.setInt(2, accountDAO.idFromUsername(request.getFriend()));
+        insertStmt.setInt(2, accountDAO.idFromUsername(request.getOther()));
         insertStmt.executeUpdate();
 
         return true;
     }
 
     @Override
-    public boolean deleteFriendRequest(CancelFriendRequest request) throws SQLException {
+    public boolean deleteFriendRequest(UserInteraction request) throws SQLException {
         //if no auth, return false
         if(!accountDAO.isAuthenticated(request.getAuth())) {
             return false;
@@ -94,7 +94,7 @@ public class SocialDAOSqlite implements SocialDAO {
 
         PreparedStatement checkStmt = conn.prepareStatement(checkRequest);
         checkStmt.setInt(1, accountDAO.idFromUsername(request.getAuth().getUsername()));
-        checkStmt.setInt(2, accountDAO.idFromUsername(request.getAcceptor()));
+        checkStmt.setInt(2, accountDAO.idFromUsername(request.getOther()));
         ResultSet rs = checkStmt.executeQuery();
 
         if(!rs.next()) {
@@ -107,7 +107,7 @@ public class SocialDAOSqlite implements SocialDAO {
 
         PreparedStatement deleteStmt = conn.prepareStatement(deleteRequest);
         deleteStmt.setInt(1, accountDAO.idFromUsername(request.getAuth().getUsername()));
-        deleteStmt.setInt(2, accountDAO.idFromUsername(request.getAcceptor()));
+        deleteStmt.setInt(2, accountDAO.idFromUsername(request.getOther()));
         deleteStmt.executeUpdate();
 
         return true;
@@ -157,7 +157,7 @@ public class SocialDAOSqlite implements SocialDAO {
     }
 
     @Override
-    public boolean blockUser(Block block) throws SQLException {
+    public boolean blockUser(UserInteraction block) throws SQLException {
         //if no auth, return false
         if(!accountDAO.isAuthenticated(block.getAuth())) {
             return false;
@@ -169,8 +169,8 @@ public class SocialDAOSqlite implements SocialDAO {
 
         PreparedStatement deleteRequestStmt = conn.prepareStatement(deleteRequest);
         deleteRequestStmt.setInt(1, accountDAO.idFromUsername(block.getAuth().getUsername()));
-        deleteRequestStmt.setInt(2, accountDAO.idFromUsername(block.getBlock()));
-        deleteRequestStmt.setInt(3, accountDAO.idFromUsername(block.getBlock()));
+        deleteRequestStmt.setInt(2, accountDAO.idFromUsername(block.getOther()));
+        deleteRequestStmt.setInt(3, accountDAO.idFromUsername(block.getOther()));
         deleteRequestStmt.setInt(4, accountDAO.idFromUsername(block.getAuth().getUsername()));
         deleteRequestStmt.executeUpdate();
 
@@ -179,8 +179,8 @@ public class SocialDAOSqlite implements SocialDAO {
 
         PreparedStatement deleteStmt = conn.prepareStatement(deleteFriend);
         deleteStmt.setInt(1, accountDAO.idFromUsername(block.getAuth().getUsername()));
-        deleteStmt.setInt(2, accountDAO.idFromUsername(block.getBlock()));
-        deleteStmt.setInt(3, accountDAO.idFromUsername(block.getBlock()));
+        deleteStmt.setInt(2, accountDAO.idFromUsername(block.getOther()));
+        deleteStmt.setInt(3, accountDAO.idFromUsername(block.getOther()));
         deleteStmt.setInt(4, accountDAO.idFromUsername(block.getAuth().getUsername()));
         deleteStmt.executeUpdate();
 
@@ -190,21 +190,21 @@ public class SocialDAOSqlite implements SocialDAO {
 
         PreparedStatement insertStmt = conn.prepareStatement(insertBlock);
         insertStmt.setInt(1, accountDAO.idFromUsername(block.getAuth().getUsername()));
-        insertStmt.setInt(2, accountDAO.idFromUsername(block.getBlock()));
+        insertStmt.setInt(2, accountDAO.idFromUsername(block.getOther()));
         insertStmt.executeUpdate();
 
         return false;
     }
 
     @Override
-    public boolean unblockUser(Unblock unblock) throws SQLException {
+    public boolean unblockUser(UserInteraction unblock) throws SQLException {
         //if no auth, return false
         if(!accountDAO.isAuthenticated(unblock.getAuth())) {
             return false;
         }
 
         //if block doesn't exist, return false
-        if(!isBlocked(unblock.getAuth().getUsername(), unblock.getUnblock())) {
+        if(!isBlocked(unblock.getAuth().getUsername(), unblock.getOther())) {
             return false;
         }
 
@@ -214,7 +214,7 @@ public class SocialDAOSqlite implements SocialDAO {
 
         PreparedStatement deleteStmt = conn.prepareStatement(deleteBlock);
         deleteStmt.setInt(1, accountDAO.idFromUsername(unblock.getAuth().getUsername()));
-        deleteStmt.setInt(2, accountDAO.idFromUsername(unblock.getUnblock()));
+        deleteStmt.setInt(2, accountDAO.idFromUsername(unblock.getOther()));
         deleteStmt.executeUpdate();
 
         return true;
