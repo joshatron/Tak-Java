@@ -1,9 +1,12 @@
 package io.joshatron.tak.server.controller;
 
+import io.joshatron.tak.server.config.ApplicationConfig;
 import io.joshatron.tak.server.database.AccountDAO;
 import io.joshatron.tak.server.database.AccountDAOSqlite;
 import io.joshatron.tak.server.request.Auth;
 import io.joshatron.tak.server.request.PassChange;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +23,8 @@ public class AccountController {
     private AccountDAO accountDAO;
 
     public AccountController() {
-        accountDAO = new AccountDAOSqlite();
+        ApplicationContext context = new AnnotationConfigApplicationContext(ApplicationConfig.class);
+        accountDAO = context.getBean(AccountDAOSqlite.class);
     }
 
     public AccountController(AccountDAO accountDAO) {

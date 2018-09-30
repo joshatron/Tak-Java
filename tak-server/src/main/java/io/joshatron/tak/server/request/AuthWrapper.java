@@ -4,6 +4,10 @@ public class AuthWrapper {
 
     private Auth auth;
 
+    public AuthWrapper() {
+        auth = null;
+    }
+
     public AuthWrapper(Auth auth) {
         this.auth = auth;
     }

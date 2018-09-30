@@ -1,12 +1,14 @@
 package io.joshatron.tak.server.controller;
 
-import io.joshatron.tak.server.database.AccountDAO;
+import io.joshatron.tak.server.config.ApplicationConfig;
 import io.joshatron.tak.server.database.SocialDAO;
 import io.joshatron.tak.server.database.SocialDAOSqlite;
 import io.joshatron.tak.server.request.*;
 import io.joshatron.tak.server.response.Message;
 import io.joshatron.tak.server.response.Messages;
 import io.joshatron.tak.server.response.Users;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,10 +23,11 @@ public class SocialController {
     private SocialDAO socialDAO;
 
     public SocialController() {
-        socialDAO = new SocialDAOSqlite();
+        ApplicationContext context = new AnnotationConfigApplicationContext(ApplicationConfig.class);
+        socialDAO = context.getBean(SocialDAOSqlite.class);
     }
 
-    public SocialController(AccountDAO accountDAO, SocialDAO socialDAO) {
+    public SocialController(SocialDAO socialDAO) {
         this.socialDAO = socialDAO;
     }
 

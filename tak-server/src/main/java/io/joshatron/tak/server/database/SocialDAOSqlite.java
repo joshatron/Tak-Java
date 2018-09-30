@@ -282,22 +282,22 @@ public class SocialDAOSqlite implements SocialDAO {
                 "LEFT OUTER JOIN users on friends.requester = users.id " +
                 "WHERE acceptor = ?;";
 
+        ArrayList<String> names = new ArrayList<>();
+
         PreparedStatement requesterStmt = conn.prepareStatement(getFriendsRequester);
         requesterStmt.setInt(1, accountDAO.idFromUsername(auth.getUsername()));
         ResultSet requestSet = requesterStmt.executeQuery();
-
-        PreparedStatement acceptorStmt = conn.prepareStatement(getFriendsAcceptor);
-        acceptorStmt.setInt(1, accountDAO.idFromUsername(auth.getUsername()));
-        ResultSet acceptSet = acceptorStmt.executeQuery();
-
-        ArrayList<String> names = new ArrayList<>();
 
         while(requestSet.next()) {
             names.add(requestSet.getString("username"));
         }
 
+        PreparedStatement acceptorStmt = conn.prepareStatement(getFriendsAcceptor);
+        acceptorStmt.setInt(1, accountDAO.idFromUsername(auth.getUsername()));
+        ResultSet acceptSet = acceptorStmt.executeQuery();
+
         while(acceptSet.next()) {
-            names.add(requestSet.getString("username"));
+            names.add(acceptSet.getString("username"));
         }
 
         return names.toArray(new String[names.size()]);

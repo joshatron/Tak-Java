@@ -1,11 +1,15 @@
 package io.joshatron.tak.server.controller;
 
+import io.joshatron.tak.server.config.ApplicationConfig;
 import io.joshatron.tak.server.database.GameDAO;
+import io.joshatron.tak.server.database.GameDAOSqlite;
 import io.joshatron.tak.server.request.*;
 import io.joshatron.tak.server.response.GameInfo;
 import io.joshatron.tak.server.response.GameRequests;
 import io.joshatron.tak.server.response.Games;
 import io.joshatron.tak.server.response.RequestInfo;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +24,8 @@ public class GameController {
     private GameDAO gameDAO;
 
     public GameController() {
-
+        ApplicationContext context = new AnnotationConfigApplicationContext(ApplicationConfig.class);
+        gameDAO = context.getBean(GameDAOSqlite.class);
     }
 
     public GameController(GameDAO gameDAO) {
