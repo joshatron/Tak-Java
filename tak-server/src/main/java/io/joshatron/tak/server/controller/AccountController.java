@@ -4,6 +4,7 @@ import io.joshatron.tak.server.config.ApplicationConfig;
 import io.joshatron.tak.server.database.AccountDAO;
 import io.joshatron.tak.server.database.AccountDAOSqlite;
 import io.joshatron.tak.server.request.Auth;
+import io.joshatron.tak.server.request.AuthWrapper;
 import io.joshatron.tak.server.request.PassChange;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -50,6 +51,21 @@ public class AccountController {
     public ResponseEntity changePassword(@RequestBody PassChange passChange) {
         try {
             if(accountDAO.updatePassword(passChange)) {
+                return new ResponseEntity(HttpStatus.NO_CONTENT);
+            }
+            else {
+                return new ResponseEntity(HttpStatus.FORBIDDEN);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/authenticate")
+    public ResponseEntity authenticate(@RequestBody AuthWrapper authWrapper) {
+        try {
+            if(accountDAO.isAuthenticated(authWrapper.getAuth())) {
                 return new ResponseEntity(HttpStatus.NO_CONTENT);
             }
             else {

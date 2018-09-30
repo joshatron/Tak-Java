@@ -1,11 +1,14 @@
 package io.joshatron.tak.server;
 
+import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.X509HostnameVerifier;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.ssl.SSLContextBuilder;
@@ -24,6 +27,8 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
 public class HttpUtils {
+
+    public static String baseUrl = "https://localhost:8080";
 
     public static HttpClient createHttpClient() {
         try {
@@ -77,4 +82,59 @@ public class HttpUtils {
 
         return null;
     }
+
+    public static HttpResponse createUser(String username, String password, HttpClient client) throws IOException {
+        String payload = "{" +
+                "    \"username\": \"" + username + "\"," +
+                "    \"password\": \"" + password + "\"" +
+                "}";
+
+        HttpClient httpClient = HttpUtils.createHttpClient();
+
+        HttpPost request = new HttpPost(baseUrl + "/account/register");
+        StringEntity entity = new StringEntity(payload);
+        request.setHeader("Content-Type", "application/json");
+        request.setEntity(entity);
+
+        return httpClient.execute(request);
+    }
+
+    public static HttpResponse changePassword(String username, String password, String newPassword, HttpClient client) throws IOException {
+        String payload = "{" +
+                "    \"auth\": {" +
+                "        \"username\": \"" + username + "\"," +
+                "        \"password\": \"" + password + "\"" +
+                "    }," +
+                "    \"updated\": \"" + newPassword + "\"" +
+                "}";
+
+        HttpClient httpClient = HttpUtils.createHttpClient();
+
+        HttpPost request = new HttpPost(baseUrl + "/account/changepass");
+        StringEntity entity = new StringEntity(payload);
+        request.setHeader("Content-Type", "application/json");
+        request.setEntity(entity);
+
+        return httpClient.execute(request);
+    }
+
+
+    public static HttpResponse authenticate(String username, String password, HttpClient client) throws IOException {
+        String payload = "{" +
+                "    \"auth\": {" +
+                "        \"username\": \"" + username + "\"," +
+                "        \"password\": \"" + password + "\"" +
+                "    }" +
+                "}";
+
+        HttpClient httpClient = HttpUtils.createHttpClient();
+
+        HttpPost request = new HttpPost(baseUrl + "/account/authenticate");
+        StringEntity entity = new StringEntity(payload);
+        request.setHeader("Content-Type", "application/json");
+        request.setEntity(entity);
+
+        return httpClient.execute(request);
+    }
+
 }

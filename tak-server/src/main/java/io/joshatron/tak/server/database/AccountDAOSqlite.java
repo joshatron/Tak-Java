@@ -73,6 +73,9 @@ public class AccountDAOSqlite implements AccountDAO {
         if(!isAuthenticated(change.getAuth())) {
             return false;
         }
+        if(change.getUpdated() == null || change.getUpdated().length() == 0) {
+            return false;
+        }
 
         String changePass = "UPDATE users " +
                 "SET auth = ? " +
