@@ -11,6 +11,7 @@ import java.io.IOException;
 //Suite A
 public class AccountTest {
 
+    //Register User
     //Test 001
     @Test
     public void registerUser_OneUser_204() throws IOException {
@@ -48,6 +49,7 @@ public class AccountTest {
         Assert.assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
     }
 
+    //Change Password
     //Test 004
     @Test
     public void changePassword_OneUser_204() throws IOException {
@@ -55,6 +57,7 @@ public class AccountTest {
         //create user
         HttpResponse response = HttpUtils.createUser("A00401", "password", client);
         Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+        //change user password
         response = HttpUtils.changePassword("A00401", "password", "drowssap", client);
         Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
     }
@@ -66,6 +69,7 @@ public class AccountTest {
         //create user
         HttpResponse response = HttpUtils.createUser("A00501", "password", client);
         Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+        //change user password with wrong password
         response = HttpUtils.changePassword("A00501", "passwor", "drowssap", client);
         Assert.assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
     }
@@ -77,6 +81,7 @@ public class AccountTest {
         //create user
         HttpResponse response = HttpUtils.createUser("A00601", "password", client);
         Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+        //change nonexistent user's password
         response = HttpUtils.changePassword("A00602", "password", "drowssap", client);
         Assert.assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
     }
@@ -88,6 +93,7 @@ public class AccountTest {
         //create user
         HttpResponse response = HttpUtils.createUser("A00701", "password", client);
         Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+        //change user's password with blank password
         response = HttpUtils.changePassword("A00701", "password", "", client);
         Assert.assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
     }
@@ -99,10 +105,13 @@ public class AccountTest {
         //create user
         HttpResponse response = HttpUtils.createUser("A00801", "password", client);
         Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+        //create a second user
         response = HttpUtils.createUser("A00802", "12345678", client);
         Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+        //change the first user's password
         response = HttpUtils.changePassword("A00801", "password", "drowssap", client);
         Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+        //change the second user's password
         response = HttpUtils.changePassword("A00802", "12345678", "87654321", client);
         Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
     }
@@ -114,12 +123,15 @@ public class AccountTest {
         //create user
         HttpResponse response = HttpUtils.createUser("A00901", "password", client);
         Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+        //create a second user
         response = HttpUtils.createUser("A00902", "12345678", client);
         Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+        //try to change the first user's password with the password of the second user
         response = HttpUtils.changePassword("A00901", "12345678", "87654321", client);
         Assert.assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
     }
 
+    //Authenticate User
     //Test010
     @Test
     public void authenticate_Valid_204() throws IOException {
@@ -127,6 +139,7 @@ public class AccountTest {
         //create user
         HttpResponse response = HttpUtils.createUser("A01001", "password", client);
         Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+        //check that user is valid
         response = HttpUtils.authenticate("A01001", "password", client);
         Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
     }
@@ -138,6 +151,7 @@ public class AccountTest {
         //create user
         HttpResponse response = HttpUtils.createUser("A01101", "password", client);
         Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+        //check that user is valid with invalid password
         response = HttpUtils.authenticate("A01101", "drowssap", client);
         Assert.assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
     }
@@ -149,6 +163,7 @@ public class AccountTest {
         //create user
         HttpResponse response = HttpUtils.createUser("A01201", "password", client);
         Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+        //check nonexistent user with first user's password
         response = HttpUtils.authenticate("A01202", "password", client);
         Assert.assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
     }
