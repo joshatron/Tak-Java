@@ -9,6 +9,7 @@ import org.junit.Test;
 import java.io.IOException;
 
 //Suite A
+//Current final test: 012
 public class AccountTest {
 
     //Register User
@@ -116,7 +117,7 @@ public class AccountTest {
         Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
     }
 
-    //Test009
+    //Test 009
     @Test
     public void changePassword_OtherUserPassword_403() throws IOException {
         HttpClient client = HttpUtils.createHttpClient();
@@ -132,7 +133,7 @@ public class AccountTest {
     }
 
     //Authenticate User
-    //Test010
+    //Test 010
     @Test
     public void authenticate_Valid_204() throws IOException {
         HttpClient client = HttpUtils.createHttpClient();
@@ -144,7 +145,7 @@ public class AccountTest {
         Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
     }
 
-    //Test011
+    //Test 011
     @Test
     public void authenticate_WrongPassword_403() throws IOException {
         HttpClient client = HttpUtils.createHttpClient();
@@ -156,7 +157,7 @@ public class AccountTest {
         Assert.assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
     }
 
-    //Test012
+    //Test 012
     @Test
     public void authenticate_InvalidUser_403() throws IOException {
         HttpClient client = HttpUtils.createHttpClient();
