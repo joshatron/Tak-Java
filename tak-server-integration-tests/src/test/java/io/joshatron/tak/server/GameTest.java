@@ -257,6 +257,83 @@ public class GameTest {
     }
 
     //List Complete Games
+    //Test 042
+    @Test
+    public void listCompletedGames_NoGames_200EmptyArray() {
+
+    }
+
+    //Test 043
+    @Test
+    public void listCompletedGames_OneGame_200ArrayWithOne() {
+
+    }
+
+    //Test 044
+    @Test
+    public void listCompletedGames_MultipleGames_200ArrayWithMultiple() {
+
+    }
+
+    //Test 045
+    @Test
+    public void listCompletedGames_GameInProgress_200EmptyArray() {
+
+    }
+
+    //Test 046
+    @Test
+    public void listCompletedGames_OneOpponent_200GamesFromOpponent() {
+
+    }
+
+    //Test 047
+    @Test
+    public void listCompletedGames_MultipleOpponents_200GamesFromMultipleOpponents() {
+
+    }
+
+    //Test 048
+    @Test
+    public void listCompletedGames_StartInPast_200GamesFromPastOn() {
+
+    }
+
+    //Test 049
+    @Test
+    public void listCompletedGames_StartInCurrent_200EmptyGames() {
+
+    }
+
+    //Test 050
+    @Test
+    public void listCompletedGames_StartInFuture_403() {
+
+    }
+
+    //Test 051
+    @Test
+    public void listCompletedGames_OneSize_200GamesWithSize() {
+
+    }
+
+    //Test 052
+    @Test
+    public void listCompletedGames_SizeBadNumber_403() {
+
+    }
+
+    //Test 053
+    @Test
+    public void listCompletedGames_InvalidUser_403() {
+
+    }
+
+    //Test 054
+    @Test
+    public void listCompletedGames_InvalidCredentials_403() {
+
+    }
 
     //List Incomplete Games
 
