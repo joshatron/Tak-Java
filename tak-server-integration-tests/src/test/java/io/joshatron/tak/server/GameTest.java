@@ -3,6 +3,7 @@ package io.joshatron.tak.server;
 import org.junit.Test;
 
 //Suite C
+//Current final test: 077
 public class GameTest {
 
     //Request a Game
@@ -336,8 +337,143 @@ public class GameTest {
     }
 
     //List Incomplete Games
+    //Test 055
+    @Test
+    public void listIncompleteGames_NoGames_200EmptyArray() {
+
+    }
+
+    //Test 056
+    @Test
+    public void listIncompleteGames_OneGame_200ArrayWithOne() {
+
+    }
+
+    //Test 057
+    @Test
+    public void listIncompleteGames_MultipleGames_200ArrayWithMultiple() {
+
+    }
+
+    //Test 058
+    @Test
+    public void listIncompleteGames_CompleteGame_200EmptyArray() {
+
+    }
+
+    //Test 059
+    @Test
+    public void listIncompleteGames_Pending_200OnlyPending() {
+
+    }
+
+    //Test 060
+    @Test
+    public void listIncompleteGames_NotPending_200OnlyNotPending() {
+
+    }
+
+    //Test 061
+    @Test
+    public void listIncompleteGames_InvalidPending_403() {
+
+    }
+
+    //Test 062
+    @Test
+    public void listIncompleteGames_InvalidUser_403() {
+
+    }
+
+    //Test 063
+    @Test
+    public void listIncompleteGames_InvalidCredentials_403() {
+
+    }
 
     //Get Info on a Game
+    //Test 064
+    @Test
+    public void getGame_ValidGame_200GameInfo() {
+
+    }
+
+    //Test 065
+    @Test
+    public void getGame_NotYourGame_403() {
+
+    }
+
+    //Test 066
+    @Test
+    public void getGame_NotRealGame_403() {
+
+    }
+
+    //Test 067
+    @Test
+    public void getGame_InvalidUser_403() {
+
+    }
+
+    //Test 068
+    @Test
+    public void getGame_InvalidCredentials_403() {
+
+    }
 
     //Play Turn
+    //Test 069
+    @Test
+    public void playTurn_YourTurn_200TurnMadeConfirmationOfTurn() {
+
+    }
+
+    //Test 070
+    @Test
+    public void playTurn_NotYourTurn_403TurnNotMade() {
+
+    }
+
+    //Test 071
+    @Test
+    public void playTurn_NotYourGame_403TurnNotMade() {
+
+    }
+
+    //Test 072
+    @Test
+    public void playTurn_InvalidGame_403() {
+
+    }
+
+    //Test 073
+    @Test
+    public void playTurn_IllegalTurn_200TurnNotMadeWithReason() {
+
+    }
+
+    //Test 074
+    @Test
+    public void playTurn_IllFormattedTurn_403TurnNotMade() {
+
+    }
+
+    //Test 075
+    @Test
+    public void playTurn_WinGame_200WinMessage() {
+
+    }
+
+    //Test 076
+    @Test
+    public void playTurn_InvalidUser_403TurnNotMade() {
+
+    }
+
+    //Test 077
+    @Test
+    public void playTurn_InvalidCredentials_403TurnNotMade() {
+
+    }
 }
