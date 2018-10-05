@@ -89,14 +89,12 @@ public class HttpUtils {
                 "    \"password\": \"" + password + "\"" +
                 "}";
 
-        HttpClient httpClient = HttpUtils.createHttpClient();
-
         HttpPost request = new HttpPost(baseUrl + "/account/register");
         StringEntity entity = new StringEntity(payload);
         request.setHeader("Content-Type", "application/json");
         request.setEntity(entity);
 
-        return httpClient.execute(request);
+        return client.execute(request);
     }
 
     public static HttpResponse changePassword(String username, String password, String newPassword, HttpClient client) throws IOException {
@@ -108,14 +106,12 @@ public class HttpUtils {
                 "    \"updated\": \"" + newPassword + "\"" +
                 "}";
 
-        HttpClient httpClient = HttpUtils.createHttpClient();
-
         HttpPost request = new HttpPost(baseUrl + "/account/changepass");
         StringEntity entity = new StringEntity(payload);
         request.setHeader("Content-Type", "application/json");
         request.setEntity(entity);
 
-        return httpClient.execute(request);
+        return client.execute(request);
     }
 
 
@@ -127,14 +123,214 @@ public class HttpUtils {
                 "    }" +
                 "}";
 
-        HttpClient httpClient = HttpUtils.createHttpClient();
-
         HttpPost request = new HttpPost(baseUrl + "/account/authenticate");
         StringEntity entity = new StringEntity(payload);
         request.setHeader("Content-Type", "application/json");
         request.setEntity(entity);
 
-        return httpClient.execute(request);
+        return client.execute(request);
     }
 
+    public static HttpResponse requestFriend(String username, String password, String other, HttpClient client) throws IOException {
+        String payload = "{" +
+                "    \"auth\": {" +
+                "        \"username\": \"" + username + "\"," +
+                "        \"password\": \"" + password + "\"" +
+                "    }," +
+                "    \"other\": \"" + other + "\"" +
+                "}";
+
+        HttpPost request = new HttpPost(baseUrl + "/social/request");
+        StringEntity entity = new StringEntity(payload);
+        request.setHeader("Content-Type", "application/json");
+        request.setEntity(entity);
+
+        return client.execute(request);
+    }
+
+    public static HttpResponse cancelFriendRequest(String username, String password, String other, HttpClient client) throws IOException {
+        String payload = "{" +
+                "    \"auth\": {" +
+                "        \"username\": \"" + username + "\"," +
+                "        \"password\": \"" + password + "\"" +
+                "    }," +
+                "    \"other\": \"" + other + "\"" +
+                "}";
+
+        HttpPost request = new HttpPost(baseUrl + "/social/cancel");
+        StringEntity entity = new StringEntity(payload);
+        request.setHeader("Content-Type", "application/json");
+        request.setEntity(entity);
+
+        return client.execute(request);
+    }
+
+    public static HttpResponse respondToRequest(String username, String password, String other, String response, HttpClient client) throws IOException {
+        String payload = "{" +
+                "    \"auth\": {" +
+                "        \"username\": \"" + username + "\"," +
+                "        \"password\": \"" + password + "\"" +
+                "    }," +
+                "    \"friend\": \"" + other + "\"," +
+                "    \"response\": \"" + response + "\"" +
+                "}";
+
+        HttpPost request = new HttpPost(baseUrl + "/social/response");
+        StringEntity entity = new StringEntity(payload);
+        request.setHeader("Content-Type", "application/json");
+        request.setEntity(entity);
+
+        return client.execute(request);
+    }
+
+    public static HttpResponse checkIncomingFriendRequests(String username, String password, HttpClient client) throws IOException {
+        String payload = "{" +
+                "    \"auth\": {" +
+                "        \"username\": \"" + username + "\"," +
+                "        \"password\": \"" + password + "\"" +
+                "    }" +
+                "}";
+
+        HttpPost request = new HttpPost(baseUrl + "/social/incoming");
+        StringEntity entity = new StringEntity(payload);
+        request.setHeader("Content-Type", "application/json");
+        request.setEntity(entity);
+
+        return client.execute(request);
+    }
+
+    public static HttpResponse checkOutgoingFriendRequests(String username, String password, HttpClient client) throws IOException {
+        String payload = "{" +
+                "    \"auth\": {" +
+                "        \"username\": \"" + username + "\"," +
+                "        \"password\": \"" + password + "\"" +
+                "    }" +
+                "}";
+
+        HttpPost request = new HttpPost(baseUrl + "/social/outgoing");
+        StringEntity entity = new StringEntity(payload);
+        request.setHeader("Content-Type", "application/json");
+        request.setEntity(entity);
+
+        return client.execute(request);
+    }
+
+    public static HttpResponse blockUser(String username, String password, String other, HttpClient client) throws IOException {
+        String payload = "{" +
+                "    \"auth\": {" +
+                "        \"username\": \"" + username + "\"," +
+                "        \"password\": \"" + password + "\"" +
+                "    }," +
+                "    \"other\": \"" + other + "\"" +
+                "}";
+
+        HttpPost request = new HttpPost(baseUrl + "/social/block");
+        StringEntity entity = new StringEntity(payload);
+        request.setHeader("Content-Type", "application/json");
+        request.setEntity(entity);
+
+        return client.execute(request);
+    }
+
+    public static HttpResponse unblockUser(String username, String password, String other, HttpClient client) throws IOException {
+        String payload = "{" +
+                "    \"auth\": {" +
+                "        \"username\": \"" + username + "\"," +
+                "        \"password\": \"" + password + "\"" +
+                "    }," +
+                "    \"other\": \"" + other + "\"" +
+                "}";
+
+        HttpPost request = new HttpPost(baseUrl + "/social/unblock");
+        StringEntity entity = new StringEntity(payload);
+        request.setHeader("Content-Type", "application/json");
+        request.setEntity(entity);
+
+        return client.execute(request);
+    }
+
+    public static HttpResponse getFriends(String username, String password, HttpClient client) throws IOException {
+        String payload = "{" +
+                "    \"auth\": {" +
+                "        \"username\": \"" + username + "\"," +
+                "        \"password\": \"" + password + "\"" +
+                "    }" +
+                "}";
+
+        HttpPost request = new HttpPost(baseUrl + "/social/friends");
+        StringEntity entity = new StringEntity(payload);
+        request.setHeader("Content-Type", "application/json");
+        request.setEntity(entity);
+
+        return client.execute(request);
+    }
+
+    public static HttpResponse getBlocked(String username, String password, HttpClient client) throws IOException {
+        String payload = "{" +
+                "    \"auth\": {" +
+                "        \"username\": \"" + username + "\"," +
+                "        \"password\": \"" + password + "\"" +
+                "    }" +
+                "}";
+
+        HttpPost request = new HttpPost(baseUrl + "/social/blocked");
+        StringEntity entity = new StringEntity(payload);
+        request.setHeader("Content-Type", "application/json");
+        request.setEntity(entity);
+
+        return client.execute(request);
+    }
+
+    public static HttpResponse sendMessage(String username, String password, String recipient, String message, HttpClient client) throws IOException {
+        String payload = "{" +
+                "    \"auth\": {" +
+                "        \"username\": \"" + username + "\"," +
+                "        \"password\": \"" + password + "\"" +
+                "    }," +
+                "    \"recipient\": \"" + recipient + "\"," +
+                "    \"message\": \"" + message + "\"" +
+                "}";
+
+        HttpPost request = new HttpPost(baseUrl + "/social/send");
+        StringEntity entity = new StringEntity(payload);
+        request.setHeader("Content-Type", "application/json");
+        request.setEntity(entity);
+
+        return client.execute(request);
+    }
+
+    public static HttpResponse recieveMessages(String username, String password, String[] senders, String start, String read, HttpClient client) throws IOException {
+        String payload = "{" +
+                "    \"auth\": {" +
+                "        \"username\": \"" + username + "\"," +
+                "        \"password\": \"" + password + "\"" +
+                "    }";
+
+        if(senders != null) {
+            payload += ",\"senders\": [";
+            for(int i = 0; i < senders.length; i++) {
+                payload += "\"" + senders[i] + "\"";
+                if(i + 1 != senders.length) {
+                    payload += ",";
+                }
+            }
+            payload += "]";
+        }
+
+        if(start != null) {
+            payload += ",\"start\": \"" + start + "\"";
+        }
+        if(read != null) {
+            payload += ",\"read\": \"" + read + "\"";
+        }
+
+        payload += "}";
+
+        HttpPost request = new HttpPost(baseUrl + "/social/read");
+        StringEntity entity = new StringEntity(payload);
+        request.setHeader("Content-Type", "application/json");
+        request.setEntity(entity);
+
+        return client.execute(request);
+    }
 }

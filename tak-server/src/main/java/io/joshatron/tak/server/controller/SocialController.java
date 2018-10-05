@@ -76,7 +76,7 @@ public class SocialController {
         }
     }
 
-    @PostMapping("/checkincoming")
+    @PostMapping("/incoming")
     public Users checkIncomingRequests(@RequestBody AuthWrapper authWrapper) {
         try {
             String[] incoming = socialDAO.listIncomingFriendRequests(authWrapper.getAuth());
@@ -94,7 +94,7 @@ public class SocialController {
         return null;
     }
 
-    @PostMapping("/checkoutgoing")
+    @PostMapping("/outgoing")
     public Users checkOutgoingRequests(@RequestBody AuthWrapper authWrapper) {
         try {
             String[] outgoing = socialDAO.listOutgoingFriendRequests(authWrapper.getAuth());
@@ -178,7 +178,7 @@ public class SocialController {
         return null;
     }
 
-    @PostMapping("/sendmessage")
+    @PostMapping("/send")
     public ResponseEntity sendMessage(@RequestBody SendMessage sendMessage) {
         try {
             if(socialDAO.sendMessage(sendMessage)) {
@@ -193,7 +193,7 @@ public class SocialController {
         }
     }
 
-    @PostMapping("/readmessages")
+    @PostMapping("/read")
     public Messages readMessages(@RequestBody ReadMessages readMessages) {
         try {
             Message[] messages = socialDAO.listMessages(readMessages);
