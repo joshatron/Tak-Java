@@ -1,22 +1,53 @@
 package io.joshatron.tak.server;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
+import org.apache.http.util.EntityUtils;
+import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.IOException;
+
 //Suite B
-//Current final test: 087
+//Current final test: 088
 public class SocialTest {
 
     //Create Friend Request
     //Test 001
     @Test
-    public void friendRequest_BasicRequest_204Listed() {
-
+    public void friendRequest_BasicRequest_204Listed() throws IOException {
+        HttpClient client = HttpUtils.createHttpClient();
+        //Create Users
+        HttpResponse response = HttpUtils.createUser("B00101", "password", client);
+        Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+        response = HttpUtils.createUser("B00102", "password", client);
+        Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+        //Request friend
+        response = HttpUtils.requestFriend("B00101", "password", "B00102", client);
+        Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+        //Verify listed
+        response = HttpUtils.checkIncomingFriendRequests("B00102", "password", client);
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
+        Assert.assertTrue(EntityUtils.toString(response.getEntity()).contains("B00101"));
     }
 
     //Test 002
     @Test
-    public void friendRequest_InvalidUser_403() {
-
+    public void friendRequest_InvalidUser_403() throws IOException {
+        HttpClient client = HttpUtils.createHttpClient();
+        //Create Users
+        HttpResponse response = HttpUtils.createUser("B00201", "password", client);
+        Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+        response = HttpUtils.createUser("B00202", "password", client);
+        Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+        //Request friend
+        response = HttpUtils.requestFriend("B00203", "password", "B00202", client);
+        Assert.assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
+        //Verify listed
+        response = HttpUtils.checkIncomingFriendRequests("B00203", "password", client);
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
+        Assert.assertFalse(EntityUtils.toString(response.getEntity()).contains("B0020"));
     }
 
     //Test 003
@@ -46,6 +77,12 @@ public class SocialTest {
     //Test 007
     @Test
     public void friendRequest_RequestYourself_403() {
+
+    }
+
+    //Test 088
+    @Test
+    public void friendRequest_RequestInvalidUser_403() {
 
     }
 
