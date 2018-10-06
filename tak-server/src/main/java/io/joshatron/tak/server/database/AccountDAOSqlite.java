@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 public class AccountDAOSqlite implements AccountDAO {
 
-    Connection conn;
+    private Connection conn;
 
     public AccountDAOSqlite() {
         conn = DatabaseManager.getConnection();
@@ -119,5 +119,9 @@ public class AccountDAOSqlite implements AccountDAO {
         }
 
         return null;
+    }
+
+    public Connection getConnection() {
+        return conn;
     }
 }

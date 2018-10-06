@@ -17,7 +17,7 @@ public class SocialDAOSqlite implements SocialDAO {
 
     public SocialDAOSqlite() {
         accountDAO = new AccountDAOSqlite();
-        conn = DatabaseManager.getConnection();
+        conn = accountDAO.getConnection();
     }
 
     public SocialDAOSqlite(AccountDAOSqlite accountDAO, Connection conn) {
@@ -438,5 +438,13 @@ public class SocialDAOSqlite implements SocialDAO {
         readStmt.executeUpdate();
 
         return messages.toArray(new Message[messages.size()]);
+    }
+
+    public Connection getConnection() {
+        return conn;
+    }
+
+    public AccountDAOSqlite getAccountDAO() {
+        return accountDAO;
     }
 }
