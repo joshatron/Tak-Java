@@ -41,6 +41,8 @@ public class AccountDAOSqlite implements AccountDAO {
                     return true;
                 }
             }
+
+            return false;
         }
         finally {
             if(stmt != null) {
@@ -50,8 +52,6 @@ public class AccountDAOSqlite implements AccountDAO {
                 rs.close();
             }
         }
-
-        return false;
     }
 
     @Override
@@ -82,6 +82,8 @@ public class AccountDAOSqlite implements AccountDAO {
             stmt.setString(1, auth.getUsername());
             stmt.setString(2, BCrypt.hashpw(auth.getPassword(), BCrypt.gensalt()));
             stmt.executeUpdate();
+
+            return true;
         }
         finally {
             if(selectStmt != null) {
@@ -94,8 +96,6 @@ public class AccountDAOSqlite implements AccountDAO {
                 rs.close();
             }
         }
-
-        return true;
     }
 
     @Override
@@ -118,14 +118,14 @@ public class AccountDAOSqlite implements AccountDAO {
             stmt.setString(1, BCrypt.hashpw(change.getUpdated(), BCrypt.gensalt()));
             stmt.setString(2, change.getAuth().getUsername());
             stmt.executeUpdate();
+
+            return true;
         }
         finally {
             if(stmt != null) {
                 stmt.close();
             }
         }
-
-        return true;
     }
 
     public int idFromUsername(String username) throws SQLException {
@@ -143,14 +143,14 @@ public class AccountDAOSqlite implements AccountDAO {
             if (rs.next()) {
                 return rs.getInt("id");
             }
+
+            return -9999;
         }
         finally {
             if(selectStmt != null) {
                 selectStmt.close();
             }
         }
-
-        return -9999;
     }
 
     public String usernameFromId(int id) throws SQLException {
@@ -168,14 +168,14 @@ public class AccountDAOSqlite implements AccountDAO {
             if (rs.next()) {
                 return rs.getString("username");
             }
+
+            return null;
         }
         finally {
             if(selectStmt != null) {
                 selectStmt.close();
             }
         }
-
-        return null;
     }
 
     public Connection getConnection() {
