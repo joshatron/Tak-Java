@@ -27,12 +27,20 @@ public class SocialDAOSqlite implements SocialDAO {
 
     @Override
     public boolean createFriendRequest(UserInteraction request) throws SQLException {
+        //can't request yourself
+        if(request.getAuth().getUsername().equals(request.getOther())) {
+            return false;
+        }
         //if no auth, return false
         if(!accountDAO.isAuthenticated(request.getAuth())) {
             return false;
         }
         //if user blocked, return false
         if(isBlocked(request.getAuth().getUsername(), request.getOther())) {
+            return false;
+        }
+        //if other doesn't exist, return false
+        if(!accountDAO.userExists(request.getOther())) {
             return false;
         }
 
@@ -258,7 +266,7 @@ public class SocialDAOSqlite implements SocialDAO {
             insertStmt.setInt(2, accountDAO.idFromUsername(block.getOther()));
             insertStmt.executeUpdate();
 
-            return false;
+            return true;
         }
         finally {
             if(deleteRequestStmt != null) {
@@ -353,8 +361,8 @@ public class SocialDAOSqlite implements SocialDAO {
 
         try {
             checkStmt = conn.prepareStatement(checkRequest);
-            checkStmt.setInt(1, accountDAO.idFromUsername(requester));
-            checkStmt.setInt(2, accountDAO.idFromUsername(other));
+            checkStmt.setInt(1, accountDAO.idFromUsername(other));
+            checkStmt.setInt(2, accountDAO.idFromUsername(requester));
             rs = checkStmt.executeQuery();
 
             if (rs.next()) {

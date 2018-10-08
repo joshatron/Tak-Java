@@ -22,7 +22,7 @@ public class AccountDAOSqlite implements AccountDAO {
     }
 
     @Override
-    public boolean isAuthenticated(Auth auth) throws SQLException {
+    public boolean isAuthenticated(Auth auth) throws SQLException{
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
@@ -55,7 +55,7 @@ public class AccountDAOSqlite implements AccountDAO {
     }
 
     @Override
-    public boolean registerUser(Auth auth) throws SQLException {
+    public boolean registerUser(Auth auth) throws SQLException{
         PreparedStatement selectStmt = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -99,7 +99,7 @@ public class AccountDAOSqlite implements AccountDAO {
     }
 
     @Override
-    public boolean updatePassword(PassChange change) throws SQLException {
+    public boolean updatePassword(PassChange change) throws SQLException{
         if(!isAuthenticated(change.getAuth())) {
             return false;
         }
@@ -124,6 +124,36 @@ public class AccountDAOSqlite implements AccountDAO {
         finally {
             if(stmt != null) {
                 stmt.close();
+            }
+        }
+    }
+
+    @Override
+    public boolean userExists(String username) throws SQLException{
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        String checkUsername = "SELECT username " +
+                "FROM users " +
+                "WHERE username = ?;";
+
+        try {
+            stmt = conn.prepareStatement(checkUsername);
+            stmt.setString(1, username);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return true;
+            }
+
+            return false;
+        }
+        finally {
+            if(stmt != null) {
+                stmt.close();
+            }
+            if(rs != null) {
+                rs.close();
             }
         }
     }

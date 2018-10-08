@@ -109,6 +109,8 @@ public class SocialTest {
         //Second identical request
         response = HttpUtils.requestFriend("B00501", "password", "B00502", client);
         Assert.assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
+        response = HttpUtils.checkIncomingFriendRequests("B00502", "password", client);
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
         Assert.assertTrue(EntityUtils.toString(response.getEntity()).equals(original));
     }
 

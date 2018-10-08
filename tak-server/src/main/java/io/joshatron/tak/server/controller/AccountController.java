@@ -41,7 +41,7 @@ public class AccountController {
             else {
                 return new ResponseEntity(HttpStatus.FORBIDDEN);
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -56,7 +56,7 @@ public class AccountController {
             else {
                 return new ResponseEntity(HttpStatus.FORBIDDEN);
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -71,7 +71,7 @@ public class AccountController {
             else {
                 return new ResponseEntity(HttpStatus.FORBIDDEN);
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }

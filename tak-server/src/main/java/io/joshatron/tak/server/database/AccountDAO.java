@@ -7,7 +7,8 @@ import java.sql.SQLException;
 
 public interface AccountDAO {
 
-    boolean isAuthenticated(Auth auth) throws SQLException;
-    boolean registerUser(Auth auth) throws SQLException;
-    boolean updatePassword(PassChange change) throws SQLException;
+    boolean isAuthenticated(Auth auth) throws Exception;
+    boolean registerUser(Auth auth) throws Exception;
+    boolean updatePassword(PassChange change) throws Exception;
+    boolean userExists(String username) throws Exception;
 }
