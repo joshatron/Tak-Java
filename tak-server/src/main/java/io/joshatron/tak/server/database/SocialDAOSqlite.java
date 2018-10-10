@@ -166,6 +166,9 @@ public class SocialDAOSqlite implements SocialDAO {
         if(!accountDAO.isAuthenticated(response.getAuth())) {
             return false;
         }
+        if (!(response.getResponse().equalsIgnoreCase("deny") || response.getResponse().equalsIgnoreCase("accept"))) {
+            return false;
+        }
 
         PreparedStatement checkStmt = null;
         PreparedStatement deleteStmt = null;
