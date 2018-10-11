@@ -383,20 +383,78 @@ public class SocialTest {
 
     //Test 014
     @Test
-    public void respondToFriendRequest_InvalidUser_403() {
-
+    public void respondToFriendRequest_InvalidUser_403() throws IOException {
+        HttpClient client = HttpUtils.createHttpClient();
+        //Create Users
+        HttpResponse response = HttpUtils.createUser("B01401", "password", client);
+        Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+        response = HttpUtils.createUser("B01402", "password", client);
+        Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+        //Request friend
+        response = HttpUtils.requestFriend("B01401", "password", "B01402", client);
+        Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+        //Verify listed
+        response = HttpUtils.checkIncomingFriendRequests("B01402", "password", client);
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
+        Assert.assertTrue(EntityUtils.toString(response.getEntity()).contains("B01401"));
+        //Invalid request
+        response = HttpUtils.respondToRequest("B01403", "password", "B01401", "accept", client);
+        Assert.assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
+        //Verify not friends
+        response = HttpUtils.getFriends("B01401", "password", client);
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
+        Assert.assertFalse(EntityUtils.toString(response.getEntity()).contains("B01402"));
+        //Verify request there
+        response = HttpUtils.checkIncomingFriendRequests("B01402", "password", client);
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
+        Assert.assertTrue(EntityUtils.toString(response.getEntity()).contains("B01401"));
     }
 
     //Test 015
     @Test
-    public void respondToFriendRequest_InvalidCredentials_403() {
-
+    public void respondToFriendRequest_InvalidCredentials_403() throws IOException {
+        HttpClient client = HttpUtils.createHttpClient();
+        //Create Users
+        HttpResponse response = HttpUtils.createUser("B01501", "password", client);
+        Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+        response = HttpUtils.createUser("B01502", "password", client);
+        Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+        //Request friend
+        response = HttpUtils.requestFriend("B01501", "password", "B01502", client);
+        Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+        //Verify listed
+        response = HttpUtils.checkIncomingFriendRequests("B01502", "password", client);
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
+        Assert.assertTrue(EntityUtils.toString(response.getEntity()).contains("B01501"));
+        //Invalid request
+        response = HttpUtils.respondToRequest("B01502", "drowssap", "B01501", "accept", client);
+        Assert.assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
+        //Verify not friends
+        response = HttpUtils.getFriends("B01501", "password", client);
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
+        Assert.assertFalse(EntityUtils.toString(response.getEntity()).contains("B01502"));
+        //Verify request there
+        response = HttpUtils.checkIncomingFriendRequests("B01502", "password", client);
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
+        Assert.assertTrue(EntityUtils.toString(response.getEntity()).contains("B01501"));
     }
 
     //Test 016
     @Test
-    public void respondToFriendRequest_RequestNotMade_403() {
-
+    public void respondToFriendRequest_RequestNotMade_403() throws IOException {
+        HttpClient client = HttpUtils.createHttpClient();
+        //Create Users
+        HttpResponse response = HttpUtils.createUser("B01601", "password", client);
+        Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+        response = HttpUtils.createUser("B01602", "password", client);
+        Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+        //Invalid request
+        response = HttpUtils.respondToRequest("B01602", "password", "B01601", "accept", client);
+        Assert.assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
+        //Verify not friends
+        response = HttpUtils.getFriends("B01601", "password", client);
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
+        Assert.assertFalse(EntityUtils.toString(response.getEntity()).contains("B01602"));
     }
 
     //Check Incoming Requests
