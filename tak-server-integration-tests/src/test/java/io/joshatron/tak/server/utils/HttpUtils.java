@@ -1,4 +1,4 @@
-package io.joshatron.tak.server;
+package io.joshatron.tak.server.utils;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;

@@ -1,5 +1,6 @@
 package io.joshatron.tak.server;
 
+import io.joshatron.tak.server.utils.HttpUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;

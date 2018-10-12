@@ -1,5 +1,8 @@
 package io.joshatron.tak.server;
 
+import io.joshatron.tak.server.utils.AccountUtils;
+import io.joshatron.tak.server.utils.HttpUtils;
+import io.joshatron.tak.server.utils.User;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
@@ -12,79 +15,59 @@ import java.io.IOException;
 //Current final test: 012
 public class AccountTest {
 
+    private String suite;
+    private HttpClient client;
+
+    public AccountTest() {
+        suite = "A";
+        client = HttpUtils.createHttpClient();
+    }
+
     //Register User
-    //Test 001
     @Test
     public void registerUser_OneUser_204() throws IOException {
-        HttpResponse response = HttpUtils.createUser("A00101", "password", HttpUtils.createHttpClient());
-        Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+        String test = "001";
+        AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
     }
 
-    //Test 002
     @Test
     public void registerUser_MultipleUsers_204() throws IOException {
-        HttpClient client = HttpUtils.createHttpClient();
-        //first user
-        HttpResponse response = HttpUtils.createUser("A00201", "password", client);
-        Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
-        //second user, same password
-        response = HttpUtils.createUser("A00202", "password", client);
-        Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
-        //third user, different password
-        response = HttpUtils.createUser("A00203", "drowssap", client);
-        Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+        String test = "002";
+        AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
+        AccountUtils.addUser(suite, test, "02", "password", client, HttpStatus.SC_NO_CONTENT);
+        AccountUtils.addUser(suite, test, "03", "drowssap", client, HttpStatus.SC_NO_CONTENT);
     }
 
-    //Test 003
     @Test
     public void registerUser_UserAlreadyCreated_403() throws IOException {
-        HttpClient client = HttpUtils.createHttpClient();
-        //first user
-        HttpResponse response = HttpUtils.createUser("A00301", "password", client);
-        Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
-        //same user, same password
-        response = HttpUtils.createUser("A00301", "password", client);
-        Assert.assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
-        //same user, different password
-        response = HttpUtils.createUser("A00301", "drowssap", client);
-        Assert.assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
+        String test = "003";
+        AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
+        AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_FORBIDDEN);
+        AccountUtils.addUser(suite, test, "01", "drowssap", client, HttpStatus.SC_FORBIDDEN);
     }
 
     //Change Password
-    //Test 004
     @Test
     public void changePassword_OneUser_204() throws IOException {
-        HttpClient client = HttpUtils.createHttpClient();
-        //create user
-        HttpResponse response = HttpUtils.createUser("A00401", "password", client);
-        Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
-        //change user password
-        response = HttpUtils.changePassword("A00401", "password", "drowssap", client);
-        Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+        String test = "004";
+        User user = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
+        AccountUtils.changePassword(user, "drowssap", client, HttpStatus.SC_NO_CONTENT);
     }
 
-    //Test 005
     @Test
     public void changePassword_WrongPassword_403() throws IOException {
-        HttpClient client = HttpUtils.createHttpClient();
-        //create user
-        HttpResponse response = HttpUtils.createUser("A00501", "password", client);
-        Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
-        //change user password with wrong password
-        response = HttpUtils.changePassword("A00501", "passwor", "drowssap", client);
-        Assert.assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
+        String test = "005";
+        User user = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
+        user.setPassword("pass");
+        AccountUtils.changePassword(user, "drowssap", client, HttpStatus.SC_FORBIDDEN);
     }
 
-    //Test 006
     @Test
     public void changePassword_InvalidUser_403() throws IOException {
-        HttpClient client = HttpUtils.createHttpClient();
-        //create user
-        HttpResponse response = HttpUtils.createUser("A00601", "password", client);
-        Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
-        //change nonexistent user's password
-        response = HttpUtils.changePassword("A00602", "password", "drowssap", client);
-        Assert.assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
+        String test = "006";
+        User user = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
+        user.setUsername(suite + test + "02");
+        AccountUtils.changePassword(user, "drowssap", client, HttpStatus.SC_FORBIDDEN);
     }
 
     //Test 007
