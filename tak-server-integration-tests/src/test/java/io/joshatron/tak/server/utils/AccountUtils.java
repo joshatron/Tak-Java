@@ -27,4 +27,9 @@ public class AccountUtils {
             user.setPassword(newPass);
         }
     }
+
+    public static void authenticate(User user, HttpClient client, int expected) throws IOException {
+        HttpResponse response = HttpUtils.authenticate(user.getUsername(), user.getPassword(), client);
+        Assert.assertEquals(expected, response.getStatusLine().getStatusCode());
+    }
 }

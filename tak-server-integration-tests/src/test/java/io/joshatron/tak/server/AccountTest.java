@@ -70,85 +70,53 @@ public class AccountTest {
         AccountUtils.changePassword(user, "drowssap", client, HttpStatus.SC_FORBIDDEN);
     }
 
-    //Test 007
     @Test
     public void changePassword_BlankNewPassword_403() throws IOException {
-        HttpClient client = HttpUtils.createHttpClient();
-        //create user
-        HttpResponse response = HttpUtils.createUser("A00701", "password", client);
-        Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
-        //change user's password with blank password
-        response = HttpUtils.changePassword("A00701", "password", "", client);
-        Assert.assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
+        String test = "007";
+        User user = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
+        AccountUtils.changePassword(user, "", client, HttpStatus.SC_FORBIDDEN);
     }
 
-    //Test 008
     @Test
     public void changePassword_MultipleUsers_204() throws IOException {
-        HttpClient client = HttpUtils.createHttpClient();
-        //create user
-        HttpResponse response = HttpUtils.createUser("A00801", "password", client);
-        Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
-        //create a second user
-        response = HttpUtils.createUser("A00802", "12345678", client);
-        Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
-        //change the first user's password
-        response = HttpUtils.changePassword("A00801", "password", "drowssap", client);
-        Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
-        //change the second user's password
-        response = HttpUtils.changePassword("A00802", "12345678", "87654321", client);
-        Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+        String test = "008";
+        User user1 = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
+        User user2 = AccountUtils.addUser(suite, test, "02", "12345678", client, HttpStatus.SC_NO_CONTENT);
+        AccountUtils.changePassword(user1, "drowssap", client, HttpStatus.SC_NO_CONTENT);
+        AccountUtils.changePassword(user2, "87654321", client, HttpStatus.SC_NO_CONTENT);
     }
 
     //Test 009
     @Test
     public void changePassword_OtherUserPassword_403() throws IOException {
-        HttpClient client = HttpUtils.createHttpClient();
-        //create user
-        HttpResponse response = HttpUtils.createUser("A00901", "password", client);
-        Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
-        //create a second user
-        response = HttpUtils.createUser("A00902", "12345678", client);
-        Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
-        //try to change the first user's password with the password of the second user
-        response = HttpUtils.changePassword("A00901", "12345678", "87654321", client);
-        Assert.assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
+        String test = "009";
+        User user1 = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
+        User user2 = AccountUtils.addUser(suite, test, "02", "12345678", client, HttpStatus.SC_NO_CONTENT);
+        user1.setPassword("12345678");
+        AccountUtils.changePassword(user1, "drowssap", client, HttpStatus.SC_FORBIDDEN);
     }
 
     //Authenticate User
-    //Test 010
     @Test
     public void authenticate_Valid_204() throws IOException {
-        HttpClient client = HttpUtils.createHttpClient();
-        //create user
-        HttpResponse response = HttpUtils.createUser("A01001", "password", client);
-        Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
-        //check that user is valid
-        response = HttpUtils.authenticate("A01001", "password", client);
-        Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+        String test = "010";
+        User user = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
+        AccountUtils.authenticate(user, client, HttpStatus.SC_NO_CONTENT);
     }
 
-    //Test 011
     @Test
     public void authenticate_WrongPassword_403() throws IOException {
-        HttpClient client = HttpUtils.createHttpClient();
-        //create user
-        HttpResponse response = HttpUtils.createUser("A01101", "password", client);
-        Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
-        //check that user is valid with invalid password
-        response = HttpUtils.authenticate("A01101", "drowssap", client);
-        Assert.assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
+        String test = "011";
+        User user = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
+        user.setPassword("drowssap");
+        AccountUtils.authenticate(user, client, HttpStatus.SC_FORBIDDEN);
     }
 
-    //Test 012
     @Test
     public void authenticate_InvalidUser_403() throws IOException {
-        HttpClient client = HttpUtils.createHttpClient();
-        //create user
-        HttpResponse response = HttpUtils.createUser("A01201", "password", client);
-        Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
-        //check nonexistent user with first user's password
-        response = HttpUtils.authenticate("A01202", "password", client);
-        Assert.assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
+        String test = "012";
+        User user = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
+        user.setUsername(suite + test + "02");
+        AccountUtils.authenticate(user, client, HttpStatus.SC_FORBIDDEN);
     }
 }
