@@ -3,10 +3,8 @@ package io.joshatron.tak.server;
 import io.joshatron.tak.server.utils.AccountUtils;
 import io.joshatron.tak.server.utils.HttpUtils;
 import io.joshatron.tak.server.utils.User;
-import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -15,11 +13,10 @@ import java.io.IOException;
 //Current final test: 012
 public class AccountTest {
 
-    private String suite;
+    private final String suite = "A";
     private HttpClient client;
 
     public AccountTest() {
-        suite = "A";
         client = HttpUtils.createHttpClient();
     }
 
