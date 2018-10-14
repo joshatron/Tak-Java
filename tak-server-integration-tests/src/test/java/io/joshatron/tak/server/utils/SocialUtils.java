@@ -14,6 +14,11 @@ public class SocialUtils {
         Assert.assertEquals(expected, response.getStatusLine().getStatusCode());
     }
 
+    public static void cancelRequest(User requester, User other, HttpClient client, int expected) throws IOException {
+        HttpResponse response = HttpUtils.cancelFriendRequest(requester.getUsername(), requester.getPassword(), other.getUsername(), client);
+        Assert.assertEquals(expected, response.getStatusLine().getStatusCode());
+    }
+
     public static void checkIncoming(User user, HttpClient client, int expected, User[] included, User[] excluded) throws IOException {
         HttpResponse response = HttpUtils.checkIncomingFriendRequests(user.getUsername(), user.getPassword(), client);
         Assert.assertEquals(expected, response.getStatusLine().getStatusCode());
@@ -33,6 +38,23 @@ public class SocialUtils {
 
     public static void checkOutgoing(User user, HttpClient client, int expected, User[] included, User[] excluded) throws IOException {
         HttpResponse response = HttpUtils.checkOutgoingFriendRequests(user.getUsername(), user.getPassword(), client);
+        Assert.assertEquals(expected, response.getStatusLine().getStatusCode());
+        String contents = EntityUtils.toString(response.getEntity());
+        if(included != null && included.length > 0) {
+            for(User include : included) {
+                //Makes sure there is just one occurrence
+                Assert.assertEquals(1, (contents.length() - contents.replace(include.getUsername(), "").length()) / include.getUsername().length());
+            }
+        }
+        if(excluded != null && excluded.length > 0) {
+            for(User exclude : excluded) {
+                Assert.assertFalse(contents.contains(exclude.getUsername()));
+            }
+        }
+    }
+
+    public static void checkFriends(User user, HttpClient client, int expected, User[] included, User[] excluded) throws IOException {
+        HttpResponse response = HttpUtils.getFriends(user.getUsername(), user.getPassword(), client);
         Assert.assertEquals(expected, response.getStatusLine().getStatusCode());
         String contents = EntityUtils.toString(response.getEntity());
         if(included != null && included.length > 0) {
