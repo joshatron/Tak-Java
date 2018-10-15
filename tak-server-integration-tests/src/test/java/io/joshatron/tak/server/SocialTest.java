@@ -4,11 +4,8 @@ import io.joshatron.tak.server.utils.AccountUtils;
 import io.joshatron.tak.server.utils.HttpUtils;
 import io.joshatron.tak.server.utils.SocialUtils;
 import io.joshatron.tak.server.utils.User;
-import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
-import org.apache.http.util.EntityUtils;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -234,430 +231,360 @@ public class SocialTest {
     }
 
     //Check Incoming Requests
-    //Test 017
     @Test
     public void checkIncomingRequests_NoIncoming_200BlankArray() {
-
+        String test = "017";
     }
 
-    //Test 018
     @Test
     public void checkIncomingRequest_OneIncoming_200ArrayWithOne() {
-
+        String test = "018";
     }
 
-    //Test 019
     @Test
     public void checkIncomingRequest_MultipleIncoming_200ArrayWithMultiple() {
-
+        String test = "019";
     }
 
-    //Test 020
     @Test
     public void checkIncomingRequest_OneOutgoing_200BlankArray() {
-
+        String test = "020";
     }
 
-    //Test 021
     @Test
     public void checkIncomingRequest_InvalidUser_403() {
-
+        String test = "021";
     }
 
-    //Test 022
     @Test
     public void checkIncomingRequest_InvalidCredentials_403() {
-
+        String test = "022";
     }
 
     //Check Outgoing Requests
-    //Test 023
     @Test
     public void checkOutgoingRequests_NoOutgoing_200BlankArray() {
-
+        String test = "023";
     }
 
-    //Test 024
     @Test
     public void checkOutgoingRequest_OneOutgoing_200ArrayWithOne() {
-
+        String test = "024";
     }
 
-    //Test 025
     @Test
     public void checkOutgoingRequest_MultipleOutgoing_200ArrayWithMultiple() {
-
+        String test = "025";
     }
 
-    //Test 026
     @Test
     public void checkOutgoingRequest_OneIncoming_200BlankArray() {
-
+        String test = "026";
     }
 
-    //Test 027
     @Test
     public void checkOutgoingRequest_InvalidUser_403() {
-
+        String test = "027";
     }
 
-    //Test 028
     @Test
     public void checkOutgoingRequest_InvalidCredentials_403() {
-
+        String test = "028";
     }
 
     //Block User
-    //Test 029
     @Test
     public void blockUser_BlockNonFriend_204BlockAdded() {
-
+        String test = "029";
     }
 
-    //Test 030
     @Test
     public void blockUser_BlockFriend_204FriendRemovedBlockAdded() {
-
+        String test = "030";
     }
 
-    //Test 031
     @Test
     public void blockUser_BlockWhileRequested_204RequestRemovedBlockAdded() {
-
+        String test = "031";
     }
 
-    //Test 032
     @Test
     public void blockUser_BlockWhileRequesting_204RequestRemovedBlockAdded() {
-
+        String test = "032";
     }
 
-    //Test 033
     @Test
     public void blockUser_BlockWhileBlocked_204BlockAdded() {
-
+        String test = "033";
     }
 
-    //Test 034
     @Test
     public void blockUser_InvalidUser_403() {
-
+        String test = "034";
     }
 
-    //Test 035
     @Test
     public void blockUser_InvalidCredentials_403() {
-
+        String test = "035";
     }
 
-    //Test 036
     @Test
     public void blockUser_BlockingInvalidUser_403() {
-
+        String test = "036";
     }
 
-    //Test 037
     @Test
     public void blockUser_BlockingAlreadyBlocked_403() {
-
+        String test = "037";
     }
 
-    //Test 038
     @Test
     public void blockUser_BlockingSelf_403() {
-
+        String test = "038";
     }
 
     //Unblock User
-    //Test 039
     @Test
     public void unblockUser_Normal_204BlockRemoved() {
-
+        String test = "039";
     }
 
-    //Test 040
     @Test
     public void unblockUser_UnblockedWhileBlocked_204OnlyYourBlockRemoved() {
-
+        String test = "040";
     }
 
-    //Test 041
     @Test
     public void unblockUser_UnblockWhileNoBlock_403() {
-
+        String test = "041";
     }
 
-    //Test 042
     @Test
     public void unblockUser_InvalidUser_403() {
-
+        String test = "042";
     }
 
-    //Test 043
     @Test
     public void unblockUser_InvalidCredentials_403() {
-
+        String test = "043";
     }
 
-    //Test 044
     @Test
     public void unblockUser_InvalidUserToUnblock_403() {
-
+        String test = "044";
     }
 
     //List Friends
-    //Test 045
     @Test
     public void listFriends_NoFriends_200EmptyArray() {
-
+        String test = "045";
     }
 
-    //Test 046
     @Test
     public void listFriends_OneFriend_200ArrayWithOne() {
-
+        String test = "046";
     }
 
-    //Test 047
     @Test
     public void listFriends_MultipleFriends_200ArrayWithMultiple() {
-
+        String test = "047";
     }
 
-    //Test 048
     @Test
     public void listFriends_CreatedByYou_200ArrayWithOne() {
-
+        String test = "048";
     }
 
-    //Test 049
     @Test
     public void listFriends_CreatedByOther_200ArrayWithOne() {
-
+        String test = "049";
     }
 
-    //Test 050
     @Test
     public void listFriends_IncomingRequest_200EmptyArray() {
-
+        String test = "050";
     }
 
-    //Test 051
     @Test
     public void listFriends_OutgoingRequest_200EmptyArray() {
-
+        String test = "051";
     }
 
-    //Test 052
     @Test
     public void listFriends_InvalidUser_403() {
-
+        String test = "052";
     }
 
-    //Test 053
     @Test
     public void listFriends_InvalidCredentials_403() {
-
+        String test = "053";
     }
 
     //List Blocked Users
-    //Test 054
     @Test
     public void listBlocked_NoBlocked_200EmptyArray() {
-
+        String test = "054";
     }
 
-    //Test 055
     @Test
     public void listBlocked_OneBlocked_200ArrayWithOne() {
-
+        String test = "055";
     }
 
-    //Test 056
     @Test
     public void listBlocked_MultipleBlocked_200ArrayWithMultiple() {
-
+        String test = "056";
     }
 
-    //Test 057
     @Test
     public void listBlocked_BeenBlocked_200EmptyArray() {
-
+        String test = "057";
     }
 
-    //Test 058
     @Test
     public void listBlocked_InvalidUser_403() {
-
+        String test = "058";
     }
 
-    //Test 059
     @Test
     public void listBlocked_InvalidCredentials_403() {
-
+        String test = "059";
     }
 
     //Send a Message
-    //Test 060
     @Test
     public void sendMessage_NormalMessage_204MessageSent() {
-
+        String test = "060";
     }
 
-    //Test 061
     @Test
     public void sendMessage_EmptyMessage_403NotSent() {
-
+        String test = "061";
     }
 
-    //Test 062
     @Test
     public void sendMessage_InvalidRecipient_403NotSent() {
-
+        String test = "062";
     }
 
-    //Test 063
     @Test
     public void sendMessage_InvalidUser_403NotSent() {
-
+        String test = "063";
     }
 
-    //Test 064
     @Test
     public void sendMessage_InvalidCredentials_403NotSent() {
-
+        String test = "064";
     }
 
-    //Test 065
     @Test
     public void sendMessage_SentToBlocked_403NotSent() {
-
+        String test = "065";
     }
 
-    //Test 066
     @Test
     public void sendMessage_SentToNonFriend_204Sent() {
-
+        String test = "066";
     }
 
-    //Test 067
     @Test
     public void sendMessage_SentToFriend_204Sent() {
-
+        String test = "067";
     }
 
-    //Test 068
     @Test
     public void sendMessage_SuperLongMessage_403NotSent() {
-
+        String test = "068";
     }
 
     //Read Messages
-    //Test 069
     @Test
     public void readMessages_NoParameters_200AllMessages() {
-
+        String test = "069";
     }
 
-    //Test 070
     @Test
     public void readMessages_InvalidUser_403() {
-
+        String test = "070";
     }
 
-    //Test 071
     @Test
     public void readMessages_InvalidCredentials_403() {
-
+        String test = "071";
     }
 
-    //Test 072
     @Test
     public void readMessages_OneSender_200MessagesFromSender() {
-
+        String test = "072";
     }
 
-    //Test 073
     @Test
     public void readMessages_MultipleSenders_200MessagesFromSenders() {
-
+        String test = "073";
     }
 
-    //Test 074
     @Test
     public void readMessages_NormalStart_200MessagesAfterStart() {
-
+        String test = "074";
     }
 
-    //Test 075
     @Test
     public void readMessages_StartAtCurrent_200NoMessages() {
-
+        String test = "075";
     }
 
-    //Test 076
     @Test
     public void readMessages_StartAtFuture_403() {
-
+        String test = "076";
     }
 
-    //Test 077
     @Test
     public void readMessages_OnlyUnread_200OnlyUnreadMessages() {
-
+        String test = "077";
     }
 
-    //Test 078
     @Test
     public void readMessages_OnlyRead_200OnlyReadMessages() {
-
+        String test = "078";
     }
 
-    //Test 079
     @Test
     public void readMessages_ReadBadFormat_403() {
-
+        String test = "079";
     }
 
-    //Test 080
     @Test
     public void readMessages_StartBadFormat_403() {
-
+        String test = "080";
     }
 
-    //Test 081
     @Test
     public void readMessages_InvalidSender_403() {
-
+        String test = "081";
     }
 
-    //Test 082
     @Test
     public void readMessages_SenderNoMessages_200NoMessages() {
-
+        String test = "082";
     }
 
-    //Test 083
     @Test
     public void readMessages_SenderAndStart_200MessagesFromSendersFromStart() {
-
+        String test = "083";
     }
 
-    //Test 084
     @Test
     public void readMessages_SenderAndRead_200MessagesFromSendersThatAreRead() {
-
+        String test = "084";
     }
 
-    //Test 085
     @Test
     public void readMessages_StartAndRead_200MessagesStartingAtStartThatAreRead() {
-
+        String test = "085";
     }
 
-    //Test 086
     @Test
     public void readMessages_SendersAndStartAndRead_200MessagesFittingQuery() {
-
+        String test = "086";
     }
 }
