@@ -232,23 +232,39 @@ public class SocialTest {
 
     //Check Incoming Requests
     @Test
-    public void checkIncomingRequests_NoIncoming_200BlankArray() {
+    public void checkIncomingRequests_NoIncoming_200BlankArray() throws IOException {
         String test = "017";
+        User user = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.checkIncoming(user, client, HttpStatus.SC_OK, null, null);
     }
 
     @Test
-    public void checkIncomingRequest_OneIncoming_200ArrayWithOne() {
+    public void checkIncomingRequest_OneIncoming_200ArrayWithOne() throws IOException {
         String test = "018";
+        User user1 = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
+        User user2 = AccountUtils.addUser(suite, test, "02", "password", client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.requestFriend(user1, user2, client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.checkIncoming(user2, client, HttpStatus.SC_OK, new User[]{user1}, null);
     }
 
     @Test
-    public void checkIncomingRequest_MultipleIncoming_200ArrayWithMultiple() {
+    public void checkIncomingRequest_MultipleIncoming_200ArrayWithMultiple() throws IOException {
         String test = "019";
+        User user1 = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
+        User user2 = AccountUtils.addUser(suite, test, "02", "password", client, HttpStatus.SC_NO_CONTENT);
+        User user3 = AccountUtils.addUser(suite, test, "03", "password", client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.requestFriend(user1, user3, client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.requestFriend(user2, user3, client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.checkIncoming(user3, client, HttpStatus.SC_OK, new User[]{user1, user2}, null);
     }
 
     @Test
-    public void checkIncomingRequest_OneOutgoing_200BlankArray() {
+    public void checkIncomingRequest_OneOutgoing_200BlankArray() throws IOException {
         String test = "020";
+        User user1 = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
+        User user2 = AccountUtils.addUser(suite, test, "02", "password", client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.requestFriend(user1, user2, client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.checkIncoming(user1, client, HttpStatus.SC_OK, null, new User[]{user2});
     }
 
     @Test
