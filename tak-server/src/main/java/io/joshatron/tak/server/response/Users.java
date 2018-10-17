@@ -8,6 +8,10 @@ public class Users {
         this.users = users;
     }
 
+    public Users() {
+        users = null;
+    }
+
     public String[] getUsers() {
         return users;
     }

@@ -77,14 +77,15 @@ public class SocialController {
     }
 
     @PostMapping("/incoming")
-    public Users checkIncomingRequests(@RequestBody AuthWrapper authWrapper) {
+    public ResponseEntity<Users> checkIncomingRequests(@RequestBody AuthWrapper authWrapper) {
         try {
             String[] incoming = socialDAO.listIncomingFriendRequests(authWrapper.getAuth());
             if(incoming != null) {
-                return new Users(incoming);
+                return new ResponseEntity<>(new Users(incoming), HttpStatus.OK);
             }
             else {
                 //return forbidden
+                return new ResponseEntity<>(new Users(), HttpStatus.FORBIDDEN);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -95,14 +96,14 @@ public class SocialController {
     }
 
     @PostMapping("/outgoing")
-    public Users checkOutgoingRequests(@RequestBody AuthWrapper authWrapper) {
+    public ResponseEntity<Users> checkOutgoingRequests(@RequestBody AuthWrapper authWrapper) {
         try {
             String[] outgoing = socialDAO.listOutgoingFriendRequests(authWrapper.getAuth());
             if(outgoing != null) {
-                return new Users(outgoing);
+                return new ResponseEntity<>(new Users(outgoing), HttpStatus.OK);
             }
             else {
-                //return forbidden
+                return new ResponseEntity<>(new Users(), HttpStatus.FORBIDDEN);
             }
         } catch (Exception e) {
             e.printStackTrace();

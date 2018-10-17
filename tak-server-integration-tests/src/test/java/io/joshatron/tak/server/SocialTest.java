@@ -268,44 +268,70 @@ public class SocialTest {
     }
 
     @Test
-    public void checkIncomingRequest_InvalidUser_403() {
+    public void checkIncomingRequest_InvalidUser_403() throws IOException {
         String test = "021";
+        User user1 = new User(suite + test + "01", "password");
+        SocialUtils.checkIncoming(user1, client, HttpStatus.SC_FORBIDDEN, null, null);
     }
 
     @Test
-    public void checkIncomingRequest_InvalidCredentials_403() {
+    public void checkIncomingRequest_InvalidCredentials_403() throws IOException {
         String test = "022";
+        User user1 = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
+        user1.setPassword("drowssap");
+        SocialUtils.checkIncoming(user1, client, HttpStatus.SC_FORBIDDEN, null, null);
     }
 
     //Check Outgoing Requests
     @Test
-    public void checkOutgoingRequests_NoOutgoing_200BlankArray() {
+    public void checkOutgoingRequests_NoOutgoing_200BlankArray() throws IOException {
         String test = "023";
+        User user1 = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.checkOutgoing(user1, client, HttpStatus.SC_OK, null, null);
     }
 
     @Test
-    public void checkOutgoingRequest_OneOutgoing_200ArrayWithOne() {
+    public void checkOutgoingRequest_OneOutgoing_200ArrayWithOne() throws IOException {
         String test = "024";
+        User user1 = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
+        User user2 = AccountUtils.addUser(suite, test, "02", "password", client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.requestFriend(user1, user2, client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.checkOutgoing(user1, client, HttpStatus.SC_OK, new User[]{user2}, null);
     }
 
     @Test
-    public void checkOutgoingRequest_MultipleOutgoing_200ArrayWithMultiple() {
+    public void checkOutgoingRequest_MultipleOutgoing_200ArrayWithMultiple() throws IOException {
         String test = "025";
+        User user1 = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
+        User user2 = AccountUtils.addUser(suite, test, "02", "password", client, HttpStatus.SC_NO_CONTENT);
+        User user3 = AccountUtils.addUser(suite, test, "03", "password", client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.requestFriend(user1, user2, client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.requestFriend(user1, user3, client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.checkOutgoing(user1, client, HttpStatus.SC_OK, new User[]{user2, user3}, null);
     }
 
     @Test
-    public void checkOutgoingRequest_OneIncoming_200BlankArray() {
+    public void checkOutgoingRequest_OneIncoming_200BlankArray() throws IOException {
         String test = "026";
+        User user1 = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
+        User user2 = AccountUtils.addUser(suite, test, "02", "password", client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.requestFriend(user1, user2, client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.checkOutgoing(user2, client, HttpStatus.SC_OK, null, new User[]{user1});
     }
 
     @Test
-    public void checkOutgoingRequest_InvalidUser_403() {
+    public void checkOutgoingRequest_InvalidUser_403() throws IOException {
         String test = "027";
+        User user = new User(suite + test + "01", "password");
+        SocialUtils.checkOutgoing(user, client, HttpStatus.SC_FORBIDDEN, null, null);
     }
 
     @Test
-    public void checkOutgoingRequest_InvalidCredentials_403() {
+    public void checkOutgoingRequest_InvalidCredentials_403() throws IOException {
         String test = "028";
+        User user = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
+        user.setPassword("drowssap");
+        SocialUtils.checkOutgoing(user, client, HttpStatus.SC_FORBIDDEN, null, null);
     }
 
     //Block User
