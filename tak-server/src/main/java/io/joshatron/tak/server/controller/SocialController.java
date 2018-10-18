@@ -84,15 +84,12 @@ public class SocialController {
                 return new ResponseEntity<>(new Users(incoming), HttpStatus.OK);
             }
             else {
-                //return forbidden
                 return new ResponseEntity<>(new Users(), HttpStatus.FORBIDDEN);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            //return server error
+            return new ResponseEntity<>(new Users(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return null;
     }
 
     @PostMapping("/outgoing")
@@ -107,10 +104,8 @@ public class SocialController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            //return server error
+            return new ResponseEntity<>(new Users(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return null;
     }
 
     @PostMapping("/block")
@@ -144,39 +139,35 @@ public class SocialController {
     }
 
     @PostMapping("/friends")
-    public Users listFriends(@RequestBody AuthWrapper authWrapper) {
+    public ResponseEntity<Users> listFriends(@RequestBody AuthWrapper authWrapper) {
         try {
             String[] friends = socialDAO.listFriends(authWrapper.getAuth());
             if(friends != null) {
-                return new Users(friends);
+                return new ResponseEntity<>(new Users(friends), HttpStatus.OK);
             }
             else {
-                //return fobidden
+                return new ResponseEntity<>(new Users(), HttpStatus.FORBIDDEN);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            //return server error
+            return new ResponseEntity<>(new Users(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return null;
     }
 
     @PostMapping("/blocked")
-    public Users listBlocked(@RequestBody AuthWrapper authWrapper) {
+    public ResponseEntity<Users> listBlocked(@RequestBody AuthWrapper authWrapper) {
         try {
             String[] blocked = socialDAO.listBlocked(authWrapper.getAuth());
             if(blocked != null) {
-                return new Users(blocked);
+                return new ResponseEntity<>(new Users(blocked), HttpStatus.OK);
             }
             else {
-                //return forbidden
+                return new ResponseEntity<>(new Users(), HttpStatus.FORBIDDEN);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            //return server error
+            return new ResponseEntity<>(new Users(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return null;
     }
 
     @PostMapping("/send")
@@ -195,20 +186,18 @@ public class SocialController {
     }
 
     @PostMapping("/read")
-    public Messages readMessages(@RequestBody ReadMessages readMessages) {
+    public ResponseEntity<Messages> readMessages(@RequestBody ReadMessages readMessages) {
         try {
             Message[] messages = socialDAO.listMessages(readMessages);
             if(messages != null) {
-                return new Messages(messages);
+                return new ResponseEntity<>(new Messages(messages), HttpStatus.OK);
             }
             else {
-                //return forbidden
+                return new ResponseEntity<>(new Messages(), HttpStatus.FORBIDDEN);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            //return server error
+            return new ResponseEntity<>(new Messages(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return null;
     }
 }

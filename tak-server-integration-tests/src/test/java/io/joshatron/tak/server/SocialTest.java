@@ -336,53 +336,105 @@ public class SocialTest {
 
     //Block User
     @Test
-    public void blockUser_BlockNonFriend_204BlockAdded() {
+    public void blockUser_BlockNonFriend_204BlockAdded() throws IOException {
         String test = "029";
+        User user1 = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
+        User user2 = AccountUtils.addUser(suite, test, "02", "password", client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.blockUser(user1, user2, client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.checkBlocked(user1, client, HttpStatus.SC_OK, new User[]{user2}, null);
     }
 
     @Test
-    public void blockUser_BlockFriend_204FriendRemovedBlockAdded() {
+    public void blockUser_BlockFriend_204FriendRemovedBlockAdded() throws IOException {
         String test = "030";
+        User user1 = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
+        User user2 = AccountUtils.addUser(suite, test, "02", "password", client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.requestFriend(user2, user1, client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.respondToRequest(user1, user2, "accept", client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.blockUser(user1, user2, client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.checkBlocked(user1, client, HttpStatus.SC_OK, new User[]{user2}, null);
+        SocialUtils.checkFriends(user1, client, HttpStatus.SC_OK, null, new User[]{user2});
     }
 
     @Test
-    public void blockUser_BlockWhileRequested_204RequestRemovedBlockAdded() {
+    public void blockUser_BlockWhileRequested_204RequestRemovedBlockAdded() throws IOException {
         String test = "031";
+        User user1 = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
+        User user2 = AccountUtils.addUser(suite, test, "02", "password", client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.requestFriend(user2, user1, client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.blockUser(user1, user2, client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.checkBlocked(user1, client, HttpStatus.SC_OK, new User[]{user2}, null);
+        SocialUtils.checkIncoming(user1, client, HttpStatus.SC_OK, null, new User[]{user2});
     }
 
     @Test
-    public void blockUser_BlockWhileRequesting_204RequestRemovedBlockAdded() {
+    public void blockUser_BlockWhileRequesting_204RequestRemovedBlockAdded() throws IOException {
         String test = "032";
+        User user1 = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
+        User user2 = AccountUtils.addUser(suite, test, "02", "password", client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.requestFriend(user1, user2, client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.blockUser(user1, user2, client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.checkBlocked(user1, client, HttpStatus.SC_OK, new User[]{user2}, null);
+        SocialUtils.checkOutgoing(user1, client, HttpStatus.SC_OK, null, new User[]{user2});
     }
 
     @Test
-    public void blockUser_BlockWhileBlocked_204BlockAdded() {
+    public void blockUser_BlockWhileBlocked_204BlockAdded() throws IOException {
         String test = "033";
+        User user1 = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
+        User user2 = AccountUtils.addUser(suite, test, "02", "password", client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.blockUser(user2, user1, client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.checkBlocked(user2, client, HttpStatus.SC_OK, new User[]{user1}, null);
+        SocialUtils.blockUser(user1, user2, client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.checkBlocked(user1, client, HttpStatus.SC_OK, new User[]{user2}, null);
     }
 
     @Test
-    public void blockUser_InvalidUser_403() {
+    public void blockUser_InvalidUser_403() throws IOException {
         String test = "034";
+        User user1 = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
+        User user2 = AccountUtils.addUser(suite, test, "02", "password", client, HttpStatus.SC_NO_CONTENT);
+        User user3 = new User(suite + test + "03", "password");
+        SocialUtils.blockUser(user3, user2, client, HttpStatus.SC_FORBIDDEN);
     }
 
     @Test
-    public void blockUser_InvalidCredentials_403() {
+    public void blockUser_InvalidCredentials_403() throws IOException {
         String test = "035";
+        User user1 = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
+        User user2 = AccountUtils.addUser(suite, test, "02", "password", client, HttpStatus.SC_NO_CONTENT);
+        user1.setPassword("drowssap");
+        SocialUtils.blockUser(user1, user2, client, HttpStatus.SC_FORBIDDEN);
+        user1.setPassword("password");
+        SocialUtils.checkBlocked(user1, client, HttpStatus.SC_OK, null, new User[]{user2});
     }
 
     @Test
-    public void blockUser_BlockingInvalidUser_403() {
+    public void blockUser_BlockingInvalidUser_403() throws IOException {
         String test = "036";
+        User user1 = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
+        User user2 = new User(suite + test + "02", "password");
+        SocialUtils.blockUser(user1, user2, client, HttpStatus.SC_FORBIDDEN);
+        SocialUtils.checkBlocked(user1, client, HttpStatus.SC_OK, null, new User[]{user2});
     }
 
     @Test
-    public void blockUser_BlockingAlreadyBlocked_403() {
+    public void blockUser_BlockingAlreadyBlocked_403() throws IOException {
         String test = "037";
+        User user1 = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
+        User user2 = AccountUtils.addUser(suite, test, "02", "password", client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.blockUser(user1, user2, client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.checkBlocked(user1, client, HttpStatus.SC_OK, new User[]{user2}, null);
+        SocialUtils.blockUser(user1, user2, client, HttpStatus.SC_FORBIDDEN);
+        SocialUtils.checkBlocked(user1, client, HttpStatus.SC_OK, new User[]{user2}, null);
     }
 
     @Test
-    public void blockUser_BlockingSelf_403() {
+    public void blockUser_BlockingSelf_403() throws IOException {
         String test = "038";
+        User user1 = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
+        SocialUtils.blockUser(user1, user1, client, HttpStatus.SC_FORBIDDEN);
+        SocialUtils.checkBlocked(user1, client, HttpStatus.SC_OK, null, new User[]{user1});
     }
 
     //Unblock User

@@ -2,6 +2,7 @@ package io.joshatron.tak.server.database;
 
 import io.joshatron.tak.server.request.*;
 import io.joshatron.tak.server.response.Message;
+import io.joshatron.tak.server.response.Users;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -232,6 +233,19 @@ public class SocialDAOSqlite implements SocialDAO {
         //if no auth, return false
         if(!accountDAO.isAuthenticated(block.getAuth())) {
             return false;
+        }
+        if(!accountDAO.userExists(block.getOther())) {
+            return false;
+        }
+        if(block.getAuth().getUsername().equals(block.getOther())) {
+            return false;
+        }
+
+        String[] users = listBlocked(block.getAuth());
+        for(String user : users) {
+            if(user.equals(block.getOther())) {
+                return false;
+            }
         }
 
         PreparedStatement deleteRequestStmt = null;

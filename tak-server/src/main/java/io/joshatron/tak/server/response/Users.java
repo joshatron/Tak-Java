@@ -9,7 +9,7 @@ public class Users {
     }
 
     public Users() {
-        users = null;
+        users = new String[0];
     }
 
     public String[] getUsers() {

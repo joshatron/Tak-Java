@@ -8,6 +8,10 @@ public class Messages {
         this.messages = messages;
     }
 
+    public Messages() {
+        messages = new Message[0];
+    }
+
     public Message[] getMessages() {
         return messages;
     }
