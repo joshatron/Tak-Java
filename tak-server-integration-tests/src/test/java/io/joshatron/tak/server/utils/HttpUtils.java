@@ -3,6 +3,7 @@ package io.joshatron.tak.server.utils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
@@ -25,6 +26,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Base64;
 
 public class HttpUtils {
 
@@ -83,13 +85,17 @@ public class HttpUtils {
         return null;
     }
 
+    private static String getBasicAuthString(String username, String password) {
+        return "Basic " + Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
+    }
+
     public static HttpResponse createUser(String username, String password, HttpClient client) throws IOException {
         String payload = "{" +
                 "    \"username\": \"" + username + "\"," +
                 "    \"password\": \"" + password + "\"" +
                 "}";
 
-        HttpPost request = new HttpPost(baseUrl + "/account/register");
+        HttpPut request = new HttpPut(baseUrl + "/account/register");
         StringEntity entity = new StringEntity(payload);
         request.setHeader("Content-Type", "application/json");
         request.setEntity(entity);
@@ -99,16 +105,13 @@ public class HttpUtils {
 
     public static HttpResponse changePassword(String username, String password, String newPassword, HttpClient client) throws IOException {
         String payload = "{" +
-                "    \"auth\": {" +
-                "        \"username\": \"" + username + "\"," +
-                "        \"password\": \"" + password + "\"" +
-                "    }," +
                 "    \"updated\": \"" + newPassword + "\"" +
                 "}";
 
         HttpPost request = new HttpPost(baseUrl + "/account/changepass");
         StringEntity entity = new StringEntity(payload);
         request.setHeader("Content-Type", "application/json");
+        request.setHeader("Authorization", getBasicAuthString(username, password));
         request.setEntity(entity);
 
         return client.execute(request);

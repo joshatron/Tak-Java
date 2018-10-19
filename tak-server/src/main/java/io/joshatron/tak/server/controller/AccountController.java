@@ -10,10 +10,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 
@@ -32,7 +29,7 @@ public class AccountController {
         this.accountDAO = accountDAO;
     }
 
-    @PostMapping("/register")
+    @PutMapping("/register")
     public ResponseEntity register(@RequestBody Auth auth) {
         try {
             if(accountDAO.registerUser(auth)) {
@@ -48,12 +45,18 @@ public class AccountController {
     }
 
     @PostMapping("/changepass")
-    public ResponseEntity changePassword(@RequestBody PassChange passChange) {
+    public ResponseEntity changePassword(@RequestHeader(value="Authorization") String auth, @RequestBody PassChange passChange) {
+        passChange.setAuth(new Auth(auth));
         try {
             if(accountDAO.updatePassword(passChange)) {
                 return new ResponseEntity(HttpStatus.NO_CONTENT);
             }
             else {
+                System.out.println();
+                System.out.println(passChange.getAuth().getUsername());
+                System.out.println(passChange.getAuth().getPassword());
+                System.out.println(passChange.getUpdated());
+                System.out.println();
                 return new ResponseEntity(HttpStatus.FORBIDDEN);
             }
         } catch (Exception e) {
