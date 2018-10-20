@@ -47,9 +47,9 @@ public class AccountController {
     }
 
     @PostMapping("/changepass")
-    public ResponseEntity changePassword(@RequestHeader(value="Authorization") Auth auth, @RequestBody PassChange passChange) {
+    public ResponseEntity changePassword(@RequestHeader(value="Authorization") String auth, @RequestBody PassChange passChange) {
         try {
-            passChange.setAuth(auth);
+            passChange.setAuth(new Auth(auth));
             accountDAO.updatePassword(passChange);
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (NoAuthException e) {
@@ -65,9 +65,9 @@ public class AccountController {
     }
 
     @GetMapping("/authenticate")
-    public ResponseEntity authenticate(@RequestHeader(value="Authorization") Auth auth) {
+    public ResponseEntity authenticate(@RequestHeader(value="Authorization") String auth) {
         try {
-            if(accountDAO.isAuthenticated(auth)) {
+            if(accountDAO.isAuthenticated(new Auth(auth))) {
                 return new ResponseEntity(HttpStatus.NO_CONTENT);
             }
             else {

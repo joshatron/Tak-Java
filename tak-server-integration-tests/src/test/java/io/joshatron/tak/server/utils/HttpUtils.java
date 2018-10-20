@@ -112,14 +112,18 @@ public class HttpUtils {
     }
 
     public static HttpResponse changePassword(String username, String password, String newPassword, HttpClient client) throws IOException {
-        String payload = "{" +
-                "    \"updated\": \"" + newPassword + "\"" +
-                "}";
+        String payload = "{";
+        if(newPassword != null) {
+            payload += "\"updated\": \"" + newPassword + "\"";
+        }
+        payload += "}";
 
         HttpPost request = new HttpPost(baseUrl + "/account/changepass");
         StringEntity entity = new StringEntity(payload);
         request.setHeader("Content-Type", "application/json");
-        request.setHeader("Authorization", getBasicAuthString(username, password));
+        if(username != null && password != null) {
+            request.setHeader("Authorization", getBasicAuthString(username, password));
+        }
         request.setEntity(entity);
 
         return client.execute(request);
@@ -129,7 +133,9 @@ public class HttpUtils {
     public static HttpResponse authenticate(String username, String password, HttpClient client) throws IOException {
         HttpGet request = new HttpGet(baseUrl + "/account/authenticate");
         request.setHeader("Content-Type", "application/json");
-        request.setHeader("Authorization", getBasicAuthString(username, password));
+        if(username != null && password != null) {
+            request.setHeader("Authorization", getBasicAuthString(username, password));
+        }
 
         return client.execute(request);
     }

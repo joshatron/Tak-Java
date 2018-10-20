@@ -24,7 +24,13 @@ public class AccountUtils {
     }
 
     public static void changePassword(User user, String newPass, HttpClient client, int expected) throws IOException {
-        HttpResponse response = HttpUtils.changePassword(user.getUsername(), user.getPassword(), newPass, client);
+        HttpResponse response;
+        if(user != null) {
+            response = HttpUtils.changePassword(user.getUsername(), user.getPassword(), newPass, client);
+        }
+        else {
+            response = HttpUtils.changePassword(null, null, newPass, client);
+        }
         Assert.assertEquals(expected, response.getStatusLine().getStatusCode());
         if(expected == HttpStatus.SC_NO_CONTENT) {
             user.setPassword(newPass);
@@ -33,7 +39,13 @@ public class AccountUtils {
     }
 
     public static void authenticate(User user, HttpClient client, int expected) throws IOException {
-        HttpResponse response = HttpUtils.authenticate(user.getUsername(), user.getPassword(), client);
+        HttpResponse response;
+        if(user != null) {
+            response = HttpUtils.authenticate(user.getUsername(), user.getPassword(), client);
+        }
+        else {
+            response = HttpUtils.authenticate(null, null, client);
+        }
         Assert.assertEquals(expected, response.getStatusLine().getStatusCode());
     }
 }

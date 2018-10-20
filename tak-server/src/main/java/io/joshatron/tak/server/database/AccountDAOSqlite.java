@@ -26,7 +26,7 @@ public class AccountDAOSqlite implements AccountDAO {
 
     @Override
     public boolean isAuthenticated(Auth auth) throws SQLException, BadRequestException {
-        if(auth.getUsername() == null || auth.getPassword() == null) {
+        if(auth == null || auth.getUsername() == null || auth.getPassword() == null) {
             throw new BadRequestException();
         }
 
