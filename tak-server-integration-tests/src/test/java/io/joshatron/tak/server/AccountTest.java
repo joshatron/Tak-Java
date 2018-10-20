@@ -10,7 +10,7 @@ import org.junit.Test;
 import java.io.IOException;
 
 //Suite A
-//Current final test: 015
+//Current final test: 017
 public class AccountTest {
 
     private final String suite = "A";
@@ -57,6 +57,21 @@ public class AccountTest {
         AccountUtils.addUser(suite, test, "01", "", client, HttpStatus.SC_BAD_REQUEST);
         AccountUtils.addUser("", "", "", "", client, HttpStatus.SC_BAD_REQUEST);
         AccountUtils.addUser(null, null, null, null, client, HttpStatus.SC_BAD_REQUEST);
+    }
+
+    @Test
+    public void registerUser_ColonInUsername_400() throws IOException {
+        String test = "016";
+        AccountUtils.addUser(suite, test, ":01", "password", client, HttpStatus.SC_BAD_REQUEST);
+        AccountUtils.addUser(suite, test, "01:", "password", client, HttpStatus.SC_BAD_REQUEST);
+    }
+
+    @Test
+    public void registerUser_ColonInPassword_204() throws IOException {
+        String test = "017";
+        AccountUtils.addUser(suite, test, "01", ":password", client, HttpStatus.SC_NO_CONTENT);
+        AccountUtils.addUser(suite, test, "02", "pass:word", client, HttpStatus.SC_NO_CONTENT);
+        AccountUtils.addUser(suite, test, "03", "password:", client, HttpStatus.SC_NO_CONTENT);
     }
 
     //Change Password

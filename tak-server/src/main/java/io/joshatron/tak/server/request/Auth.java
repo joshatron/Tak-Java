@@ -22,13 +22,17 @@ public class Auth {
         //Decode from base 64
         String decoded = new String(Base64.getDecoder().decode(basicAuth.replace("Basic ", "")));
         //Makes sure there is only one :
-        if(decoded.length() - decoded.replace(":", "").length() == 1) {
+        if(decoded.length() - decoded.replace(":", "").length() >= 1) {
             String[] auth = decoded.split(":");
-            if(auth.length != 2 || auth[0].length() == 0 || auth[1].length() == 0) {
+            if(auth.length < 2) {
                 throw new BadRequestException();
             }
             username = auth[0];
-            password = auth[1];
+            password = decoded.substring(username.length() + 1);
+
+            if(username.length() == 0 || password.length() == 0) {
+                throw new BadRequestException();
+            }
         }
     }
 }

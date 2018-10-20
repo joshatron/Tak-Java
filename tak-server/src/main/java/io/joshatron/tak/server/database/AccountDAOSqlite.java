@@ -67,6 +67,12 @@ public class AccountDAOSqlite implements AccountDAO {
            auth.getPassword() == null || auth.getPassword().length() == 0) {
             throw new BadRequestException();
         }
+
+        if(auth.getUsername().contains(":")) {
+            throw new BadRequestException();
+        }
+
+
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
@@ -102,6 +108,7 @@ public class AccountDAOSqlite implements AccountDAO {
                 rs.close();
             }
         }
+
     }
 
     @Override

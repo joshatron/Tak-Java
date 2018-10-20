@@ -57,9 +57,7 @@ Todo
    * Set up testing suite
    * Have better methodology for return codes
    * Add logging
-   * Add dependency injection
    * Redesign request and response objects
-   * Use spring security?
    * Add config for how rubust to make password hashing
  * GameDAOSqlite
    * Implement requestRandomGame
