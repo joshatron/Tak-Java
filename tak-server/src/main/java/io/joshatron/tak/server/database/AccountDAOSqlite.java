@@ -62,11 +62,15 @@ public class AccountDAOSqlite implements AccountDAO {
     }
 
     @Override
-    public void registerUser(Auth auth) throws SQLException, ForbiddenException {
+    public void registerUser(Auth auth) throws SQLException, ForbiddenException, BadRequestException {
+        if(auth == null || auth.getUsername() == null || auth.getUsername().length() == 0 ||
+           auth.getPassword() == null || auth.getPassword().length() == 0) {
+            throw new BadRequestException();
+        }
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
-        //make sure username isn't taken
+        //make sure username isn't taken, ignoring the case
         String checkUsername = "SELECT username " +
                 "FROM users " +
                 "WHERE username = ? " +

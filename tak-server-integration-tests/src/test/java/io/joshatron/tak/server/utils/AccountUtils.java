@@ -13,7 +13,10 @@ public class AccountUtils {
         HttpResponse response = HttpUtils.createUser(suite + test + user, password, client);
         Assert.assertEquals(expected, response.getStatusLine().getStatusCode());
         if(expected == HttpStatus.SC_NO_CONTENT) {
-            return new User(suite + test + user, password);
+            User u = new User(suite + test + user, password);
+            authenticate(u, client, HttpStatus.SC_NO_CONTENT);
+
+            return u;
         }
         else {
             return null;
@@ -25,6 +28,7 @@ public class AccountUtils {
         Assert.assertEquals(expected, response.getStatusLine().getStatusCode());
         if(expected == HttpStatus.SC_NO_CONTENT) {
             user.setPassword(newPass);
+            authenticate(user, client, HttpStatus.SC_NO_CONTENT);
         }
     }
 

@@ -91,10 +91,17 @@ public class HttpUtils {
     }
 
     public static HttpResponse createUser(String username, String password, HttpClient client) throws IOException {
-        String payload = "{" +
-                "    \"username\": \"" + username + "\"," +
-                "    \"password\": \"" + password + "\"" +
-                "}";
+        String payload = "{";
+        if(username != null) {
+            payload += "\"username\": \"" + username + "\"";
+        }
+        if(password != null) {
+            if(username != null) {
+                payload += ",";
+            }
+            payload += "\"password\": \"" + password + "\"";
+        }
+        payload += "}";
 
         HttpPut request = new HttpPut(baseUrl + "/account/register");
         StringEntity entity = new StringEntity(payload);

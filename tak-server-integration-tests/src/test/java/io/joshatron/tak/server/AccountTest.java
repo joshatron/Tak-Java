@@ -10,7 +10,7 @@ import org.junit.Test;
 import java.io.IOException;
 
 //Suite A
-//Current final test: 012
+//Current final test: 014
 public class AccountTest {
 
     private final String suite = "A";
@@ -41,6 +41,22 @@ public class AccountTest {
         AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
         AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_FORBIDDEN);
         AccountUtils.addUser(suite, test, "01", "drowssap", client, HttpStatus.SC_FORBIDDEN);
+    }
+
+    @Test
+    public void registerUser_TryToRegisterWithDifferentCase_403() throws IOException {
+        String test = "013";
+        AccountUtils.addUser(suite, test, "aa", "password", client, HttpStatus.SC_NO_CONTENT);
+        AccountUtils.addUser(suite, test, "AA", "password", client, HttpStatus.SC_FORBIDDEN);
+    }
+
+    @Test
+    public void registerUser_BlankFields_400() throws IOException {
+        String test = "014";
+        AccountUtils.addUser("", "", "", "password", client, HttpStatus.SC_BAD_REQUEST);
+        AccountUtils.addUser(suite, test, "01", "", client, HttpStatus.SC_BAD_REQUEST);
+        AccountUtils.addUser("", "", "", "", client, HttpStatus.SC_BAD_REQUEST);
+        AccountUtils.addUser(null, null, null, null, client, HttpStatus.SC_BAD_REQUEST);
     }
 
     //Change Password
