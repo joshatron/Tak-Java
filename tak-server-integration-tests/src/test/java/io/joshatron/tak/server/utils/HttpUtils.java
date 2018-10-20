@@ -2,6 +2,7 @@ package io.joshatron.tak.server.utils;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.config.Registry;
@@ -119,17 +120,9 @@ public class HttpUtils {
 
 
     public static HttpResponse authenticate(String username, String password, HttpClient client) throws IOException {
-        String payload = "{" +
-                "    \"auth\": {" +
-                "        \"username\": \"" + username + "\"," +
-                "        \"password\": \"" + password + "\"" +
-                "    }" +
-                "}";
-
-        HttpPost request = new HttpPost(baseUrl + "/account/authenticate");
-        StringEntity entity = new StringEntity(payload);
+        HttpGet request = new HttpGet(baseUrl + "/account/authenticate");
         request.setHeader("Content-Type", "application/json");
-        request.setEntity(entity);
+        request.setHeader("Authorization", getBasicAuthString(username, password));
 
         return client.execute(request);
     }

@@ -3,21 +3,19 @@ package io.joshatron.tak.server.database;
 import io.joshatron.tak.server.request.*;
 import io.joshatron.tak.server.response.Message;
 
-import java.sql.SQLException;
-
 public interface SocialDAO {
 
-    boolean createFriendRequest(UserInteraction request) throws SQLException;
-    boolean deleteFriendRequest(UserInteraction request) throws SQLException;
-    boolean respondToFriendRequest(FriendResponse response) throws SQLException;
-    boolean blockUser(UserInteraction block) throws SQLException;
-    boolean unblockUser(UserInteraction unblock) throws SQLException;
-    boolean sendMessage(SendMessage sendMessage) throws SQLException;
-    boolean isBlocked(String requester, String other) throws SQLException;
+    boolean createFriendRequest(UserInteraction request) throws Exception;
+    boolean deleteFriendRequest(UserInteraction request) throws Exception;
+    boolean respondToFriendRequest(FriendResponse response) throws Exception;
+    boolean blockUser(UserInteraction block) throws Exception;
+    boolean unblockUser(UserInteraction unblock) throws Exception;
+    boolean sendMessage(SendMessage sendMessage) throws Exception;
+    boolean isBlocked(String requester, String other) throws Exception;
 
-    String[] listFriends(Auth auth) throws SQLException;
-    String[] listBlocked(Auth auth) throws SQLException;
-    String[] listIncomingFriendRequests(Auth auth) throws SQLException;
-    String[] listOutgoingFriendRequests(Auth auth) throws SQLException;
-    Message[] listMessages(ReadMessages readMessages) throws SQLException;
+    String[] listFriends(Auth auth) throws Exception;
+    String[] listBlocked(Auth auth) throws Exception;
+    String[] listIncomingFriendRequests(Auth auth) throws Exception;
+    String[] listOutgoingFriendRequests(Auth auth) throws Exception;
+    Message[] listMessages(ReadMessages readMessages) throws Exception;
 }

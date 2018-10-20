@@ -15,9 +15,7 @@ public class Auth {
     //Constructor for basic auth
     public Auth(String basicAuth) {
         //Decode from base 64
-        System.out.println(basicAuth);
         String decoded = new String(Base64.getDecoder().decode(basicAuth.replace("Basic ", "")));
-        System.out.println(decoded);
         //Makes sure there is only one :
         if(decoded.length() - decoded.replace(":", "").length() == 1) {
             String[] auth = decoded.split(":");

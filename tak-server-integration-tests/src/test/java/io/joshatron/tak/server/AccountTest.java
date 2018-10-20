@@ -52,26 +52,26 @@ public class AccountTest {
     }
 
     @Test
-    public void changePassword_WrongPassword_403() throws IOException {
+    public void changePassword_WrongPassword_401() throws IOException {
         String test = "005";
         User user = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
         user.setPassword("pass");
-        AccountUtils.changePassword(user, "drowssap", client, HttpStatus.SC_FORBIDDEN);
+        AccountUtils.changePassword(user, "drowssap", client, HttpStatus.SC_UNAUTHORIZED);
     }
 
     @Test
-    public void changePassword_InvalidUser_403() throws IOException {
+    public void changePassword_InvalidUser_401() throws IOException {
         String test = "006";
         User user = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
         user.setUsername(suite + test + "02");
-        AccountUtils.changePassword(user, "drowssap", client, HttpStatus.SC_FORBIDDEN);
+        AccountUtils.changePassword(user, "drowssap", client, HttpStatus.SC_UNAUTHORIZED);
     }
 
     @Test
-    public void changePassword_BlankNewPassword_403() throws IOException {
+    public void changePassword_BlankNewPassword_400() throws IOException {
         String test = "007";
         User user = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
-        AccountUtils.changePassword(user, "", client, HttpStatus.SC_FORBIDDEN);
+        AccountUtils.changePassword(user, "", client, HttpStatus.SC_BAD_REQUEST);
     }
 
     @Test
@@ -85,12 +85,12 @@ public class AccountTest {
 
     //Test 009
     @Test
-    public void changePassword_OtherUserPassword_403() throws IOException {
+    public void changePassword_OtherUserPassword_401() throws IOException {
         String test = "009";
         User user1 = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
         User user2 = AccountUtils.addUser(suite, test, "02", "12345678", client, HttpStatus.SC_NO_CONTENT);
         user1.setPassword("12345678");
-        AccountUtils.changePassword(user1, "drowssap", client, HttpStatus.SC_FORBIDDEN);
+        AccountUtils.changePassword(user1, "drowssap", client, HttpStatus.SC_UNAUTHORIZED);
     }
 
     //Authenticate User
@@ -102,18 +102,18 @@ public class AccountTest {
     }
 
     @Test
-    public void authenticate_WrongPassword_403() throws IOException {
+    public void authenticate_WrongPassword_401() throws IOException {
         String test = "011";
         User user = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
         user.setPassword("drowssap");
-        AccountUtils.authenticate(user, client, HttpStatus.SC_FORBIDDEN);
+        AccountUtils.authenticate(user, client, HttpStatus.SC_UNAUTHORIZED);
     }
 
     @Test
-    public void authenticate_InvalidUser_403() throws IOException {
+    public void authenticate_InvalidUser_401() throws IOException {
         String test = "012";
         User user = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
         user.setUsername(suite + test + "02");
-        AccountUtils.authenticate(user, client, HttpStatus.SC_FORBIDDEN);
+        AccountUtils.authenticate(user, client, HttpStatus.SC_UNAUTHORIZED);
     }
 }

@@ -8,7 +8,6 @@ import io.joshatron.tak.server.response.RequestInfo;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class GameDAOSqlite implements GameDAO {
@@ -30,7 +29,7 @@ public class GameDAOSqlite implements GameDAO {
     }
 
     @Override
-    public boolean requestGame(GameRequest request) throws SQLException {
+    public boolean requestGame(GameRequest request) throws Exception {
         //if no auth, return false
         if(!accountDAO.isAuthenticated(request.getAuth())) {
             return false;
@@ -97,7 +96,7 @@ public class GameDAOSqlite implements GameDAO {
     }
 
     @Override
-    public boolean requestRandomGame(RandomGame request) throws SQLException {
+    public boolean requestRandomGame(RandomGame request) throws Exception {
         //if no auth, return false
         if(!accountDAO.isAuthenticated(request.getAuth())) {
             return false;
@@ -108,7 +107,7 @@ public class GameDAOSqlite implements GameDAO {
     }
 
     @Override
-    public boolean respondToGame(GameResponse response) throws SQLException {
+    public boolean respondToGame(GameResponse response) throws Exception {
         //if no auth, return false
         if(!accountDAO.isAuthenticated(response.getAuth())) {
             return false;
@@ -120,7 +119,7 @@ public class GameDAOSqlite implements GameDAO {
     }
 
     @Override
-    public boolean playTurn(PlayTurn turn) throws SQLException {
+    public boolean playTurn(PlayTurn turn) throws Exception {
         //if no auth, return false
         if(!accountDAO.isAuthenticated(turn.getAuth())) {
             return false;
@@ -132,7 +131,7 @@ public class GameDAOSqlite implements GameDAO {
     }
 
     @Override
-    public RequestInfo[] checkIncomingGames(Auth auth) throws SQLException {
+    public RequestInfo[] checkIncomingGames(Auth auth) throws Exception {
         //if no auth, return false
         if(!accountDAO.isAuthenticated(auth)) {
             return null;
@@ -175,7 +174,7 @@ public class GameDAOSqlite implements GameDAO {
     }
 
     @Override
-    public RequestInfo[] checkOutgoingGames(Auth auth) throws SQLException {
+    public RequestInfo[] checkOutgoingGames(Auth auth) throws Exception {
         //if no auth, return false
         if(!accountDAO.isAuthenticated(auth)) {
             return null;
@@ -218,7 +217,7 @@ public class GameDAOSqlite implements GameDAO {
     }
 
     @Override
-    public int[] listCompletedGames(ListCompleted completed) throws SQLException {
+    public int[] listCompletedGames(ListCompleted completed) throws Exception {
         //if no auth, return false
         if(!accountDAO.isAuthenticated(completed.getAuth())) {
             return null;
@@ -263,7 +262,7 @@ public class GameDAOSqlite implements GameDAO {
     }
 
     @Override
-    public int[] listIncompleteGames(ListIncomplete incomplete) throws SQLException {
+    public int[] listIncompleteGames(ListIncomplete incomplete) throws Exception {
         //if no auth, return false
         if(!accountDAO.isAuthenticated(incomplete.getAuth())) {
             return null;
@@ -308,7 +307,7 @@ public class GameDAOSqlite implements GameDAO {
     }
 
     @Override
-    public GameInfo getGame(GetGame game) throws SQLException {
+    public GameInfo getGame(GetGame game) throws Exception {
         //if no auth, return false
         if(!accountDAO.isAuthenticated(game.getAuth())) {
             return null;
@@ -378,7 +377,7 @@ public class GameDAOSqlite implements GameDAO {
         }
     }
 
-    private boolean authorizedForGame(String username, String gameID) throws SQLException {
+    private boolean authorizedForGame(String username, String gameID) throws Exception {
         String getGame = "SELECT white, black " +
                 "FROM games " +
                 "WHERE id = ?;";

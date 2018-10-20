@@ -1,5 +1,8 @@
 package io.joshatron.tak.server.database;
 
+import io.joshatron.tak.server.exceptions.BadRequestException;
+import io.joshatron.tak.server.exceptions.ForbiddenException;
+import io.joshatron.tak.server.exceptions.NoAuthException;
 import io.joshatron.tak.server.request.Auth;
 import io.joshatron.tak.server.request.PassChange;
 import org.mindrot.jbcrypt.BCrypt;
@@ -22,7 +25,11 @@ public class AccountDAOSqlite implements AccountDAO {
     }
 
     @Override
-    public boolean isAuthenticated(Auth auth) throws SQLException{
+    public boolean isAuthenticated(Auth auth) throws SQLException, BadRequestException {
+        if(auth.getUsername() == null || auth.getPassword() == null) {
+            throw new BadRequestException();
+        }
+
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
@@ -55,40 +62,35 @@ public class AccountDAOSqlite implements AccountDAO {
     }
 
     @Override
-    public boolean registerUser(Auth auth) throws SQLException{
-        PreparedStatement selectStmt = null;
+    public void registerUser(Auth auth) throws SQLException, ForbiddenException {
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
         //make sure username isn't taken
         String checkUsername = "SELECT username " +
                 "FROM users " +
-                "WHERE username = ?;";
+                "WHERE username = ? " +
+                "COLLATE NOCASE;";
 
         //insert new user if it isn't
         String insertUser = "INSERT INTO  users (username, auth) " +
-                "VALUES (?,?)";
+                "VALUES (?,?);";
 
         try {
-            selectStmt = conn.prepareStatement(checkUsername);
-            selectStmt.setString(1, auth.getUsername());
-            rs = selectStmt.executeQuery();
+            stmt = conn.prepareStatement(checkUsername);
+            stmt.setString(1, auth.getUsername());
+            rs = stmt.executeQuery();
 
             if (rs.next()) {
-                return false;
+                throw new ForbiddenException();
             }
+            stmt.close();
 
             stmt = conn.prepareStatement(insertUser);
             stmt.setString(1, auth.getUsername());
             stmt.setString(2, BCrypt.hashpw(auth.getPassword(), BCrypt.gensalt()));
             stmt.executeUpdate();
-
-            return true;
-        }
-        finally {
-            if(selectStmt != null) {
-                selectStmt.close();
-            }
+        } finally {
             if(stmt != null) {
                 stmt.close();
             }
@@ -99,12 +101,12 @@ public class AccountDAOSqlite implements AccountDAO {
     }
 
     @Override
-    public boolean updatePassword(PassChange change) throws SQLException{
-        if(!isAuthenticated(change.getAuth())) {
-            return false;
-        }
+    public void updatePassword(PassChange change) throws SQLException, NoAuthException, BadRequestException {
         if(change.getUpdated() == null || change.getUpdated().length() == 0) {
-            return false;
+            throw new BadRequestException();
+        }
+        if(!isAuthenticated(change.getAuth())) {
+            throw new NoAuthException();
         }
 
         PreparedStatement stmt = null;
@@ -118,8 +120,6 @@ public class AccountDAOSqlite implements AccountDAO {
             stmt.setString(1, BCrypt.hashpw(change.getUpdated(), BCrypt.gensalt()));
             stmt.setString(2, change.getAuth().getUsername());
             stmt.executeUpdate();
-
-            return true;
         }
         finally {
             if(stmt != null) {
@@ -129,7 +129,11 @@ public class AccountDAOSqlite implements AccountDAO {
     }
 
     @Override
-    public boolean userExists(String username) throws SQLException{
+    public boolean userExists(String username) throws SQLException, BadRequestException {
+        if(username == null) {
+            throw new BadRequestException();
+        }
+
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
@@ -158,7 +162,11 @@ public class AccountDAOSqlite implements AccountDAO {
         }
     }
 
-    public int idFromUsername(String username) throws SQLException {
+    public int idFromUsername(String username) throws SQLException, BadRequestException, ForbiddenException {
+        if(username == null) {
+            throw new BadRequestException();
+        }
+
         PreparedStatement selectStmt = null;
 
         String checkUsername = "SELECT id " +
@@ -173,8 +181,9 @@ public class AccountDAOSqlite implements AccountDAO {
             if (rs.next()) {
                 return rs.getInt("id");
             }
-
-            return -9999;
+            else {
+                throw new ForbiddenException();
+            }
         }
         finally {
             if(selectStmt != null) {
@@ -183,7 +192,7 @@ public class AccountDAOSqlite implements AccountDAO {
         }
     }
 
-    public String usernameFromId(int id) throws SQLException {
+    public String usernameFromId(int id) throws SQLException, ForbiddenException {
         PreparedStatement selectStmt = null;
 
         String checkUsername = "SELECT username " +
@@ -198,8 +207,9 @@ public class AccountDAOSqlite implements AccountDAO {
             if (rs.next()) {
                 return rs.getString("username");
             }
-
-            return null;
+            else {
+                throw new ForbiddenException();
+            }
         }
         finally {
             if(selectStmt != null) {

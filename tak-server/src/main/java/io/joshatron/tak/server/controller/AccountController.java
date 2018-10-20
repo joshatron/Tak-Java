@@ -3,16 +3,16 @@ package io.joshatron.tak.server.controller;
 import io.joshatron.tak.server.config.ApplicationConfig;
 import io.joshatron.tak.server.database.AccountDAO;
 import io.joshatron.tak.server.database.AccountDAOSqlite;
+import io.joshatron.tak.server.exceptions.BadRequestException;
+import io.joshatron.tak.server.exceptions.ForbiddenException;
+import io.joshatron.tak.server.exceptions.NoAuthException;
 import io.joshatron.tak.server.request.Auth;
-import io.joshatron.tak.server.request.AuthWrapper;
 import io.joshatron.tak.server.request.PassChange;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.sql.SQLException;
 
 @RestController
 @RequestMapping("/account")
@@ -32,12 +32,14 @@ public class AccountController {
     @PutMapping("/register")
     public ResponseEntity register(@RequestBody Auth auth) {
         try {
-            if(accountDAO.registerUser(auth)) {
-                return new ResponseEntity(HttpStatus.NO_CONTENT);
-            }
-            else {
-                return new ResponseEntity(HttpStatus.FORBIDDEN);
-            }
+            accountDAO.registerUser(auth);
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        } catch (NoAuthException e) {
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        } catch (BadRequestException e) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        } catch (ForbiddenException e) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -45,35 +47,38 @@ public class AccountController {
     }
 
     @PostMapping("/changepass")
-    public ResponseEntity changePassword(@RequestHeader(value="Authorization") String auth, @RequestBody PassChange passChange) {
-        passChange.setAuth(new Auth(auth));
+    public ResponseEntity changePassword(@RequestHeader(value="Authorization") Auth auth, @RequestBody PassChange passChange) {
         try {
-            if(accountDAO.updatePassword(passChange)) {
-                return new ResponseEntity(HttpStatus.NO_CONTENT);
-            }
-            else {
-                System.out.println();
-                System.out.println(passChange.getAuth().getUsername());
-                System.out.println(passChange.getAuth().getPassword());
-                System.out.println(passChange.getUpdated());
-                System.out.println();
-                return new ResponseEntity(HttpStatus.FORBIDDEN);
-            }
+            passChange.setAuth(auth);
+            accountDAO.updatePassword(passChange);
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        } catch (NoAuthException e) {
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        } catch (BadRequestException e) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        } catch (ForbiddenException e) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PostMapping("/authenticate")
-    public ResponseEntity authenticate(@RequestBody AuthWrapper authWrapper) {
+    @GetMapping("/authenticate")
+    public ResponseEntity authenticate(@RequestHeader(value="Authorization") Auth auth) {
         try {
-            if(accountDAO.isAuthenticated(authWrapper.getAuth())) {
+            if(accountDAO.isAuthenticated(auth)) {
                 return new ResponseEntity(HttpStatus.NO_CONTENT);
             }
             else {
-                return new ResponseEntity(HttpStatus.FORBIDDEN);
+                return new ResponseEntity(HttpStatus.UNAUTHORIZED);
             }
+        } catch (NoAuthException e) {
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        } catch (BadRequestException e) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        } catch (ForbiddenException e) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);

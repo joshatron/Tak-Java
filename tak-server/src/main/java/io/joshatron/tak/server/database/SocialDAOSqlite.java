@@ -7,7 +7,6 @@ import io.joshatron.tak.server.response.Users;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -27,7 +26,7 @@ public class SocialDAOSqlite implements SocialDAO {
     }
 
     @Override
-    public boolean createFriendRequest(UserInteraction request) throws SQLException {
+    public boolean createFriendRequest(UserInteraction request) throws Exception {
         //can't request yourself
         if(request.getAuth().getUsername().equals(request.getOther())) {
             return false;
@@ -112,7 +111,7 @@ public class SocialDAOSqlite implements SocialDAO {
     }
 
     @Override
-    public boolean deleteFriendRequest(UserInteraction request) throws SQLException {
+    public boolean deleteFriendRequest(UserInteraction request) throws Exception {
         //if no auth, return false
         if(!accountDAO.isAuthenticated(request.getAuth())) {
             return false;
@@ -162,7 +161,7 @@ public class SocialDAOSqlite implements SocialDAO {
     }
 
     @Override
-    public boolean respondToFriendRequest(FriendResponse response) throws SQLException {
+    public boolean respondToFriendRequest(FriendResponse response) throws Exception {
         //if no auth, return false
         if(!accountDAO.isAuthenticated(response.getAuth())) {
             return false;
@@ -229,7 +228,7 @@ public class SocialDAOSqlite implements SocialDAO {
     }
 
     @Override
-    public boolean blockUser(UserInteraction block) throws SQLException {
+    public boolean blockUser(UserInteraction block) throws Exception {
         //if no auth, return false
         if(!accountDAO.isAuthenticated(block.getAuth())) {
             return false;
@@ -299,7 +298,7 @@ public class SocialDAOSqlite implements SocialDAO {
     }
 
     @Override
-    public boolean unblockUser(UserInteraction unblock) throws SQLException {
+    public boolean unblockUser(UserInteraction unblock) throws Exception {
         //if no auth, return false
         if(!accountDAO.isAuthenticated(unblock.getAuth())) {
             return false;
@@ -332,7 +331,7 @@ public class SocialDAOSqlite implements SocialDAO {
     }
 
     @Override
-    public boolean sendMessage(SendMessage sendMessage) throws SQLException {
+    public boolean sendMessage(SendMessage sendMessage) throws Exception {
         //if no auth, return false
         if(!accountDAO.isAuthenticated(sendMessage.getAuth())) {
             return false;
@@ -367,7 +366,7 @@ public class SocialDAOSqlite implements SocialDAO {
     }
 
     @Override
-    public boolean isBlocked(String requester, String other) throws SQLException {
+    public boolean isBlocked(String requester, String other) throws Exception {
         PreparedStatement checkStmt = null;
         ResultSet rs = null;
 
@@ -399,7 +398,7 @@ public class SocialDAOSqlite implements SocialDAO {
     }
 
     @Override
-    public String[] listFriends(Auth auth) throws SQLException {
+    public String[] listFriends(Auth auth) throws Exception {
         //if no auth, return false
         if(!accountDAO.isAuthenticated(auth)) {
             return null;
@@ -458,7 +457,7 @@ public class SocialDAOSqlite implements SocialDAO {
     }
 
     @Override
-    public String[] listBlocked(Auth auth) throws SQLException {
+    public String[] listBlocked(Auth auth) throws Exception {
         //if no auth, return false
         if(!accountDAO.isAuthenticated(auth)) {
             return null;
@@ -496,7 +495,7 @@ public class SocialDAOSqlite implements SocialDAO {
     }
 
     @Override
-    public String[] listIncomingFriendRequests(Auth auth) throws SQLException {
+    public String[] listIncomingFriendRequests(Auth auth) throws Exception {
         //if no auth, return false
         if(!accountDAO.isAuthenticated(auth)) {
             return null;
@@ -534,7 +533,7 @@ public class SocialDAOSqlite implements SocialDAO {
     }
 
     @Override
-    public String[] listOutgoingFriendRequests(Auth auth) throws SQLException {
+    public String[] listOutgoingFriendRequests(Auth auth) throws Exception {
         //if no auth, return false
         if(!accountDAO.isAuthenticated(auth)) {
             return null;
@@ -572,7 +571,7 @@ public class SocialDAOSqlite implements SocialDAO {
     }
 
     @Override
-    public Message[] listMessages(ReadMessages readMessages) throws SQLException {
+    public Message[] listMessages(ReadMessages readMessages) throws Exception {
         //if no auth, return false
         if(!accountDAO.isAuthenticated(readMessages.getAuth())) {
             return null;
