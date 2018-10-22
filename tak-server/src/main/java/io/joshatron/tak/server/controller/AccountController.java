@@ -6,6 +6,7 @@ import io.joshatron.tak.server.database.AccountDAOSqlite;
 import io.joshatron.tak.server.exceptions.BadRequestException;
 import io.joshatron.tak.server.exceptions.ForbiddenException;
 import io.joshatron.tak.server.exceptions.NoAuthException;
+import io.joshatron.tak.server.exceptions.ResourceNotFoundException;
 import io.joshatron.tak.server.request.Auth;
 import io.joshatron.tak.server.request.PassChange;
 import org.springframework.context.ApplicationContext;
@@ -14,8 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
-@RequestMapping("/account")
+@RequestMapping(value = "/account", produces = "application/json")
 public class AccountController {
 
     private AccountDAO accountDAO;
@@ -35,11 +37,13 @@ public class AccountController {
             accountDAO.registerUser(auth);
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (NoAuthException e) {
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (BadRequestException e) {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (ForbiddenException e) {
-            return new ResponseEntity(HttpStatus.FORBIDDEN);
+            return new ResponseEntity(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -53,11 +57,13 @@ public class AccountController {
             accountDAO.updatePassword(passChange);
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (NoAuthException e) {
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (BadRequestException e) {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (ForbiddenException e) {
-            return new ResponseEntity(HttpStatus.FORBIDDEN);
+            return new ResponseEntity(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -71,14 +77,16 @@ public class AccountController {
                 return new ResponseEntity(HttpStatus.NO_CONTENT);
             }
             else {
-                return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+                throw new NoAuthException();
             }
         } catch (NoAuthException e) {
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (BadRequestException e) {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (ForbiddenException e) {
-            return new ResponseEntity(HttpStatus.FORBIDDEN);
+            return new ResponseEntity(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);

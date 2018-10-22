@@ -3,6 +3,7 @@ package io.joshatron.tak.server.database;
 import io.joshatron.tak.server.exceptions.BadRequestException;
 import io.joshatron.tak.server.exceptions.ForbiddenException;
 import io.joshatron.tak.server.exceptions.NoAuthException;
+import io.joshatron.tak.server.exceptions.ResourceNotFoundException;
 import io.joshatron.tak.server.request.Auth;
 import io.joshatron.tak.server.request.PassChange;
 import org.mindrot.jbcrypt.BCrypt;
@@ -27,7 +28,7 @@ public class AccountDAOSqlite implements AccountDAO {
     @Override
     public boolean isAuthenticated(Auth auth) throws SQLException, BadRequestException {
         if(auth == null || auth.getUsername() == null || auth.getPassword() == null) {
-            throw new BadRequestException();
+            throw new BadRequestException("The authorization is in an invalid format.");
         }
 
         PreparedStatement stmt = null;
@@ -63,13 +64,18 @@ public class AccountDAOSqlite implements AccountDAO {
 
     @Override
     public void registerUser(Auth auth) throws SQLException, ForbiddenException, BadRequestException {
-        if(auth == null || auth.getUsername() == null || auth.getUsername().length() == 0 ||
-           auth.getPassword() == null || auth.getPassword().length() == 0) {
+        if(auth == null) {
             throw new BadRequestException();
+        }
+        if(auth.getUsername() == null || auth.getUsername().length() == 0) {
+            throw new BadRequestException("The username is blank or missing.");
+        }
+        if(auth.getPassword() == null || auth.getPassword().length() == 0) {
+            throw new BadRequestException("The password is blank or missing.");
         }
 
         if(auth.getUsername().contains(":")) {
-            throw new BadRequestException();
+            throw new BadRequestException("The username cannot contain a ':'.");
         }
 
 
@@ -92,7 +98,7 @@ public class AccountDAOSqlite implements AccountDAO {
             rs = stmt.executeQuery();
 
             if (rs.next()) {
-                throw new ForbiddenException();
+                throw new ForbiddenException("That username is already taken.");
             }
             stmt.close();
 
@@ -108,13 +114,12 @@ public class AccountDAOSqlite implements AccountDAO {
                 rs.close();
             }
         }
-
     }
 
     @Override
     public void updatePassword(PassChange change) throws SQLException, NoAuthException, BadRequestException {
         if(change.getUpdated() == null || change.getUpdated().length() == 0) {
-            throw new BadRequestException();
+            throw new BadRequestException("The new password is blank or missing.");
         }
         if(!isAuthenticated(change.getAuth())) {
             throw new NoAuthException();
@@ -141,8 +146,8 @@ public class AccountDAOSqlite implements AccountDAO {
 
     @Override
     public boolean userExists(String username) throws SQLException, BadRequestException {
-        if(username == null) {
-            throw new BadRequestException();
+        if(username == null || username.length() == 0) {
+            throw new BadRequestException("The username is blank or missing.");
         }
 
         PreparedStatement stmt = null;
@@ -173,9 +178,9 @@ public class AccountDAOSqlite implements AccountDAO {
         }
     }
 
-    public int idFromUsername(String username) throws SQLException, BadRequestException, ForbiddenException {
-        if(username == null) {
-            throw new BadRequestException();
+    public int idFromUsername(String username) throws SQLException, BadRequestException, ResourceNotFoundException {
+        if(username == null || username.length() == 0) {
+            throw new BadRequestException("The username is blank or missing.");
         }
 
         PreparedStatement selectStmt = null;
@@ -193,7 +198,7 @@ public class AccountDAOSqlite implements AccountDAO {
                 return rs.getInt("id");
             }
             else {
-                throw new ForbiddenException();
+                throw new ResourceNotFoundException("That user could not be found.");
             }
         }
         finally {
@@ -203,7 +208,7 @@ public class AccountDAOSqlite implements AccountDAO {
         }
     }
 
-    public String usernameFromId(int id) throws SQLException, ForbiddenException {
+    public String usernameFromId(int id) throws SQLException, ResourceNotFoundException {
         PreparedStatement selectStmt = null;
 
         String checkUsername = "SELECT username " +
@@ -219,7 +224,7 @@ public class AccountDAOSqlite implements AccountDAO {
                 return rs.getString("username");
             }
             else {
-                throw new ForbiddenException();
+                throw new ResourceNotFoundException("That user could not be found.");
             }
         }
         finally {

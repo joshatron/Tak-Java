@@ -3,6 +3,10 @@ package io.joshatron.tak.server.exceptions;
 public class ForbiddenException extends Exception {
 
     public ForbiddenException() {
-        super("The user is forbidden from performing that action.");
+        super("{\"reason\": \"The user is forbidden from performing that action.\"}");
+    }
+
+    public ForbiddenException(String message) {
+        super("{\"reason\": \"" + message + "\"}");
     }
 }

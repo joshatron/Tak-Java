@@ -3,6 +3,10 @@ package io.joshatron.tak.server.exceptions;
 public class BadRequestException extends Exception {
 
     public BadRequestException() {
-        super("The input provided was invalid.");
+        super("{\"reason\": \"The input provided was invalid.\"}");
+    }
+
+    public BadRequestException(String message) {
+        super("{\"reason\": \"" + message + "\"}");
     }
 }

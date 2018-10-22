@@ -10,6 +10,7 @@ import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.X509HostnameVerifier;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
@@ -104,8 +105,7 @@ public class HttpUtils {
         payload += "}";
 
         HttpPut request = new HttpPut(baseUrl + "/account/register");
-        StringEntity entity = new StringEntity(payload);
-        request.setHeader("Content-Type", "application/json");
+        StringEntity entity = new StringEntity(payload, ContentType.APPLICATION_JSON);
         request.setEntity(entity);
 
         return client.execute(request);
@@ -119,8 +119,7 @@ public class HttpUtils {
         payload += "}";
 
         HttpPost request = new HttpPost(baseUrl + "/account/changepass");
-        StringEntity entity = new StringEntity(payload);
-        request.setHeader("Content-Type", "application/json");
+        StringEntity entity = new StringEntity(payload, ContentType.APPLICATION_JSON);
         if(username != null && password != null) {
             request.setHeader("Authorization", getBasicAuthString(username, password));
         }
@@ -132,7 +131,6 @@ public class HttpUtils {
 
     public static HttpResponse authenticate(String username, String password, HttpClient client) throws IOException {
         HttpGet request = new HttpGet(baseUrl + "/account/authenticate");
-        request.setHeader("Content-Type", "application/json");
         if(username != null && password != null) {
             request.setHeader("Authorization", getBasicAuthString(username, password));
         }
@@ -150,8 +148,7 @@ public class HttpUtils {
                 "}";
 
         HttpPost request = new HttpPost(baseUrl + "/social/request");
-        StringEntity entity = new StringEntity(payload);
-        request.setHeader("Content-Type", "application/json");
+        StringEntity entity = new StringEntity(payload, ContentType.APPLICATION_JSON);
         request.setEntity(entity);
 
         return client.execute(request);
@@ -167,8 +164,7 @@ public class HttpUtils {
                 "}";
 
         HttpPost request = new HttpPost(baseUrl + "/social/cancel");
-        StringEntity entity = new StringEntity(payload);
-        request.setHeader("Content-Type", "application/json");
+        StringEntity entity = new StringEntity(payload, ContentType.APPLICATION_JSON);
         request.setEntity(entity);
 
         return client.execute(request);
@@ -185,8 +181,7 @@ public class HttpUtils {
                 "}";
 
         HttpPost request = new HttpPost(baseUrl + "/social/response");
-        StringEntity entity = new StringEntity(payload);
-        request.setHeader("Content-Type", "application/json");
+        StringEntity entity = new StringEntity(payload, ContentType.APPLICATION_JSON);
         request.setEntity(entity);
 
         return client.execute(request);
@@ -201,8 +196,7 @@ public class HttpUtils {
                 "}";
 
         HttpPost request = new HttpPost(baseUrl + "/social/incoming");
-        StringEntity entity = new StringEntity(payload);
-        request.setHeader("Content-Type", "application/json");
+        StringEntity entity = new StringEntity(payload, ContentType.APPLICATION_JSON);
         request.setEntity(entity);
 
         return client.execute(request);
@@ -217,8 +211,7 @@ public class HttpUtils {
                 "}";
 
         HttpPost request = new HttpPost(baseUrl + "/social/outgoing");
-        StringEntity entity = new StringEntity(payload);
-        request.setHeader("Content-Type", "application/json");
+        StringEntity entity = new StringEntity(payload, ContentType.APPLICATION_JSON);
         request.setEntity(entity);
 
         return client.execute(request);
@@ -234,8 +227,7 @@ public class HttpUtils {
                 "}";
 
         HttpPost request = new HttpPost(baseUrl + "/social/block");
-        StringEntity entity = new StringEntity(payload);
-        request.setHeader("Content-Type", "application/json");
+        StringEntity entity = new StringEntity(payload, ContentType.APPLICATION_JSON);
         request.setEntity(entity);
 
         return client.execute(request);
@@ -251,8 +243,7 @@ public class HttpUtils {
                 "}";
 
         HttpPost request = new HttpPost(baseUrl + "/social/unblock");
-        StringEntity entity = new StringEntity(payload);
-        request.setHeader("Content-Type", "application/json");
+        StringEntity entity = new StringEntity(payload, ContentType.APPLICATION_JSON);
         request.setEntity(entity);
 
         return client.execute(request);
@@ -267,8 +258,7 @@ public class HttpUtils {
                 "}";
 
         HttpPost request = new HttpPost(baseUrl + "/social/friends");
-        StringEntity entity = new StringEntity(payload);
-        request.setHeader("Content-Type", "application/json");
+        StringEntity entity = new StringEntity(payload, ContentType.APPLICATION_JSON);
         request.setEntity(entity);
 
         return client.execute(request);
@@ -283,8 +273,7 @@ public class HttpUtils {
                 "}";
 
         HttpPost request = new HttpPost(baseUrl + "/social/blocked");
-        StringEntity entity = new StringEntity(payload);
-        request.setHeader("Content-Type", "application/json");
+        StringEntity entity = new StringEntity(payload, ContentType.APPLICATION_JSON);
         request.setEntity(entity);
 
         return client.execute(request);
@@ -301,8 +290,7 @@ public class HttpUtils {
                 "}";
 
         HttpPost request = new HttpPost(baseUrl + "/social/send");
-        StringEntity entity = new StringEntity(payload);
-        request.setHeader("Content-Type", "application/json");
+        StringEntity entity = new StringEntity(payload, ContentType.APPLICATION_JSON);
         request.setEntity(entity);
 
         return client.execute(request);
@@ -336,8 +324,7 @@ public class HttpUtils {
         payload += "}";
 
         HttpPost request = new HttpPost(baseUrl + "/social/read");
-        StringEntity entity = new StringEntity(payload);
-        request.setHeader("Content-Type", "application/json");
+        StringEntity entity = new StringEntity(payload, ContentType.APPLICATION_JSON);
         request.setEntity(entity);
 
         return client.execute(request);

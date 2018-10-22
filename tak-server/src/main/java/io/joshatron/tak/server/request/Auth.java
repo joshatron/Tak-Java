@@ -1,7 +1,6 @@
 package io.joshatron.tak.server.request;
 
 import io.joshatron.tak.server.exceptions.BadRequestException;
-import io.joshatron.tak.server.exceptions.NoAuthException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -17,7 +16,10 @@ public class Auth {
     //Constructor for basic auth
     public Auth(String basicAuth) throws BadRequestException {
         if(basicAuth == null) {
-            throw new BadRequestException();
+            throw new BadRequestException("There is no content for the authorization.");
+        }
+        if(!basicAuth.startsWith("Basic ")) {
+            throw new BadRequestException("The authorization is not correctly formatted.");
         }
         //Decode from base 64
         String decoded = new String(Base64.getDecoder().decode(basicAuth.replace("Basic ", "")));
@@ -25,7 +27,7 @@ public class Auth {
         if(decoded.length() - decoded.replace(":", "").length() >= 1) {
             String[] auth = decoded.split(":");
             if(auth.length < 2) {
-                throw new BadRequestException();
+                throw new BadRequestException("The decoded authorization is not in the format username:password.");
             }
             username = auth[0];
             password = decoded.substring(username.length() + 1);

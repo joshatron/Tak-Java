@@ -10,7 +10,7 @@ import org.junit.Test;
 import java.io.IOException;
 
 //Suite A
-//Current final test: 017
+//Current final test: 018
 public class AccountTest {
 
     private final String suite = "A";
@@ -51,12 +51,17 @@ public class AccountTest {
     }
 
     @Test
-    public void registerUser_BlankFields_400() throws IOException {
+    public void registerUser_BlankUsername_400() throws IOException {
         String test = "014";
         AccountUtils.addUser("", "", "", "password", client, HttpStatus.SC_BAD_REQUEST);
+        AccountUtils.addUser(null, null, null, "password", client, HttpStatus.SC_BAD_REQUEST);
+    }
+
+    @Test
+    public void registerUser_BlankPassword_400() throws IOException {
+        String test = "018";
         AccountUtils.addUser(suite, test, "01", "", client, HttpStatus.SC_BAD_REQUEST);
-        AccountUtils.addUser("", "", "", "", client, HttpStatus.SC_BAD_REQUEST);
-        AccountUtils.addUser(null, null, null, null, client, HttpStatus.SC_BAD_REQUEST);
+        AccountUtils.addUser(suite, test, "02", null, client, HttpStatus.SC_BAD_REQUEST);
     }
 
     @Test
@@ -104,7 +109,6 @@ public class AccountTest {
         User user = AccountUtils.addUser(suite, test, "01", "password", client, HttpStatus.SC_NO_CONTENT);
         AccountUtils.changePassword(user, "", client, HttpStatus.SC_BAD_REQUEST);
         AccountUtils.changePassword(user, null, client, HttpStatus.SC_BAD_REQUEST);
-        AccountUtils.changePassword(null, "pass", client, HttpStatus.SC_BAD_REQUEST);
     }
 
     @Test
@@ -157,6 +161,5 @@ public class AccountTest {
         User blankPass = new User(user.getUsername(), "");
         AccountUtils.authenticate(blankName, client, HttpStatus.SC_BAD_REQUEST);
         AccountUtils.authenticate(blankPass, client, HttpStatus.SC_BAD_REQUEST);
-        AccountUtils.authenticate(null, client, HttpStatus.SC_BAD_REQUEST);
     }
 }

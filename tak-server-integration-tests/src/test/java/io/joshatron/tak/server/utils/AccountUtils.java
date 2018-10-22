@@ -10,7 +10,13 @@ import java.io.IOException;
 public class AccountUtils {
 
     public static User addUser(String suite, String test, String user, String password, HttpClient client, int expected) throws IOException {
-        HttpResponse response = HttpUtils.createUser(suite + test + user, password, client);
+        HttpResponse response;
+        if(suite == null || test == null || user == null) {
+            response = HttpUtils.createUser(null, password, client);
+        }
+        else {
+            response = HttpUtils.createUser(suite + test + user, password, client);
+        }
         Assert.assertEquals(expected, response.getStatusLine().getStatusCode());
         if(expected == HttpStatus.SC_NO_CONTENT) {
             User u = new User(suite + test + user, password);
