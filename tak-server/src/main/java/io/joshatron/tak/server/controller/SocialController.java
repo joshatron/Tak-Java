@@ -3,6 +3,10 @@ package io.joshatron.tak.server.controller;
 import io.joshatron.tak.server.config.ApplicationConfig;
 import io.joshatron.tak.server.database.SocialDAO;
 import io.joshatron.tak.server.database.SocialDAOSqlite;
+import io.joshatron.tak.server.exceptions.BadRequestException;
+import io.joshatron.tak.server.exceptions.ForbiddenException;
+import io.joshatron.tak.server.exceptions.NoAuthException;
+import io.joshatron.tak.server.exceptions.ResourceNotFoundException;
 import io.joshatron.tak.server.request.*;
 import io.joshatron.tak.server.response.Message;
 import io.joshatron.tak.server.response.Messages;
@@ -11,10 +15,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/social")
@@ -31,30 +32,40 @@ public class SocialController {
         this.socialDAO = socialDAO;
     }
 
-    @PostMapping("/request")
-    public ResponseEntity requestFriend(@RequestBody UserInteraction friendRequest) {
+    @PutMapping("/request")
+    public ResponseEntity requestFriend(@RequestHeader(value="Authorization") String auth, @RequestBody UserInteraction friendRequest) {
         try {
-            if(socialDAO.createFriendRequest(friendRequest)) {
-                return new ResponseEntity(HttpStatus.NO_CONTENT);
-            }
-            else {
-                return new ResponseEntity(HttpStatus.FORBIDDEN);
-            }
+            friendRequest.setAuth(new Auth(auth));
+            socialDAO.createFriendRequest(friendRequest);
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        } catch (NoAuthException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (BadRequestException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (ForbiddenException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PostMapping("/cancel")
-    public ResponseEntity cancelFriendRequest(@RequestBody UserInteraction cancelFriendRequest) {
+    @DeleteMapping("/cancel")
+    public ResponseEntity cancelFriendRequest(@RequestHeader(value="Authorization") String auth, @RequestBody UserInteraction cancelFriendRequest) {
         try {
-            if(socialDAO.deleteFriendRequest(cancelFriendRequest)) {
-                return new ResponseEntity(HttpStatus.NO_CONTENT);
-            }
-            else {
-                return new ResponseEntity(HttpStatus.FORBIDDEN);
-            }
+            cancelFriendRequest.setAuth(new Auth(auth));
+            socialDAO.deleteFriendRequest(cancelFriendRequest);
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        } catch (NoAuthException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (BadRequestException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (ForbiddenException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -62,142 +73,178 @@ public class SocialController {
     }
 
     @PostMapping("/response")
-    public ResponseEntity respondToRequest(@RequestBody FriendResponse friendResponse) {
+    public ResponseEntity respondToRequest(@RequestHeader(value="Authorization") String auth, @RequestBody FriendResponse friendResponse) {
         try {
-            if(socialDAO.respondToFriendRequest(friendResponse)) {
-                return new ResponseEntity(HttpStatus.NO_CONTENT);
-            }
-            else {
-                return new ResponseEntity(HttpStatus.FORBIDDEN);
-            }
+            friendResponse.setAuth(new Auth(auth));
+            socialDAO.respondToFriendRequest(friendResponse);
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        } catch (NoAuthException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (BadRequestException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (ForbiddenException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PostMapping("/incoming")
-    public ResponseEntity<Users> checkIncomingRequests(@RequestBody AuthWrapper authWrapper) {
+    @GetMapping("/incoming")
+    public ResponseEntity<Users> checkIncomingRequests(@RequestHeader(value="Authorization") String auth) {
         try {
-            String[] incoming = socialDAO.listIncomingFriendRequests(authWrapper.getAuth());
-            if(incoming != null) {
-                return new ResponseEntity<>(new Users(incoming), HttpStatus.OK);
-            }
-            else {
-                return new ResponseEntity<>(new Users(), HttpStatus.FORBIDDEN);
-            }
+            String[] incoming = socialDAO.listIncomingFriendRequests(new Auth(auth));
+            return new ResponseEntity<>(new Users(incoming), HttpStatus.OK);
+        } catch (NoAuthException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (BadRequestException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (ForbiddenException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(new Users(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PostMapping("/outgoing")
-    public ResponseEntity<Users> checkOutgoingRequests(@RequestBody AuthWrapper authWrapper) {
+    @GetMapping("/outgoing")
+    public ResponseEntity<Users> checkOutgoingRequests(@RequestHeader(value="Authorization") String auth) {
         try {
-            String[] outgoing = socialDAO.listOutgoingFriendRequests(authWrapper.getAuth());
-            if(outgoing != null) {
-                return new ResponseEntity<>(new Users(outgoing), HttpStatus.OK);
-            }
-            else {
-                return new ResponseEntity<>(new Users(), HttpStatus.FORBIDDEN);
-            }
+            String[] outgoing = socialDAO.listOutgoingFriendRequests(new Auth(auth));
+            return new ResponseEntity<>(new Users(outgoing), HttpStatus.OK);
+        } catch (NoAuthException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (BadRequestException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (ForbiddenException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(new Users(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PostMapping("/block")
-    public ResponseEntity blockUser(@RequestBody UserInteraction block) {
+    @PutMapping("/block")
+    public ResponseEntity blockUser(@RequestHeader(value="Authorization") String auth, @RequestBody UserInteraction block) {
         try {
-            if(socialDAO.blockUser(block)) {
-                return new ResponseEntity(HttpStatus.NO_CONTENT);
-            }
-            else {
-                return new ResponseEntity(HttpStatus.FORBIDDEN);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @PostMapping("/unblock")
-    public ResponseEntity unblockUser(@RequestBody UserInteraction unblock) {
-        try {
-            if(socialDAO.unblockUser(unblock)) {
-                return new ResponseEntity(HttpStatus.NO_CONTENT);
-            }
-            else {
-                return new ResponseEntity(HttpStatus.FORBIDDEN);
-            }
+            block.setAuth(new Auth(auth));
+            socialDAO.blockUser(block);
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        } catch (NoAuthException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (BadRequestException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (ForbiddenException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PostMapping("/friends")
-    public ResponseEntity<Users> listFriends(@RequestBody AuthWrapper authWrapper) {
+    @DeleteMapping("/unblock")
+    public ResponseEntity unblockUser(@RequestHeader(value="Authorization") String auth, @RequestBody UserInteraction unblock) {
         try {
-            String[] friends = socialDAO.listFriends(authWrapper.getAuth());
-            if(friends != null) {
-                return new ResponseEntity<>(new Users(friends), HttpStatus.OK);
-            }
-            else {
-                return new ResponseEntity<>(new Users(), HttpStatus.FORBIDDEN);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(new Users(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @PostMapping("/blocked")
-    public ResponseEntity<Users> listBlocked(@RequestBody AuthWrapper authWrapper) {
-        try {
-            String[] blocked = socialDAO.listBlocked(authWrapper.getAuth());
-            if(blocked != null) {
-                return new ResponseEntity<>(new Users(blocked), HttpStatus.OK);
-            }
-            else {
-                return new ResponseEntity<>(new Users(), HttpStatus.FORBIDDEN);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(new Users(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @PostMapping("/send")
-    public ResponseEntity sendMessage(@RequestBody SendMessage sendMessage) {
-        try {
-            if(socialDAO.sendMessage(sendMessage)) {
-                return new ResponseEntity(HttpStatus.NO_CONTENT);
-            }
-            else {
-                return new ResponseEntity(HttpStatus.FORBIDDEN);
-            }
+            unblock.setAuth(new Auth(auth));
+            socialDAO.unblockUser(unblock);
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        } catch (NoAuthException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (BadRequestException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (ForbiddenException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PostMapping("/read")
-    public ResponseEntity<Messages> readMessages(@RequestBody ReadMessages readMessages) {
+    @GetMapping("/friends")
+    public ResponseEntity<Users> listFriends(@RequestHeader(value="Authorization") String auth) {
         try {
+            String[] friends = socialDAO.listFriends(new Auth(auth));
+            return new ResponseEntity<>(new Users(friends), HttpStatus.OK);
+        } catch (NoAuthException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (BadRequestException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (ForbiddenException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/blocked")
+    public ResponseEntity<Users> listBlocked(@RequestHeader(value="Authorization") String auth) {
+        try {
+            String[] blocked = socialDAO.listBlocked(new Auth(auth));
+            return new ResponseEntity<>(new Users(blocked), HttpStatus.OK);
+        } catch (NoAuthException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (BadRequestException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (ForbiddenException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/send")
+    public ResponseEntity sendMessage(@RequestHeader(value="Authorization") String auth, @RequestBody SendMessage sendMessage) {
+        try {
+            sendMessage.setAuth(new Auth(auth));
+            socialDAO.sendMessage(sendMessage);
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        } catch (NoAuthException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (BadRequestException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (ForbiddenException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/read")
+    public ResponseEntity<Messages> readMessages(@RequestHeader(value="Authorization") String auth, @RequestParam("senders") String senders, @RequestParam("start") long start, @RequestParam("read") boolean read) {
+        try {
+            ReadMessages readMessages = new ReadMessages(new Auth(auth), senders.split(":"), start, read);
             Message[] messages = socialDAO.listMessages(readMessages);
-            if(messages != null) {
-                return new ResponseEntity<>(new Messages(messages), HttpStatus.OK);
-            }
-            else {
-                return new ResponseEntity<>(new Messages(), HttpStatus.FORBIDDEN);
-            }
+            return new ResponseEntity<>(new Messages(messages), HttpStatus.OK);
+        } catch (NoAuthException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (BadRequestException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (ForbiddenException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(new Messages(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

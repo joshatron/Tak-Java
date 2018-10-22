@@ -1,16 +1,18 @@
 package io.joshatron.tak.server.request;
 
+import java.util.Date;
+
 public class ReadMessages {
 
     private Auth auth;
     private String[] senders;
-    private String start;
-    private String read;
+    private Date start;
+    private boolean read;
 
-    public ReadMessages(Auth auth, String[] senders, String start, String read) {
+    public ReadMessages(Auth auth, String[] senders, long start, boolean read) {
         this.auth = auth;
         this.senders = senders;
-        this.start = start;
+        this.start = new Date(start);
         this.read = read;
     }
 
@@ -30,19 +32,23 @@ public class ReadMessages {
         this.senders = senders;
     }
 
-    public String getStart() {
+    public Date getStart() {
         return start;
     }
 
-    public void setStart(String start) {
+    public void setStart(Date start) {
         this.start = start;
     }
 
-    public String getRead() {
+    public void setStart(long start) {
+        this.start = new Date(start);
+    }
+
+    public boolean getRead() {
         return read;
     }
 
-    public void setRead(String read) {
+    public void setRead(boolean read) {
         this.read = read;
     }
 }
