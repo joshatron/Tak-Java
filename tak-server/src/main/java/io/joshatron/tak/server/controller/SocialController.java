@@ -17,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
 @RestController
 @RequestMapping("/social")
 public class SocialController {
@@ -231,7 +233,7 @@ public class SocialController {
     @GetMapping("/read")
     public ResponseEntity<Messages> readMessages(@RequestHeader(value="Authorization") String auth, @RequestParam("senders") String senders, @RequestParam("start") long start, @RequestParam("read") boolean read) {
         try {
-            ReadMessages readMessages = new ReadMessages(new Auth(auth), senders.split(":"), start, read);
+            ReadMessages readMessages = new ReadMessages(new Auth(auth), senders.split(":"), new Date(start), read);
             Message[] messages = socialDAO.listMessages(readMessages);
             return new ResponseEntity<>(new Messages(messages), HttpStatus.OK);
         } catch (NoAuthException e) {
