@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class Users {
-    private User[] users;
+public class User {
+    String username;
+    String userId;
 }

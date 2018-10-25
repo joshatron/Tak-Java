@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class PassChange {
+public class UserChange {
     private Auth auth;
     private String updated;
 }

@@ -6,6 +6,7 @@ import io.joshatron.tak.server.exceptions.NoAuthException;
 import io.joshatron.tak.server.exceptions.ResourceNotFoundException;
 import io.joshatron.tak.server.request.Auth;
 import io.joshatron.tak.server.request.PassChange;
+import io.joshatron.tak.server.response.User;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.Connection;
@@ -178,7 +179,8 @@ public class AccountDAOSqlite implements AccountDAO {
         }
     }
 
-    public int idFromUsername(String username) throws SQLException, BadRequestException, ResourceNotFoundException {
+    @Override
+    public User getUserFromUsername(String username) throws SQLException, BadRequestException, ResourceNotFoundException {
         if(username == null || username.length() == 0) {
             throw new BadRequestException("The username is blank or missing.");
         }
@@ -195,7 +197,7 @@ public class AccountDAOSqlite implements AccountDAO {
             ResultSet rs = selectStmt.executeQuery();
 
             if (rs.next()) {
-                return rs.getInt("id");
+                return new User(username, rs.getString("id"));
             }
             else {
                 throw new ResourceNotFoundException("That user could not be found.");
@@ -208,7 +210,8 @@ public class AccountDAOSqlite implements AccountDAO {
         }
     }
 
-    public String usernameFromId(int id) throws SQLException, ResourceNotFoundException {
+    @Override
+    public User getUserFromId(String id) throws SQLException, ResourceNotFoundException {
         PreparedStatement selectStmt = null;
 
         String checkUsername = "SELECT username " +
@@ -217,11 +220,11 @@ public class AccountDAOSqlite implements AccountDAO {
 
         try {
             selectStmt = conn.prepareStatement(checkUsername);
-            selectStmt.setInt(1, id);
+            selectStmt.setString(1, id);
             ResultSet rs = selectStmt.executeQuery();
 
             if (rs.next()) {
-                return rs.getString("username");
+                return new User(rs.getString("username"), id);
             }
             else {
                 throw new ResourceNotFoundException("That user could not be found.");
