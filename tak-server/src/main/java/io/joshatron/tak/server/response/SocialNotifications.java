@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class User {
-    private String username;
-    private String userId;
+public class SocialNotifications {
+    private int incomingRequests;
+    private int incomingMessages;
 }

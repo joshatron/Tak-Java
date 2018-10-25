@@ -1,22 +1,10 @@
 package io.joshatron.tak.server.response;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
 public class Messages {
-
     private Message[] messages;
-
-    public Messages(Message[] messages) {
-        this.messages = messages;
-    }
-
-    public Messages() {
-        messages = new Message[0];
-    }
-
-    public Message[] getMessages() {
-        return messages;
-    }
-
-    public void setMessages(Message[] messages) {
-        this.messages = messages;
-    }
 }

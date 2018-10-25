@@ -32,7 +32,7 @@ public class AccountController {
         this.accountDAO = accountDAO;
     }
 
-    @PostMapping(value = "/register", consumes = "application/json")
+    @PostMapping(value = "/register", consumes = "application/json", produces = "application/json")
     public ResponseEntity register(@RequestBody Auth auth) {
         try {
             accountDAO.registerUser(auth);
@@ -51,7 +51,7 @@ public class AccountController {
         }
     }
 
-    @PostMapping(value = "/changepass", consumes = "application/json")
+    @PostMapping(value = "/changepass", consumes = "application/json", produces = "application/json")
     public ResponseEntity changePassword(@RequestHeader(value="Authorization") String auth, @RequestBody UserChange passChange) {
         try {
             passChange.setAuth(new Auth(auth));
@@ -71,7 +71,7 @@ public class AccountController {
         }
     }
 
-    @PostMapping(value = "/changename", consumes = "application/json")
+    @PostMapping(value = "/changename", consumes = "application/json", produces = "application/json")
     public ResponseEntity changeUsername(@RequestHeader(value="Authorization") String auth, @RequestBody UserChange userChange) {
         try {
             userChange.setAuth(new Auth(auth));
@@ -91,7 +91,7 @@ public class AccountController {
         }
     }
 
-    @GetMapping("/authenticate")
+    @GetMapping(value = "/authenticate", produces = "application/json")
     public ResponseEntity authenticate(@RequestHeader(value="Authorization") String auth) {
         try {
             if(accountDAO.isAuthenticated(new Auth(auth))) {
