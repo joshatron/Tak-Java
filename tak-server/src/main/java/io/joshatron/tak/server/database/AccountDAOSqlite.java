@@ -5,7 +5,6 @@ import io.joshatron.tak.server.exceptions.ForbiddenException;
 import io.joshatron.tak.server.exceptions.NoAuthException;
 import io.joshatron.tak.server.exceptions.ResourceNotFoundException;
 import io.joshatron.tak.server.request.Auth;
-import io.joshatron.tak.server.request.PassChange;
 import io.joshatron.tak.server.response.User;
 import org.mindrot.jbcrypt.BCrypt;
 

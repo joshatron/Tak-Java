@@ -10,6 +10,7 @@ import io.joshatron.tak.server.exceptions.ResourceNotFoundException;
 import io.joshatron.tak.server.request.Auth;
 import io.joshatron.tak.server.request.UserChange;
 import io.joshatron.tak.server.response.User;
+import io.joshatron.tak.server.utils.AccountUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -21,21 +22,21 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/account", produces = "application/json")
 public class AccountController {
 
-    private AccountDAO accountDAO;
+    private AccountUtils accountUtils;
 
     public AccountController() {
         ApplicationContext context = new AnnotationConfigApplicationContext(ApplicationConfig.class);
-        accountDAO = context.getBean(AccountDAOSqlite.class);
+        accountUtils = context.getBean(AccountUtils.class);
     }
 
-    public AccountController(AccountDAO accountDAO) {
-        this.accountDAO = accountDAO;
+    public AccountController(AccountUtils accountUtils) {
+        this.accountUtils = accountUtils;
     }
 
     @PostMapping(value = "/register", consumes = "application/json", produces = "application/json")
     public ResponseEntity register(@RequestBody Auth auth) {
         try {
-            accountDAO.registerUser(auth);
+            accountUtils.registerUser(auth);
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (NoAuthException e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
@@ -55,7 +56,7 @@ public class AccountController {
     public ResponseEntity changePassword(@RequestHeader(value="Authorization") String auth, @RequestBody UserChange passChange) {
         try {
             passChange.setAuth(new Auth(auth));
-            accountDAO.updatePassword(passChange);
+            accountUtils.updatePassword(passChange);
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (NoAuthException e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
@@ -75,7 +76,7 @@ public class AccountController {
     public ResponseEntity changeUsername(@RequestHeader(value="Authorization") String auth, @RequestBody UserChange userChange) {
         try {
             userChange.setAuth(new Auth(auth));
-            accountDAO.updateUsername(userChange);
+            accountUtils.updateUsername(userChange);
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (NoAuthException e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
@@ -94,7 +95,7 @@ public class AccountController {
     @GetMapping(value = "/authenticate", produces = "application/json")
     public ResponseEntity authenticate(@RequestHeader(value="Authorization") String auth) {
         try {
-            if(accountDAO.isAuthenticated(new Auth(auth))) {
+            if(accountUtils.isAuthenticated(new Auth(auth))) {
                 return new ResponseEntity(HttpStatus.NO_CONTENT);
             }
             else {
@@ -119,10 +120,10 @@ public class AccountController {
         try {
             User user;
             if(username == null && id != null && id.length() > 0) {
-                user = accountDAO.getUserFromId(id);
+                user = accountUtils.getUserFromId(id);
             }
             else if(id == null && username != null && username.length() > 0) {
-                user = accountDAO.getUserFromUsername(username);
+                user = accountUtils.getUserFromUsername(username);
             }
             else {
                 throw new BadRequestException("You can only specify the username or the ID.");
