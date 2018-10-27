@@ -1,9 +1,6 @@
 package io.joshatron.tak.server.database;
 
-import io.joshatron.tak.server.exceptions.BadRequestException;
-import io.joshatron.tak.server.exceptions.ForbiddenException;
-import io.joshatron.tak.server.exceptions.NoAuthException;
-import io.joshatron.tak.server.exceptions.ResourceNotFoundException;
+import io.joshatron.tak.server.exceptions.*;
 import io.joshatron.tak.server.request.Auth;
 import io.joshatron.tak.server.response.User;
 import org.mindrot.jbcrypt.BCrypt;
@@ -26,7 +23,7 @@ public class AccountDAOSqlite implements AccountDAO {
     }
 
     @Override
-    public boolean isAuthenticated(Auth auth) throws SQLException {
+    public boolean isAuthenticated(Auth auth) throws GameServerException {
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
@@ -41,19 +38,28 @@ public class AccountDAOSqlite implements AccountDAO {
 
             return (rs.next() && auth.getUsername().equals(rs.getString("username")) &&
                     BCrypt.checkpw(auth.getPassword(), rs.getString("auth")));
-        }
-        finally {
+        } catch (SQLException e) {
+            throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
+        } finally {
             if(stmt != null) {
-                stmt.close();
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
+                }
             }
             if(rs != null) {
-                rs.close();
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
+                }
             }
         }
     }
 
     @Override
-    public void addUser(Auth auth) throws SQLException, ForbiddenException, BadRequestException {
+    public void addUser(Auth auth) throws GameServerException {
         PreparedStatement stmt = null;
 
         //insert new user if it isn't
@@ -65,15 +71,21 @@ public class AccountDAOSqlite implements AccountDAO {
             stmt.setString(1, auth.getUsername());
             stmt.setString(2, BCrypt.hashpw(auth.getPassword(), BCrypt.gensalt()));
             stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
         } finally {
             if(stmt != null) {
-                stmt.close();
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
+                }
             }
         }
     }
 
     @Override
-    public void updatePassword(String username, String password) throws SQLException, NoAuthException, BadRequestException {
+    public void updatePassword(String username, String password) throws GameServerException {
         PreparedStatement stmt = null;
 
         String changePass = "UPDATE users " +
@@ -85,16 +97,21 @@ public class AccountDAOSqlite implements AccountDAO {
             stmt.setString(1, BCrypt.hashpw(password, BCrypt.gensalt()));
             stmt.setString(2, username);
             stmt.executeUpdate();
-        }
-        finally {
+        } catch (SQLException e) {
+            throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
+        } finally {
             if(stmt != null) {
-                stmt.close();
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
+                }
             }
         }
     }
 
     @Override
-    public void updateUsername(String oldUsername, String newUsername) throws SQLException {
+    public void updateUsername(String oldUsername, String newUsername) throws GameServerException {
         PreparedStatement stmt = null;
 
         String changeUser = "UPDATE users " +
@@ -106,16 +123,21 @@ public class AccountDAOSqlite implements AccountDAO {
             stmt.setString(1, newUsername);
             stmt.setString(2, oldUsername);
             stmt.executeUpdate();
-        }
-        finally {
+        } catch (SQLException e) {
+            throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
+        } finally {
             if(stmt != null) {
-                stmt.close();
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
+                }
             }
         }
     }
 
     @Override
-    public boolean userExists(String username) throws SQLException, BadRequestException {
+    public boolean userExists(String username) throws GameServerException {
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
@@ -129,19 +151,28 @@ public class AccountDAOSqlite implements AccountDAO {
             rs = stmt.executeQuery();
 
             return rs.next();
-        }
-        finally {
+        } catch (SQLException e) {
+            throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
+        } finally {
             if(stmt != null) {
-                stmt.close();
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
+                }
             }
             if(rs != null) {
-                rs.close();
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
+                }
             }
         }
     }
 
     @Override
-    public User getUserFromId(String id) throws SQLException, ResourceNotFoundException {
+    public User getUserFromId(String id) throws GameServerException {
         PreparedStatement stmt = null;
 
         String checkUsername = "SELECT username " +
@@ -159,16 +190,21 @@ public class AccountDAOSqlite implements AccountDAO {
             else {
                 throw new ResourceNotFoundException("That user could not be found.");
             }
-        }
-        finally {
+        } catch (SQLException e) {
+            throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
+        } finally {
             if(stmt != null) {
-                stmt.close();
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
+                }
             }
         }
     }
 
     @Override
-    public User getUserFromUsername(String username) throws SQLException, BadRequestException, ResourceNotFoundException {
+    public User getUserFromUsername(String username) throws GameServerException {
         PreparedStatement stmt = null;
 
         String checkUsername = "SELECT id " +
@@ -186,10 +222,15 @@ public class AccountDAOSqlite implements AccountDAO {
             else {
                 throw new ResourceNotFoundException("That user could not be found.");
             }
-        }
-        finally {
+        } catch (SQLException e) {
+            throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
+        } finally {
             if(stmt != null) {
-                stmt.close();
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
+                }
             }
         }
     }

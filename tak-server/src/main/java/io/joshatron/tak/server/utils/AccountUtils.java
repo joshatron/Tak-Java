@@ -2,6 +2,7 @@ package io.joshatron.tak.server.utils;
 
 import io.joshatron.tak.server.database.AccountDAO;
 import io.joshatron.tak.server.exceptions.ForbiddenException;
+import io.joshatron.tak.server.exceptions.GameServerException;
 import io.joshatron.tak.server.exceptions.NoAuthException;
 import io.joshatron.tak.server.request.Auth;
 import io.joshatron.tak.server.request.UserChange;
@@ -18,13 +19,13 @@ public class AccountUtils {
         this.accountDAO = accountDAO;
     }
 
-    public boolean isAuthenticated(Auth auth) throws Exception {
+    public boolean isAuthenticated(Auth auth) throws GameServerException {
         AccountValidator.validateAuth(auth);
 
         return accountDAO.isAuthenticated(auth);
     }
 
-    public void registerUser(Auth auth) throws Exception {
+    public void registerUser(Auth auth) throws GameServerException {
         AccountValidator.validateAuth(auth);
         if(accountDAO.userExists(auth.getUsername())) {
             throw new ForbiddenException("That username is already taken.");
@@ -33,7 +34,7 @@ public class AccountUtils {
         accountDAO.addUser(auth);
     }
 
-    public void updatePassword(UserChange change) throws Exception {
+    public void updatePassword(UserChange change) throws GameServerException {
         AccountValidator.validatePassChange(change);
         if(!accountDAO.isAuthenticated(change.getAuth())) {
             throw new NoAuthException();
@@ -42,7 +43,7 @@ public class AccountUtils {
         accountDAO.updatePassword(change.getAuth().getUsername(), change.getUpdated());
     }
 
-    public void updateUsername(UserChange change) throws Exception {
+    public void updateUsername(UserChange change) throws GameServerException {
         AccountValidator.validateUserChange(change);
         if(!accountDAO.isAuthenticated(change.getAuth())) {
             throw new NoAuthException();
@@ -51,19 +52,13 @@ public class AccountUtils {
         accountDAO.updateUsername(change.getAuth().getUsername(), change.getUpdated());
     }
 
-    public boolean userExists(String username) throws Exception {
-        AccountValidator.validateUsername(username);
-
-        return accountDAO.userExists(username);
-    }
-
-    public User getUserFromId(String id) throws Exception {
+    public User getUserFromId(String id) throws GameServerException {
         AccountValidator.validateUserId(id);
 
         return accountDAO.getUserFromId(id);
     }
 
-    public User getUserFromUsername(String username) throws Exception {
+    public User getUserFromUsername(String username) throws GameServerException {
         AccountValidator.validateUsername(username);
 
         return accountDAO.getUserFromUsername(username);

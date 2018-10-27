@@ -1,12 +1,12 @@
 package io.joshatron.tak.server.exceptions;
 
-public class BadRequestException extends Exception {
+public class BadRequestException extends GameServerException {
 
     public BadRequestException() {
-        super("{\"reason\": \"The input provided was invalid.\"}");
+        super("The input provided was invalid.");
     }
 
     public BadRequestException(String message) {
-        super("{\"reason\": \"" + message + "\"}");
+        super(message);
     }
 }

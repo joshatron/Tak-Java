@@ -1,12 +1,12 @@
 package io.joshatron.tak.server.exceptions;
 
-public class ResourceNotFoundException extends Exception {
+public class ResourceNotFoundException extends GameServerException {
 
     public ResourceNotFoundException() {
-        super("{\"reason\": \"The resource could not be found.\"}");
+        super("The resource could not be found.");
     }
 
     public ResourceNotFoundException(String message) {
-        super("{\"reason\": \"" + message + "\"}");
+        super(message);
     }
 }
