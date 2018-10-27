@@ -1,12 +1,16 @@
 package io.joshatron.tak.server.utils;
 
 import io.joshatron.tak.server.database.AccountDAO;
-import io.joshatron.tak.server.exceptions.BadRequestException;
+import io.joshatron.tak.server.exceptions.ForbiddenException;
+import io.joshatron.tak.server.exceptions.NoAuthException;
 import io.joshatron.tak.server.request.Auth;
 import io.joshatron.tak.server.request.UserChange;
 import io.joshatron.tak.server.response.User;
+import io.joshatron.tak.server.validation.AccountValidator;
 
 public class AccountUtils {
+
+    public static final int ID_LENGTH = 15;
 
     private AccountDAO accountDAO;
 
@@ -15,38 +19,53 @@ public class AccountUtils {
     }
 
     public boolean isAuthenticated(Auth auth) throws Exception {
-        validateAuth(auth);
+        AccountValidator.validateAuth(auth);
+
         return accountDAO.isAuthenticated(auth);
     }
 
     public void registerUser(Auth auth) throws Exception {
-        validateAuth(auth);
+        AccountValidator.validateAuth(auth);
+        if(accountDAO.userExists(auth.getUsername())) {
+            throw new ForbiddenException("That username is already taken.");
+        }
+
+        accountDAO.addUser(auth);
     }
 
     public void updatePassword(UserChange change) throws Exception {
+        AccountValidator.validatePassChange(change);
+        if(!accountDAO.isAuthenticated(change.getAuth())) {
+            throw new NoAuthException();
+        }
 
+        accountDAO.updatePassword(change.getAuth().getUsername(), change.getUpdated());
     }
 
     public void updateUsername(UserChange change) throws Exception {
+        AccountValidator.validateUserChange(change);
+        if(!accountDAO.isAuthenticated(change.getAuth())) {
+            throw new NoAuthException();
+        }
 
+        accountDAO.updateUsername(change.getAuth().getUsername(), change.getUpdated());
     }
 
     public boolean userExists(String username) throws Exception {
-        return false;
+        AccountValidator.validateUsername(username);
+
+        return accountDAO.userExists(username);
     }
 
     public User getUserFromId(String id) throws Exception {
-        return null;
+        AccountValidator.validateUserId(id);
+
+        return accountDAO.getUserFromId(id);
     }
 
     public User getUserFromUsername(String username) throws Exception {
-        return null;
-    }
+        AccountValidator.validateUsername(username);
 
-    private void validateAuth(Auth auth) throws BadRequestException {
-        if(auth == null || auth.getUsername() == null || auth.getUsername().length() == 0 ||
-                auth.getPassword() == null || auth.getPassword().length() == 0) {
-            throw new BadRequestException("The authorization is in an invalid format.");
-        }
+        return accountDAO.getUserFromUsername(username);
     }
 }

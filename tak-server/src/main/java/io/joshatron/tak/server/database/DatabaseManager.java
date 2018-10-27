@@ -26,8 +26,8 @@ public class DatabaseManager {
 
     private static void initializeDatabase(Connection conn) {
         String userTable = "CREATE TABLE IF NOT EXISTS users (" +
-                "id integer PRIMARY KEY AUTOINCREMENT," +
-                "username text UNIQUE NOT NULL," +
+                "id text PRIMARY KEY," +
+                "username text UNIQUE NOT NULL COLLATE NOCASE," +
                 "auth text NOT NULL);";
 
         String friendTable = "CREATE TABLE IF NOT EXISTS friends (" +
