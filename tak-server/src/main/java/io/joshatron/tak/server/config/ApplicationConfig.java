@@ -4,6 +4,7 @@ import io.joshatron.tak.server.database.AccountDAOSqlite;
 import io.joshatron.tak.server.database.DatabaseManager;
 import io.joshatron.tak.server.database.GameDAOSqlite;
 import io.joshatron.tak.server.database.SocialDAOSqlite;
+import io.joshatron.tak.server.utils.AccountUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,6 +12,11 @@ import java.sql.Connection;
 
 @Configuration
 public class ApplicationConfig {
+
+    @Bean
+    public AccountUtils accountUtils() {
+        return new AccountUtils(accountDAOSqlite());
+    }
 
     @Bean
     public GameDAOSqlite gameDAOSqlite() {

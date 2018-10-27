@@ -1,8 +1,6 @@
 package io.joshatron.tak.server.controller;
 
 import io.joshatron.tak.server.config.ApplicationConfig;
-import io.joshatron.tak.server.database.AccountDAO;
-import io.joshatron.tak.server.database.AccountDAOSqlite;
 import io.joshatron.tak.server.exceptions.BadRequestException;
 import io.joshatron.tak.server.exceptions.ForbiddenException;
 import io.joshatron.tak.server.exceptions.NoAuthException;
