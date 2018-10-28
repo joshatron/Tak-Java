@@ -19,8 +19,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/account", produces = "application/json")
 public class AccountController {
 
+    private static final String NO_AUTH_LOG = "Exception occurred, returning unauthorized.";
+    private static final String BAD_REQUEST_LOG = "Exception occurred, returning bad request.";
+    private static final String FORBIDDEN_LOG = "Exception occurred, returning forbidden.";
+    private static final String RESOURCE_NOT_FOUND_LOG = "Exception occurred, returning resource not found.";
+    private static final String SERVER_ERROR_LOG = "Exception occurred, returning server error.";
+    private static final String UNKNOWN_ERROR_LOG = "Unknown exception occurred, returning server error.";
+
     private AccountUtils accountUtils;
-    Logger logger = LoggerFactory.getLogger(AccountController.class);
+    private Logger logger = LoggerFactory.getLogger(AccountController.class);
 
     public AccountController() {
         ApplicationContext context = new AnnotationConfigApplicationContext(ApplicationConfig.class);
@@ -36,25 +43,25 @@ public class AccountController {
         try {
             logger.info("Registering user");
             accountUtils.registerUser(auth);
-            logger.info("Registered " + auth.getUsername() + ", returning no content");
+            logger.info("Registered {}, returning no content", auth.getUsername());
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (NoAuthException e) {
-            logger.error("Returning unauthorized: " + e.getMessage());
-            return new ResponseEntity(e.getJsonMessage(), HttpStatus.UNAUTHORIZED);
+            logger.error(NO_AUTH_LOG, e);
+            return new ResponseEntity<>(e.getJsonMessage(), HttpStatus.UNAUTHORIZED);
         } catch (BadRequestException e) {
-            logger.error("Returning bad request: " + e.getMessage());
-            return new ResponseEntity(e.getJsonMessage(), HttpStatus.BAD_REQUEST);
+            logger.error(BAD_REQUEST_LOG, e);
+            return new ResponseEntity<>(e.getJsonMessage(), HttpStatus.BAD_REQUEST);
         } catch (ForbiddenException e) {
-            logger.error("Returning forbidden: " + e.getMessage());
-            return new ResponseEntity(e.getJsonMessage(), HttpStatus.FORBIDDEN);
+            logger.error(FORBIDDEN_LOG, e);
+            return new ResponseEntity<>(e.getJsonMessage(), HttpStatus.FORBIDDEN);
         } catch (ResourceNotFoundException e) {
-            logger.error("Returning resource not found: " + e.getMessage());
-            return new ResponseEntity(e.getJsonMessage(), HttpStatus.NOT_FOUND);
+            logger.error(RESOURCE_NOT_FOUND_LOG, e);
+            return new ResponseEntity<>(e.getJsonMessage(), HttpStatus.NOT_FOUND);
         } catch (ServerErrorException e) {
-            logger.error("Returning internal server error: " + e.getMessage());
-            return new ResponseEntity(e.getJsonMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.error(SERVER_ERROR_LOG, e);
+            return new ResponseEntity<>(e.getJsonMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
-            logger.error("Returning unknown internal server error: " + e.getMessage());
+            logger.error(UNKNOWN_ERROR_LOG, e);
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -65,25 +72,25 @@ public class AccountController {
             logger.info("Changing password");
             passChange.setAuth(new Auth(auth));
             accountUtils.updatePassword(passChange);
-            logger.info("Changed password of " + passChange.getAuth().getUsername() + ", returning no content");
+            logger.info("Changed password of {}, returning no content", passChange.getAuth().getUsername());
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (NoAuthException e) {
-            logger.error("Returning unauthorized: " + e.getMessage());
-            return new ResponseEntity(e.getJsonMessage(), HttpStatus.UNAUTHORIZED);
+            logger.error(NO_AUTH_LOG, e);
+            return new ResponseEntity<>(e.getJsonMessage(), HttpStatus.UNAUTHORIZED);
         } catch (BadRequestException e) {
-            logger.error("Returning bad request: " + e.getMessage());
-            return new ResponseEntity(e.getJsonMessage(), HttpStatus.BAD_REQUEST);
+            logger.error(BAD_REQUEST_LOG, e);
+            return new ResponseEntity<>(e.getJsonMessage(), HttpStatus.BAD_REQUEST);
         } catch (ForbiddenException e) {
-            logger.error("Returning forbidden: " + e.getMessage());
-            return new ResponseEntity(e.getJsonMessage(), HttpStatus.FORBIDDEN);
+            logger.error(FORBIDDEN_LOG, e);
+            return new ResponseEntity<>(e.getJsonMessage(), HttpStatus.FORBIDDEN);
         } catch (ResourceNotFoundException e) {
-            logger.error("Returning resource not found: " + e.getMessage());
-            return new ResponseEntity(e.getJsonMessage(), HttpStatus.NOT_FOUND);
+            logger.error(RESOURCE_NOT_FOUND_LOG, e);
+            return new ResponseEntity<>(e.getJsonMessage(), HttpStatus.NOT_FOUND);
         } catch (ServerErrorException e) {
-            logger.error("Returning internal server error: " + e.getMessage());
-            return new ResponseEntity(e.getJsonMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.error(SERVER_ERROR_LOG, e);
+            return new ResponseEntity<>(e.getJsonMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
-            logger.error("Returning unknown internal server error: " + e.getMessage());
+            logger.error(UNKNOWN_ERROR_LOG, e);
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -94,25 +101,25 @@ public class AccountController {
             logger.info("Changing username");
             userChange.setAuth(new Auth(auth));
             accountUtils.updateUsername(userChange);
-            logger.info("Changed username of " + userChange.getAuth().getUsername() + ", returning no content");
+            logger.info("Changed username of {}, returning no content", userChange.getAuth().getUsername());
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (NoAuthException e) {
-            logger.error("Returning unauthorized: " + e.getMessage());
-            return new ResponseEntity(e.getJsonMessage(), HttpStatus.UNAUTHORIZED);
+            logger.error(NO_AUTH_LOG, e);
+            return new ResponseEntity<>(e.getJsonMessage(), HttpStatus.UNAUTHORIZED);
         } catch (BadRequestException e) {
-            logger.error("Returning bad request: " + e.getMessage());
-            return new ResponseEntity(e.getJsonMessage(), HttpStatus.BAD_REQUEST);
+            logger.error(BAD_REQUEST_LOG, e);
+            return new ResponseEntity<>(e.getJsonMessage(), HttpStatus.BAD_REQUEST);
         } catch (ForbiddenException e) {
-            logger.error("Returning forbidden: " + e.getMessage());
-            return new ResponseEntity(e.getJsonMessage(), HttpStatus.FORBIDDEN);
+            logger.error(FORBIDDEN_LOG, e);
+            return new ResponseEntity<>(e.getJsonMessage(), HttpStatus.FORBIDDEN);
         } catch (ResourceNotFoundException e) {
-            logger.error("Returning resource not found: " + e.getMessage());
-            return new ResponseEntity(e.getJsonMessage(), HttpStatus.NOT_FOUND);
+            logger.error(RESOURCE_NOT_FOUND_LOG, e);
+            return new ResponseEntity<>(e.getJsonMessage(), HttpStatus.NOT_FOUND);
         } catch (ServerErrorException e) {
-            logger.error("Returning internal server error: " + e.getMessage());
-            return new ResponseEntity(e.getJsonMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.error(SERVER_ERROR_LOG, e);
+            return new ResponseEntity<>(e.getJsonMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
-            logger.error("Returning unknown internal server error: " + e.getMessage());
+            logger.error(UNKNOWN_ERROR_LOG, e);
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -123,35 +130,35 @@ public class AccountController {
             logger.info("Authenticating");
             Auth a = new Auth(auth);
             if(accountUtils.isAuthenticated(a)) {
-                logger.info("Authenicated " + a.getUsername() + ", returning no content");
+                logger.info("Authenticated {}, returning no content", a.getUsername());
                 return new ResponseEntity(HttpStatus.NO_CONTENT);
             }
             else {
                 throw new NoAuthException();
             }
         } catch (NoAuthException e) {
-            logger.error("Returning unauthorized: " + e.getMessage());
-            return new ResponseEntity(e.getJsonMessage(), HttpStatus.UNAUTHORIZED);
+            logger.error(NO_AUTH_LOG, e);
+            return new ResponseEntity<>(e.getJsonMessage(), HttpStatus.UNAUTHORIZED);
         } catch (BadRequestException e) {
-            logger.error("Returning bad request: " + e.getMessage());
-            return new ResponseEntity(e.getJsonMessage(), HttpStatus.BAD_REQUEST);
+            logger.error(BAD_REQUEST_LOG, e);
+            return new ResponseEntity<>(e.getJsonMessage(), HttpStatus.BAD_REQUEST);
         } catch (ForbiddenException e) {
-            logger.error("Returning forbidden: " + e.getMessage());
-            return new ResponseEntity(e.getJsonMessage(), HttpStatus.FORBIDDEN);
+            logger.error(FORBIDDEN_LOG, e);
+            return new ResponseEntity<>(e.getJsonMessage(), HttpStatus.FORBIDDEN);
         } catch (ResourceNotFoundException e) {
-            logger.error("Returning resource not found: " + e.getMessage());
-            return new ResponseEntity(e.getJsonMessage(), HttpStatus.NOT_FOUND);
+            logger.error(RESOURCE_NOT_FOUND_LOG, e);
+            return new ResponseEntity<>(e.getJsonMessage(), HttpStatus.NOT_FOUND);
         } catch (ServerErrorException e) {
-            logger.error("Returning internal server error: " + e.getMessage());
-            return new ResponseEntity(e.getJsonMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.error(SERVER_ERROR_LOG, e);
+            return new ResponseEntity<>(e.getJsonMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
-            logger.error("Returning unknown internal server error: " + e.getMessage());
+            logger.error(UNKNOWN_ERROR_LOG, e);
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping(value = "/user", produces = "application/json")
-    public ResponseEntity<User> findUser(@RequestParam(value="user") String username, @RequestParam("id") String id) {
+    public ResponseEntity findUser(@RequestParam(value="user") String username, @RequestParam("id") String id) {
         try {
             logger.info("Finding user info");
             User user;
@@ -166,25 +173,25 @@ public class AccountController {
             else {
                 throw new BadRequestException("You can only specify the username or the ID.");
             }
-            logger.info("User " + user.getUsername() + " found, returning OK with user info");
+            logger.info("User {} found, returning OK with user info", user.getUsername());
             return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (NoAuthException e) {
-            logger.error("Returning unauthorized: " + e.getMessage());
-            return new ResponseEntity(e.getJsonMessage(), HttpStatus.UNAUTHORIZED);
+            logger.error(NO_AUTH_LOG, e);
+            return new ResponseEntity<>(e.getJsonMessage(), HttpStatus.UNAUTHORIZED);
         } catch (BadRequestException e) {
-            logger.error("Returning bad request: " + e.getMessage());
-            return new ResponseEntity(e.getJsonMessage(), HttpStatus.BAD_REQUEST);
+            logger.error(BAD_REQUEST_LOG, e);
+            return new ResponseEntity<>(e.getJsonMessage(), HttpStatus.BAD_REQUEST);
         } catch (ForbiddenException e) {
-            logger.error("Returning forbidden: " + e.getMessage());
-            return new ResponseEntity(e.getJsonMessage(), HttpStatus.FORBIDDEN);
+            logger.error(FORBIDDEN_LOG, e);
+            return new ResponseEntity<>(e.getJsonMessage(), HttpStatus.FORBIDDEN);
         } catch (ResourceNotFoundException e) {
-            logger.error("Returning resource not found: " + e.getMessage());
-            return new ResponseEntity(e.getJsonMessage(), HttpStatus.NOT_FOUND);
+            logger.error(RESOURCE_NOT_FOUND_LOG, e);
+            return new ResponseEntity<>(e.getJsonMessage(), HttpStatus.NOT_FOUND);
         } catch (ServerErrorException e) {
-            logger.error("Returning internal server error: " + e.getMessage());
-            return new ResponseEntity(e.getJsonMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.error(SERVER_ERROR_LOG, e);
+            return new ResponseEntity<>(e.getJsonMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
-            logger.error("Returning unknown internal server error: " + e.getMessage());
+            logger.error(UNKNOWN_ERROR_LOG, e);
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

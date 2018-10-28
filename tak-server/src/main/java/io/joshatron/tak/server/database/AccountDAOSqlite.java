@@ -14,10 +14,6 @@ public class AccountDAOSqlite implements AccountDAO {
 
     private Connection conn;
 
-    public AccountDAOSqlite() {
-        conn = DatabaseManager.getConnection();
-    }
-
     public AccountDAOSqlite(Connection conn) {
         this.conn = conn;
     }
@@ -41,20 +37,8 @@ public class AccountDAOSqlite implements AccountDAO {
         } catch (SQLException e) {
             throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
         } finally {
-            if(stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException e) {
-                    throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
-                }
-            }
-            if(rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                    throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
-                }
-            }
+            DatabaseManager.closeStatement(stmt);
+            DatabaseManager.closeResultSet(rs);
         }
     }
 
@@ -74,13 +58,7 @@ public class AccountDAOSqlite implements AccountDAO {
         } catch (SQLException e) {
             throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
         } finally {
-            if(stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException e) {
-                    throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
-                }
-            }
+            DatabaseManager.closeStatement(stmt);
         }
     }
 
@@ -100,13 +78,7 @@ public class AccountDAOSqlite implements AccountDAO {
         } catch (SQLException e) {
             throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
         } finally {
-            if(stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException e) {
-                    throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
-                }
-            }
+            DatabaseManager.closeStatement(stmt);
         }
     }
 
@@ -126,13 +98,7 @@ public class AccountDAOSqlite implements AccountDAO {
         } catch (SQLException e) {
             throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
         } finally {
-            if(stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException e) {
-                    throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
-                }
-            }
+            DatabaseManager.closeStatement(stmt);
         }
     }
 
@@ -154,20 +120,8 @@ public class AccountDAOSqlite implements AccountDAO {
         } catch (SQLException e) {
             throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
         } finally {
-            if(stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException e) {
-                    throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
-                }
-            }
-            if(rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                    throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
-                }
-            }
+            DatabaseManager.closeStatement(stmt);
+            DatabaseManager.closeResultSet(rs);
         }
     }
 
@@ -193,13 +147,7 @@ public class AccountDAOSqlite implements AccountDAO {
         } catch (SQLException e) {
             throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
         } finally {
-            if(stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException e) {
-                    throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
-                }
-            }
+            DatabaseManager.closeStatement(stmt);
         }
     }
 
@@ -225,13 +173,7 @@ public class AccountDAOSqlite implements AccountDAO {
         } catch (SQLException e) {
             throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
         } finally {
-            if(stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException e) {
-                    throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
-                }
-            }
+            DatabaseManager.closeStatement(stmt);
         }
     }
 

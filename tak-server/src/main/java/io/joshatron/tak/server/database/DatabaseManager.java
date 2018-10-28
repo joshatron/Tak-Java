@@ -1,13 +1,17 @@
 package io.joshatron.tak.server.database;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import io.joshatron.tak.server.exceptions.GameServerException;
+import io.joshatron.tak.server.exceptions.ServerErrorException;
+
+import java.sql.*;
 
 public class DatabaseManager {
 
-    public static Connection getConnection() {
+    private DatabaseManager() {
+        throw new IllegalStateException("This is a utility class");
+    }
+
+    public static Connection getConnection() throws ServerErrorException {
         String database = "server.db";
 
         try {
@@ -17,14 +21,11 @@ public class DatabaseManager {
             return conn;
         }
         catch(SQLException e) {
-            System.out.println("Failed to connect to database.");
-            e.printStackTrace();
+            throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
         }
-
-        return null;
     }
 
-    private static void initializeDatabase(Connection conn) {
+    private static void initializeDatabase(Connection conn) throws ServerErrorException {
         String userTable = "CREATE TABLE IF NOT EXISTS users (" +
                 "id text PRIMARY KEY," +
                 "username text UNIQUE NOT NULL COLLATE NOCASE," +
@@ -95,8 +96,27 @@ public class DatabaseManager {
             stmt.close();
 
         } catch (SQLException e) {
-            System.out.println("Failed to initialize database.");
-            e.printStackTrace();
+            throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
+        }
+    }
+
+    public static void closeStatement(PreparedStatement stmt) throws GameServerException {
+        if(stmt != null) {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
+            }
+        }
+    }
+
+    public static void closeResultSet(ResultSet rs) throws GameServerException {
+        if(rs != null) {
+            try {
+                rs.close();
+            } catch (SQLException e) {
+                throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
+            }
         }
     }
 }
