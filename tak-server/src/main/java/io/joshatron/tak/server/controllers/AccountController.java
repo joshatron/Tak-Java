@@ -87,7 +87,7 @@ public class AccountController {
     }
 
     @GetMapping(value = "/user", produces = "application/json")
-    public ResponseEntity findUser(@RequestParam(value="user") String username, @RequestParam("id") String id) {
+    public ResponseEntity findUser(@RequestParam(value = "user", required = false) String username, @RequestParam(value = "id", required = false) String id) {
         try {
             logger.info("Finding user info");
             User user;

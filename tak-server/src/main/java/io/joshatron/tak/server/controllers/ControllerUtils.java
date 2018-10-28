@@ -15,22 +15,22 @@ public class ControllerUtils {
 
         if(e instanceof NoAuthException) {
             NoAuthException noAuth = (NoAuthException) e;
-            logger.error("Exception occurred, returning unauthorized", noAuth);
+            logger.warn("An unauthorized request was made: {}", noAuth.getMessage());
             return new ResponseEntity<>(noAuth.getJsonMessage(), HttpStatus.UNAUTHORIZED);
         }
         else if(e instanceof BadRequestException) {
             BadRequestException badRequest = (BadRequestException) e;
-            logger.error("Exception occurred, returning bad request", badRequest);
+            logger.warn("A bad request was made: {}", badRequest.getMessage());
             return new ResponseEntity<>(badRequest.getJsonMessage(), HttpStatus.BAD_REQUEST);
         }
         else if(e instanceof ForbiddenException) {
             ForbiddenException forbidden = (ForbiddenException) e;
-            logger.error("Exception occurred, returning forbidden", forbidden);
+            logger.warn("A forbidden request was made: {}", forbidden.getMessage());
             return new ResponseEntity<>(forbidden.getJsonMessage(), HttpStatus.FORBIDDEN);
         }
         else if(e instanceof ResourceNotFoundException) {
             ResourceNotFoundException resourceNotFound = (ResourceNotFoundException) e;
-            logger.error("Exception occurred, returning not found", resourceNotFound);
+            logger.warn("The resource could not be found: {}", resourceNotFound.getMessage());
             return new ResponseEntity<>(resourceNotFound.getJsonMessage(), HttpStatus.NOT_FOUND);
         }
         else if(e instanceof ServerErrorException) {

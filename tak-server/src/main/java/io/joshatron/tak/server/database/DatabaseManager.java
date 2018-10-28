@@ -27,7 +27,7 @@ public class DatabaseManager {
 
     private static void initializeDatabase(Connection conn) throws ServerErrorException {
         String userTable = "CREATE TABLE IF NOT EXISTS users (" +
-                "id text PRIMARY KEY," +
+                "id text PRIMARY KEY COLLATE NOCASE," +
                 "username text UNIQUE NOT NULL COLLATE NOCASE," +
                 "auth text NOT NULL);";
 

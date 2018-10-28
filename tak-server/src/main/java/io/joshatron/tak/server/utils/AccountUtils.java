@@ -31,13 +31,16 @@ public class AccountUtils {
             throw new ForbiddenException("That username is already taken.");
         }
 
-        accountDAO.addUser(auth);
+        accountDAO.addUser(auth, ID_LENGTH);
     }
 
     public void updatePassword(UserChange change) throws GameServerException {
         AccountValidator.validatePassChange(change);
         if(!accountDAO.isAuthenticated(change.getAuth())) {
             throw new NoAuthException();
+        }
+        if(change.getAuth().getPassword().equals(change.getUpdated())) {
+            throw new ForbiddenException("The password is the same as the previous one.");
         }
 
         accountDAO.updatePassword(change.getAuth().getUsername(), change.getUpdated());
@@ -47,6 +50,9 @@ public class AccountUtils {
         AccountValidator.validateUserChange(change);
         if(!accountDAO.isAuthenticated(change.getAuth())) {
             throw new NoAuthException();
+        }
+        if(change.getAuth().getUsername().equals(change.getUpdated())) {
+            throw new ForbiddenException("The username is the same as the previous one.");
         }
 
         accountDAO.updateUsername(change.getAuth().getUsername(), change.getUpdated());

@@ -7,7 +7,7 @@ import io.joshatron.tak.server.response.User;
 public interface AccountDAO {
 
     boolean isAuthenticated(Auth auth) throws GameServerException;
-    void addUser(Auth auth) throws GameServerException;
+    void addUser(Auth auth, int idLength) throws GameServerException;
     void updatePassword(String username, String password) throws GameServerException;
     void updateUsername(String oldUsername, String newUsername) throws GameServerException;
     boolean userExists(String username) throws GameServerException;

@@ -3,6 +3,7 @@ package io.joshatron.tak.server.database;
 import io.joshatron.tak.server.exceptions.*;
 import io.joshatron.tak.server.request.Auth;
 import io.joshatron.tak.server.response.User;
+import io.joshatron.tak.server.utils.IdUtils;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.Connection;
@@ -43,17 +44,18 @@ public class AccountDAOSqlite implements AccountDAO {
     }
 
     @Override
-    public void addUser(Auth auth) throws GameServerException {
+    public void addUser(Auth auth, int idLength) throws GameServerException {
         PreparedStatement stmt = null;
 
         //insert new user if it isn't
-        String insertUser = "INSERT INTO  users (username, auth) " +
-                "VALUES (?,?);";
+        String insertUser = "INSERT INTO  users (username, auth, id) " +
+                "VALUES (?,?,?);";
 
         try {
             stmt = conn.prepareStatement(insertUser);
             stmt.setString(1, auth.getUsername());
             stmt.setString(2, BCrypt.hashpw(auth.getPassword(), BCrypt.gensalt()));
+            stmt.setString(3, IdUtils.generateId(idLength));
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new ServerErrorException("The server encountered a SQL exception: " + e.getMessage());
@@ -129,7 +131,7 @@ public class AccountDAOSqlite implements AccountDAO {
     public User getUserFromId(String id) throws GameServerException {
         PreparedStatement stmt = null;
 
-        String checkUsername = "SELECT username " +
+        String checkUsername = "SELECT id, username " +
                 "FROM users " +
                 "WHERE id = ?;";
 
@@ -139,7 +141,7 @@ public class AccountDAOSqlite implements AccountDAO {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                return new User(rs.getString("username"), id);
+                return new User(rs.getString("username"), rs.getString("id"));
             }
             else {
                 throw new ResourceNotFoundException("That user could not be found.");
@@ -155,7 +157,7 @@ public class AccountDAOSqlite implements AccountDAO {
     public User getUserFromUsername(String username) throws GameServerException {
         PreparedStatement stmt = null;
 
-        String checkUsername = "SELECT id " +
+        String checkUsername = "SELECT id, username " +
                 "FROM users " +
                 "WHERE username = ?;";
 
@@ -165,7 +167,7 @@ public class AccountDAOSqlite implements AccountDAO {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                return new User(username, rs.getString("id"));
+                return new User(rs.getString("username"), rs.getString("id"));
             }
             else {
                 throw new ResourceNotFoundException("That user could not be found.");
