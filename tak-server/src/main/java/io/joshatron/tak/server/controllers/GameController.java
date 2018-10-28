@@ -1,4 +1,4 @@
-package io.joshatron.tak.server.controller;
+package io.joshatron.tak.server.controllers;
 
 import io.joshatron.tak.server.config.ApplicationConfig;
 import io.joshatron.tak.server.database.GameDAO;
