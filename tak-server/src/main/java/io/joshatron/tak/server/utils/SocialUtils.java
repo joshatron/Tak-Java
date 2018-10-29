@@ -9,10 +9,10 @@ import io.joshatron.tak.server.response.User;
 
 public class SocialUtils {
 
-    private AccountDAO accountDAO;
     private SocialDAO socialDAO;
+    private AccountDAO accountDAO;
 
-    public SocialUtils(AccountDAO accountDAO, SocialDAO socialDAO) {
+    public SocialUtils(SocialDAO socialDAO, AccountDAO accountDAO) {
         this.accountDAO = accountDAO;
         this.socialDAO = socialDAO;
     }
@@ -23,7 +23,7 @@ public class SocialUtils {
     public void deleteFriendRequest(UserInteraction delete) {
     }
 
-    public void respondToFriendRequest(FriendResponse response) {
+    public void respondToFriendRequest(Answer response) {
     }
 
     public User[] listIncomingFriendRequests(Auth auth) {

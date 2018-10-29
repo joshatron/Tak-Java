@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class FriendResponse {
+public class Answer {
     private Auth auth;
     private String other;
     private String response;

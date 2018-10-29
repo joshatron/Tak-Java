@@ -59,7 +59,7 @@ public class SocialController {
     public ResponseEntity respondToRequest(@RequestHeader(value="Authorization") String auth, @PathVariable("id") String id, @PathVariable("answer") String friendResponse) {
         try {
             logger.info("Responding to friend request");
-            socialUtils.respondToFriendRequest(new FriendResponse(new Auth(auth), id, friendResponse));
+            socialUtils.respondToFriendRequest(new Answer(new Auth(auth), id, friendResponse));
             logger.info("Successfully responded to request");
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (Exception e) {

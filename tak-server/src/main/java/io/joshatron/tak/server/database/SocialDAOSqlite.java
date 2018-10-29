@@ -1,30 +1,17 @@
 package io.joshatron.tak.server.database;
 
-import io.joshatron.tak.server.request.*;
-import io.joshatron.tak.server.response.Message;
-import io.joshatron.tak.server.response.Users;
-
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.time.LocalDate;
-import java.util.ArrayList;
 
 public class SocialDAOSqlite implements SocialDAO {
 
-    private AccountDAOSqlite accountDAO;
     private Connection conn;
 
-    public SocialDAOSqlite() {
-        accountDAO = new AccountDAOSqlite();
-        conn = accountDAO.getConnection();
-    }
-
-    public SocialDAOSqlite(AccountDAOSqlite accountDAO, Connection conn) {
-        this.accountDAO = accountDAO;
+    public SocialDAOSqlite(Connection conn) {
         this.conn = conn;
     }
 
+    /*
+    THIS IS LEGACY CODE: DELETE AFTER CREATING NEW METHODS
     @Override
     public boolean createFriendRequest(UserInteraction request) throws Exception {
         //can't request yourself
@@ -161,7 +148,7 @@ public class SocialDAOSqlite implements SocialDAO {
     }
 
     @Override
-    public boolean respondToFriendRequest(FriendResponse response) throws Exception {
+    public boolean respondToFriendRequest(Answer response) throws Exception {
         //if no auth, return false
         if(!accountDAO.isAuthenticated(response.getAuth())) {
             return false;
@@ -647,13 +634,5 @@ public class SocialDAOSqlite implements SocialDAO {
                 messageSet.close();
             }
         }
-    }
-
-    public Connection getConnection() {
-        return conn;
-    }
-
-    public AccountDAOSqlite getAccountDAO() {
-        return accountDAO;
-    }
+    }*/
 }

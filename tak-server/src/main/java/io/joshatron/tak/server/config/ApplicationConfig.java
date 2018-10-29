@@ -6,6 +6,7 @@ import io.joshatron.tak.server.database.GameDAOSqlite;
 import io.joshatron.tak.server.database.SocialDAOSqlite;
 import io.joshatron.tak.server.exceptions.ServerErrorException;
 import io.joshatron.tak.server.utils.AccountUtils;
+import io.joshatron.tak.server.utils.GameUtils;
 import io.joshatron.tak.server.utils.SocialUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,8 +17,13 @@ import java.sql.Connection;
 public class ApplicationConfig {
 
     @Bean
+    public GameUtils gameUtils() throws ServerErrorException {
+        return new GameUtils(gameDAOSqlite(), socialDAOSqlite(), accountDAOSqlite());
+    }
+
+    @Bean
     public SocialUtils socialUtils() throws ServerErrorException {
-        return new SocialUtils(accountDAOSqlite(), socialDAOSqlite());
+        return new SocialUtils(socialDAOSqlite(), accountDAOSqlite());
     }
 
     @Bean
@@ -27,12 +33,12 @@ public class ApplicationConfig {
 
     @Bean
     public GameDAOSqlite gameDAOSqlite() throws ServerErrorException {
-        return new GameDAOSqlite(accountDAOSqlite(), socialDAOSqlite(), connection());
+        return new GameDAOSqlite(connection());
     }
 
     @Bean
     public SocialDAOSqlite socialDAOSqlite() throws ServerErrorException {
-        return new SocialDAOSqlite(accountDAOSqlite(), connection());
+        return new SocialDAOSqlite(connection());
     }
 
     @Bean

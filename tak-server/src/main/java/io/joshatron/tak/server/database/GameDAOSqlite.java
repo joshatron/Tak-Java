@@ -1,33 +1,17 @@
 package io.joshatron.tak.server.database;
 
-import io.joshatron.tak.server.request.*;
-import io.joshatron.tak.server.response.GameInfo;
-import io.joshatron.tak.server.response.GameTurn;
-import io.joshatron.tak.server.response.RequestInfo;
-
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
 
 public class GameDAOSqlite implements GameDAO {
 
-    AccountDAOSqlite accountDAO;
-    SocialDAOSqlite socialDAO;
     Connection conn;
 
-    public GameDAOSqlite() {
-        accountDAO = new AccountDAOSqlite();
-        socialDAO = new SocialDAOSqlite();
-        conn = DatabaseManager.getConnection();
-    }
-
-    public GameDAOSqlite(AccountDAOSqlite accountDAO, SocialDAOSqlite socialDAO, Connection conn) {
-        this.accountDAO = accountDAO;
-        this.socialDAO = socialDAO;
+    public GameDAOSqlite(Connection conn) {
         this.conn = conn;
     }
 
+    /*
+    THIS IS LEGACY CODE: DELETE AFTER CREATING NEW METHODS
     @Override
     public boolean requestGame(GameRequest request) throws Exception {
         //if no auth, return false
@@ -408,5 +392,5 @@ public class GameDAOSqlite implements GameDAO {
                 gameSet.close();
             }
         }
-    }
+    }*/
 }
