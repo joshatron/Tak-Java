@@ -36,7 +36,7 @@ public class AccountController {
         try {
             logger.info("Registering user");
             accountUtils.registerUser(auth);
-            logger.info("Registered {}, returning no content", auth.getUsername());
+            logger.info("User successfully registered");
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return ControllerUtils.handleExceptions(e, logger);
@@ -49,7 +49,7 @@ public class AccountController {
             logger.info("Changing password");
             passChange.setAuth(new Auth(auth));
             accountUtils.updatePassword(passChange);
-            logger.info("Changed password of {}, returning no content", passChange.getAuth().getUsername());
+            logger.info("Password successfully changed");
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return ControllerUtils.handleExceptions(e, logger);
@@ -62,7 +62,7 @@ public class AccountController {
             logger.info("Changing username");
             userChange.setAuth(new Auth(auth));
             accountUtils.updateUsername(userChange);
-            logger.info("Changed username of {}, returning no content", userChange.getAuth().getUsername());
+            logger.info("Username successfully changed");
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return ControllerUtils.handleExceptions(e, logger);
@@ -73,9 +73,8 @@ public class AccountController {
     public ResponseEntity authenticate(@RequestHeader(value="Authorization") String auth) {
         try {
             logger.info("Authenticating");
-            Auth a = new Auth(auth);
-            if(accountUtils.isAuthenticated(a)) {
-                logger.info("Authenticated {}, returning no content", a.getUsername());
+            if(accountUtils.isAuthenticated(new Auth(auth))) {
+                logger.info("User successfully authenticated");
                 return new ResponseEntity(HttpStatus.NO_CONTENT);
             }
             else {
@@ -102,7 +101,7 @@ public class AccountController {
             else {
                 throw new BadRequestException("You can only specify the username or the ID.");
             }
-            logger.info("User {} found, returning OK with user info", user.getUsername());
+            logger.info("User found, returning info");
             return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (Exception e) {
             return ControllerUtils.handleExceptions(e, logger);
