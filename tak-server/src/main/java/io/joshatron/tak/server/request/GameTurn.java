@@ -5,8 +5,6 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class GameRequest {
-    private int size;
-    private String color;
-    private String first;
+public class GameTurn {
+    String turn;
 }

@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class RandomSizes {
-    private int[] sizes;
+public class GameNotification {
+    private int incomingRequests;
+    private int pendingGames;
 }

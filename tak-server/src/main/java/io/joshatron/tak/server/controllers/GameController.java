@@ -1,8 +1,10 @@
 package io.joshatron.tak.server.controllers;
 
+import io.joshatron.tak.engine.turn.Turn;
 import io.joshatron.tak.server.config.ApplicationConfig;
 import io.joshatron.tak.server.request.*;
 import io.joshatron.tak.server.response.*;
+import io.joshatron.tak.server.response.GameTurn;
 import io.joshatron.tak.server.utils.GameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,9 +34,7 @@ public class GameController {
     public ResponseEntity requestGame(@RequestHeader(value="Authorization") String auth, @PathVariable("id") String other, @RequestBody GameRequest gameRequest) {
         try {
             logger.info("Requesting new game");
-            gameRequest.setOpponent(other);
-            gameRequest.setAuth(new Auth(auth));
-            gameUtils.requestGame(gameRequest);
+            gameUtils.requestGame(new Auth(auth), other, gameRequest);
             logger.info("Request successfully made");
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
@@ -46,7 +46,7 @@ public class GameController {
     public ResponseEntity cancelGameRequest(@RequestHeader(value="Authorization") String auth, @PathVariable("id") String other) {
         try {
             logger.info("Deleting game request");
-            gameUtils.deleteRequest(new UserInteraction(new Auth(auth), other));
+            gameUtils.deleteRequest(new Auth(auth), other);
             logger.info("Successfully deleted request");
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
@@ -58,7 +58,7 @@ public class GameController {
     public ResponseEntity respondToGameRequest(@RequestHeader(value="Authorization") String auth, @PathVariable("id") String id, @PathVariable("answer") String answer) {
         try {
             logger.info("Responding to game request");
-            gameUtils.respondToGame(new Answer(new Auth(auth), id, answer));
+            gameUtils.respondToGame(new Auth(auth), id, answer);
             logger.info("Successfully responded to game request");
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
@@ -72,7 +72,7 @@ public class GameController {
             logger.info("Requesting incoming games");
             RequestInfo[] games = gameUtils.checkIncomingRequests(new Auth(auth));
             logger.info("Incoming games found");
-            return new ResponseEntity<>(new GameRequests(games), HttpStatus.OK);
+            return new ResponseEntity<>(games, HttpStatus.OK);
         } catch (Exception e) {
             return ControllerUtils.handleExceptions(e, logger);
         }
@@ -84,7 +84,7 @@ public class GameController {
             logger.info("Requesting outgoing games");
             RequestInfo[] games = gameUtils.checkOutgoingRequests(new Auth(auth));
             logger.info("Outgoing games found");
-            return new ResponseEntity<>(new GameRequests(games), HttpStatus.OK);
+            return new ResponseEntity<>(games, HttpStatus.OK);
         } catch (Exception e) {
             return ControllerUtils.handleExceptions(e, logger);
         }
@@ -94,7 +94,7 @@ public class GameController {
     public ResponseEntity requestRandomGame(@RequestHeader(value="Authorization") String auth, @PathVariable("size") int size) {
         try {
             logger.info("Requesting a random game");
-            gameUtils.requestRandomGame(new RandomGame(new Auth(auth), size));
+            gameUtils.requestRandomGame(new Auth(auth), size);
             logger.info("Random game successfully made");
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
@@ -106,7 +106,7 @@ public class GameController {
     public ResponseEntity cancelRandomGameRequest(@RequestHeader(value="Authorization") String auth, @PathVariable("size") int size) {
         try {
             logger.info("Deleting random game request");
-            gameUtils.deleteRandomRequest(new RandomGame(new Auth(auth), size));
+            gameUtils.deleteRandomRequest(new Auth(auth), size);
             logger.info("Successfully deleted random request");
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
@@ -120,7 +120,7 @@ public class GameController {
             logger.info("Getting outgoing random request sizes");
             int[] sizes = gameUtils.checkRandomSizes(new Auth(auth));
             logger.info("Outing random games found");
-            return new ResponseEntity<>(new RandomSizes(sizes), HttpStatus.OK);
+            return new ResponseEntity<>(sizes, HttpStatus.OK);
         } catch (Exception e) {
             return ControllerUtils.handleExceptions(e, logger);
         }
@@ -137,21 +137,47 @@ public class GameController {
 
     @GetMapping(value = "/game/{id}", produces = "application/json")
     public ResponseEntity getGameInfo(@RequestHeader(value="Authorization") String auth, @PathVariable("id") String gameId) {
-        return null;
+        try {
+            logger.info("Getting game info");
+            GameInfo info = gameUtils.getGameInfo(new Auth(auth), gameId);
+            logger.info("Game info found");
+            return new ResponseEntity<>(info, HttpStatus.OK);
+        } catch (Exception e) {
+            return ControllerUtils.handleExceptions(e, logger);
+        }
     }
 
     @GetMapping(value = "/game/{id}/turns", produces = "application/json")
     public ResponseEntity getPossibleTurns(@RequestHeader(value="Authorization") String auth, @PathVariable("id") String gameId) {
-        return null;
+        try {
+            logger.info("Getting all possible turns for a game");
+            Turn[] turns = gameUtils.getTurns(new Auth(auth), gameId);
+            logger.info("Turns found");
+            return new ResponseEntity<>(turns, HttpStatus.OK);
+        } catch (Exception e) {
+            return ControllerUtils.handleExceptions(e, logger);
+        }
     }
 
     @PostMapping(value = "/game/{id}/play", produces = "application/json")
-    public ResponseEntity playTurn(@RequestHeader(value="Authorization") String auth, @PathVariable("id") String gameId, @RequestBody PlayTurn turn) {
-        return null;
+    public ResponseEntity playTurn(@RequestHeader(value="Authorization") String auth, @PathVariable("id") String gameId, @RequestBody GameTurn turn) {
+        try {
+            logger.info("Trying to play a turn");
+            gameUtils.playTurn(new Auth(auth), gameId, turn);
+            logger.info("Turn successfully made");
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return ControllerUtils.handleExceptions(e, logger);
+        }
     }
 
     @GetMapping(value = "/notifications", produces = "application/json")
     public ResponseEntity getNotifications(@RequestHeader(value="Authorization") String auth) {
-        return null;
+        try {
+            logger.info("Getting notifications");
+            GameNotification gameNotifications = gameUtils.getNotifications(new Auth(auth));
+        } catch (Exception e) {
+            return ControllerUtils.handleExceptions(e, logger);
+        }
     }
 }
