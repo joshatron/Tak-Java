@@ -2,10 +2,7 @@ package io.joshatron.tak.server.controllers;
 
 import io.joshatron.tak.server.config.ApplicationConfig;
 import io.joshatron.tak.server.request.*;
-import io.joshatron.tak.server.response.GameInfo;
-import io.joshatron.tak.server.response.GameRequests;
-import io.joshatron.tak.server.response.Games;
-import io.joshatron.tak.server.response.RequestInfo;
+import io.joshatron.tak.server.response.*;
 import io.joshatron.tak.server.utils.GameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/game")
+@RequestMapping("/games")
 public class GameController {
 
     private GameUtils gameUtils;
@@ -57,7 +54,7 @@ public class GameController {
         }
     }
 
-    @PostMapping("/request/respond/{id}/{answer}")
+    @PostMapping(value = "/request/respond/{id}/{answer}", produces = "application/json")
     public ResponseEntity respondToGameRequest(@RequestHeader(value="Authorization") String auth, @PathVariable("id") String id, @PathVariable("answer") String answer) {
         try {
             logger.info("Responding to game request");
@@ -69,123 +66,92 @@ public class GameController {
         }
     }
 
-    @PostMapping("/checkincoming")
-    public GameRequests checkIncomingGames(@RequestBody AuthWrapper authWrapper) {
+    @GetMapping(value = "/request/incoming", produces = "application/json")
+    public ResponseEntity checkIncomingGames(@RequestHeader(value="Authorization") String auth) {
         try {
-            RequestInfo[] games = gameUtils.checkIncomingGames(authWrapper.getAuth());
-            if(games != null) {
-                return new GameRequests(games);
-            }
-            else {
-                //return forbidden
-            }
+            logger.info("Requesting incoming games");
+            RequestInfo[] games = gameUtils.checkIncomingRequests(new Auth(auth));
+            logger.info("Incoming games found");
+            return new ResponseEntity<>(new GameRequests(games), HttpStatus.OK);
         } catch (Exception e) {
-            e.printStackTrace();
-            //return server error
+            return ControllerUtils.handleExceptions(e, logger);
         }
+    }
 
+    @GetMapping(value = "/request/outgoing", produces = "application/json")
+    public ResponseEntity checkOutgoingGames(@RequestHeader(value="Authorization") String auth) {
+        try {
+            logger.info("Requesting outgoing games");
+            RequestInfo[] games = gameUtils.checkOutgoingRequests(new Auth(auth));
+            logger.info("Outgoing games found");
+            return new ResponseEntity<>(new GameRequests(games), HttpStatus.OK);
+        } catch (Exception e) {
+            return ControllerUtils.handleExceptions(e, logger);
+        }
+    }
+
+    @PostMapping(value = "/request/random/create/{size}", produces = "application/json")
+    public ResponseEntity requestRandomGame(@RequestHeader(value="Authorization") String auth, @PathVariable("size") int size) {
+        try {
+            logger.info("Requesting a random game");
+            gameUtils.requestRandomGame(new RandomGame(new Auth(auth), size));
+            logger.info("Random game successfully made");
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return ControllerUtils.handleExceptions(e, logger);
+        }
+    }
+
+    @DeleteMapping(value = "/request/random/cancel/{size}", produces = "application/json")
+    public ResponseEntity cancelRandomGameRequest(@RequestHeader(value="Authorization") String auth, @PathVariable("size") int size) {
+        try {
+            logger.info("Deleting random game request");
+            gameUtils.deleteRandomRequest(new RandomGame(new Auth(auth), size));
+            logger.info("Successfully deleted random request");
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return ControllerUtils.handleExceptions(e, logger);
+        }
+    }
+
+    @GetMapping(value = "/request/random/outgoing", produces = "application/json")
+    public ResponseEntity getOutgoingRandomRequests(@RequestHeader(value="Authorization") String auth) {
+        try {
+            logger.info("Getting outgoing random request sizes");
+            int[] sizes = gameUtils.checkRandomSizes(new Auth(auth));
+            logger.info("Outing random games found");
+            return new ResponseEntity<>(new RandomSizes(sizes), HttpStatus.OK);
+        } catch (Exception e) {
+            return ControllerUtils.handleExceptions(e, logger);
+        }
+    }
+
+    @GetMapping(value = "/search", produces = "application/json")
+    public ResponseEntity findGames(@RequestHeader(value="Authorization") String auth, @RequestParam(value = "opponents", required = false) String opponents,
+                                    @RequestParam(value = "start", required = false) long start, @RequestParam(value = "end", required = false) long end,
+                                    @RequestParam(value = "complete", required = false) boolean complete, @RequestParam(value = "pending", required = false) boolean pending,
+                                    @RequestParam(value = "sizes", required = false) String sizes, @RequestParam(value = "winner", required = false) String winner,
+                                    @RequestParam(value = "color", required = false) String color) {
         return null;
     }
 
-    @PostMapping("/checkoutgoing")
-    public GameRequests checkOutgoingGames(@RequestBody AuthWrapper authWrapper) {
-        try {
-            RequestInfo[] games = gameUtils.checkOutgoingGames(authWrapper.getAuth());
-            if(games != null) {
-                return new GameRequests(games);
-            }
-            else {
-                //return forbidden
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            //return server error
-        }
-
+    @GetMapping(value = "/game/{id}", produces = "application/json")
+    public ResponseEntity getGameInfo(@RequestHeader(value="Authorization") String auth, @PathVariable("id") String gameId) {
         return null;
     }
 
-    @PostMapping("/random")
-    public ResponseEntity requestRandomGame(@RequestBody RandomGame randomGame) {
-        try {
-            if(gameUtils.requestRandomGame(randomGame)) {
-                return new ResponseEntity(HttpStatus.NO_CONTENT);
-            }
-            else {
-                return new ResponseEntity(HttpStatus.FORBIDDEN);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @PostMapping("/completed")
-    public Games listCompletedGames(@RequestBody ListCompleted listCompleted) {
-        try {
-            int[] games = gameUtils.listCompletedGames(listCompleted);
-            if(games != null) {
-                return new Games(games);
-            }
-            else {
-                //return forbidden
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            //return server error
-        }
-
+    @GetMapping(value = "/game/{id}/turns", produces = "application/json")
+    public ResponseEntity getPossibleTurns(@RequestHeader(value="Authorization") String auth, @PathVariable("id") String gameId) {
         return null;
     }
 
-    @PostMapping("/incomplete")
-    public Games listIncompleteGames(@RequestBody ListIncomplete listIncomplete) {
-        try {
-            int[] games = gameUtils.listIncompleteGames(listIncomplete);
-            if(games != null) {
-                return new Games(games);
-            }
-            else {
-                //return forbidden
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            //return server error
-        }
-
+    @PostMapping(value = "/game/{id}/play", produces = "application/json")
+    public ResponseEntity playTurn(@RequestHeader(value="Authorization") String auth, @PathVariable("id") String gameId, @RequestBody PlayTurn turn) {
         return null;
     }
 
-    @PostMapping("/game")
-    public GameInfo getGame(@RequestBody GetGame getGame) {
-        try {
-            GameInfo info = gameUtils.getGame(getGame);
-            if(info != null) {
-                return info;
-            }
-            else {
-                //return forbidden
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            //return server error
-        }
-
+    @GetMapping(value = "/notifications", produces = "application/json")
+    public ResponseEntity getNotifications(@RequestHeader(value="Authorization") String auth) {
         return null;
-    }
-
-    @PostMapping("/play")
-    public ResponseEntity playTurn(@RequestBody PlayTurn playTurn) {
-        try {
-            if(gameUtils.playTurn(playTurn)) {
-                return new ResponseEntity(HttpStatus.NO_CONTENT);
-            }
-            else {
-                return new ResponseEntity(HttpStatus.FORBIDDEN);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 }

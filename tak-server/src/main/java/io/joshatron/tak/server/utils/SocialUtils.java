@@ -58,7 +58,7 @@ public class SocialUtils {
     public void sendMessage(SendMessage sendMessage) {
     }
 
-    public Message[] listMessages(ReadMessages readMessages) {
+    public Message[] listMessages(SearchMessages searchMessages) {
         return null;
     }
 

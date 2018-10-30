@@ -7,9 +7,10 @@ import java.util.Date;
 
 @Data
 @AllArgsConstructor
-public class ReadMessages {
+public class SearchMessages {
     private Auth auth;
     private String[] senders;
     private Date start;
+    private Date end;
     private boolean read;
 }

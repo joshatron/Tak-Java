@@ -558,7 +558,7 @@ public class SocialDAOSqlite implements SocialDAO {
     }
 
     @Override
-    public Message[] listMessages(ReadMessages readMessages) throws Exception {
+    public Message[] listMessages(SearchMessages readMessages) throws Exception {
         //if no auth, return false
         if(!accountDAO.isAuthenticated(readMessages.getAuth())) {
             return null;

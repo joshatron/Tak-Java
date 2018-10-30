@@ -4,9 +4,8 @@ import io.joshatron.tak.server.database.AccountDAO;
 import io.joshatron.tak.server.database.GameDAO;
 import io.joshatron.tak.server.database.SocialDAO;
 import io.joshatron.tak.server.exceptions.GameServerException;
-import io.joshatron.tak.server.request.Answer;
-import io.joshatron.tak.server.request.GameRequest;
-import io.joshatron.tak.server.request.UserInteraction;
+import io.joshatron.tak.server.request.*;
+import io.joshatron.tak.server.response.RequestInfo;
 
 public class GameUtils {
 
@@ -27,5 +26,23 @@ public class GameUtils {
     }
 
     public void respondToGame(Answer answer) throws GameServerException {
+    }
+
+    public void requestRandomGame(RandomGame randomGame) throws GameServerException {
+    }
+
+    public RequestInfo[] checkIncomingRequests(Auth auth) throws GameServerException {
+        return null;
+    }
+
+    public RequestInfo[] checkOutgoingRequests(Auth auth) throws GameServerException {
+        return null;
+    }
+
+    public void deleteRandomRequest(RandomGame randomGame) throws GameServerException {
+    }
+
+    public int[] checkRandomSizes(Auth auth) throws GameServerException {
+        return null;
     }
 }

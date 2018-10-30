@@ -182,12 +182,14 @@ public class SocialController {
         }
     }
 
-    @GetMapping(value = "/message/read", produces = "application/json")
-    public ResponseEntity readMessages(@RequestHeader(value="Authorization") String auth, @RequestParam("senders") String senders, @RequestParam("start") long start, @RequestParam("read") boolean read) {
+    @GetMapping(value = "/message/search", produces = "application/json")
+    public ResponseEntity readMessages(@RequestHeader(value="Authorization") String auth, @RequestParam(value = "senders", required = false) String senders,
+                                       @RequestParam(value = "start", required = false) long start, @RequestParam(value = "end", required = false) long end,
+                                       @RequestParam(value = "read", required = false) boolean read) {
         try {
             logger.info("Reading messages");
-            ReadMessages readMessages = new ReadMessages(new Auth(auth), senders.split(","), new Date(start), read);
-            Message[] messages = socialUtils.listMessages(readMessages);
+            SearchMessages searchMessages = new SearchMessages(new Auth(auth), senders.split(","), new Date(start), new Date(end), read);
+            Message[] messages = socialUtils.listMessages(searchMessages);
             logger.info("Messages found, returning");
             return new ResponseEntity<>(new Messages(messages), HttpStatus.OK);
         } catch (Exception e) {
