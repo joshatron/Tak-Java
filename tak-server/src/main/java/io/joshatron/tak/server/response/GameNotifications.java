@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class GameNotification {
+public class GameNotifications {
     private int incomingRequests;
     private int pendingGames;
 }

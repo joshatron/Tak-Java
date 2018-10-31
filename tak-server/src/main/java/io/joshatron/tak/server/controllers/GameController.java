@@ -4,7 +4,6 @@ import io.joshatron.tak.engine.turn.Turn;
 import io.joshatron.tak.server.config.ApplicationConfig;
 import io.joshatron.tak.server.request.*;
 import io.joshatron.tak.server.response.*;
-import io.joshatron.tak.server.response.GameTurn;
 import io.joshatron.tak.server.utils.GameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,8 +53,8 @@ public class GameController {
         }
     }
 
-    @PostMapping(value = "/request/respond/{id}/{answer}", produces = "application/json")
-    public ResponseEntity respondToGameRequest(@RequestHeader(value="Authorization") String auth, @PathVariable("id") String id, @PathVariable("answer") String answer) {
+    @PostMapping(value = "/request/respond/{id}", produces = "application/json")
+    public ResponseEntity respondToGameRequest(@RequestHeader(value="Authorization") String auth, @PathVariable("id") String id, @RequestBody Text answer) {
         try {
             logger.info("Responding to game request");
             gameUtils.respondToGame(new Auth(auth), id, answer);
@@ -160,7 +159,7 @@ public class GameController {
     }
 
     @PostMapping(value = "/game/{id}/play", produces = "application/json")
-    public ResponseEntity playTurn(@RequestHeader(value="Authorization") String auth, @PathVariable("id") String gameId, @RequestBody GameTurn turn) {
+    public ResponseEntity playTurn(@RequestHeader(value="Authorization") String auth, @PathVariable("id") String gameId, @RequestBody Text turn) {
         try {
             logger.info("Trying to play a turn");
             gameUtils.playTurn(new Auth(auth), gameId, turn);
@@ -175,7 +174,9 @@ public class GameController {
     public ResponseEntity getNotifications(@RequestHeader(value="Authorization") String auth) {
         try {
             logger.info("Getting notifications");
-            GameNotification gameNotifications = gameUtils.getNotifications(new Auth(auth));
+            GameNotifications gameNotifications = gameUtils.getNotifications(new Auth(auth));
+            logger.info("Notifications found");
+            return new ResponseEntity(gameNotifications, HttpStatus.OK);
         } catch (Exception e) {
             return ControllerUtils.handleExceptions(e, logger);
         }

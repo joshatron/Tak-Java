@@ -3,7 +3,7 @@ package io.joshatron.tak.server.controllers;
 import io.joshatron.tak.server.config.ApplicationConfig;
 import io.joshatron.tak.server.exceptions.*;
 import io.joshatron.tak.server.request.Auth;
-import io.joshatron.tak.server.request.UserChange;
+import io.joshatron.tak.server.request.Text;
 import io.joshatron.tak.server.response.User;
 import io.joshatron.tak.server.utils.AccountUtils;
 import org.slf4j.Logger;
@@ -44,11 +44,10 @@ public class AccountController {
     }
 
     @PostMapping(value = "/changepass", consumes = "application/json", produces = "application/json")
-    public ResponseEntity changePassword(@RequestHeader(value="Authorization") String auth, @RequestBody UserChange passChange) {
+    public ResponseEntity changePassword(@RequestHeader(value="Authorization") String auth, @RequestBody Text passChange) {
         try {
             logger.info("Changing password");
-            passChange.setAuth(new Auth(auth));
-            accountUtils.updatePassword(passChange);
+            accountUtils.updatePassword(new Auth(auth), passChange);
             logger.info("Password successfully changed");
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
@@ -57,11 +56,10 @@ public class AccountController {
     }
 
     @PostMapping(value = "/changename", consumes = "application/json", produces = "application/json")
-    public ResponseEntity changeUsername(@RequestHeader(value="Authorization") String auth, @RequestBody UserChange userChange) {
+    public ResponseEntity changeUsername(@RequestHeader(value="Authorization") String auth, @RequestBody Text userChange) {
         try {
             logger.info("Changing username");
-            userChange.setAuth(new Auth(auth));
-            accountUtils.updateUsername(userChange);
+            accountUtils.updateUsername(new Auth(auth), userChange);
             logger.info("Username successfully changed");
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (Exception e) {

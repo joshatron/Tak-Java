@@ -7,6 +7,8 @@ import io.joshatron.tak.server.response.Message;
 import io.joshatron.tak.server.response.SocialNotifications;
 import io.joshatron.tak.server.response.User;
 
+import java.util.Date;
+
 public class SocialUtils {
 
     private SocialDAO socialDAO;
@@ -17,13 +19,13 @@ public class SocialUtils {
         this.socialDAO = socialDAO;
     }
 
-    public void createFriendRequest(UserInteraction request) {
+    public void createFriendRequest(Auth auth, String other) {
     }
 
-    public void deleteFriendRequest(UserInteraction delete) {
+    public void deleteFriendRequest(Auth auth, String other) {
     }
 
-    public void respondToFriendRequest(Answer response) {
+    public void respondToFriendRequest(Auth auth, String other, Text answer) {
     }
 
     public User[] listIncomingFriendRequests(Auth auth) {
@@ -34,16 +36,16 @@ public class SocialUtils {
         return null;
     }
 
-    public void unfriend(UserInteraction userInteraction) {
+    public void unfriend(Auth auth, String other) {
     }
 
-    public void blockUser(UserInteraction userInteraction) {
+    public void blockUser(Auth auth, String other) {
     }
 
-    public void unblockUser(UserInteraction userInteraction) {
+    public void unblockUser(Auth auth, String other) {
     }
 
-    public boolean isBlocked(UserInteraction userInteraction) {
+    public boolean isBlocked(Auth auth, String other) {
         return false;
     }
 
@@ -55,14 +57,14 @@ public class SocialUtils {
         return null;
     }
 
-    public void sendMessage(SendMessage sendMessage) {
+    public void sendMessage(Auth auth, Text sendMessage) {
     }
 
-    public Message[] listMessages(SearchMessages searchMessages) {
+    public Message[] listMessages(Auth auth, String senders, Date start, Date end, boolean read) {
         return null;
     }
 
-    public void markMessagesRead(MarkRead markRead) {
+    public void markMessagesRead(Auth auth, MarkRead markRead) {
     }
 
     public SocialNotifications getNotifications(Auth auth) {

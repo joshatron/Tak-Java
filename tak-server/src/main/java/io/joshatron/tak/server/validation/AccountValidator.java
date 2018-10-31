@@ -2,7 +2,7 @@ package io.joshatron.tak.server.validation;
 
 import io.joshatron.tak.server.exceptions.BadRequestException;
 import io.joshatron.tak.server.request.Auth;
-import io.joshatron.tak.server.request.UserChange;
+import io.joshatron.tak.server.request.Text;
 import io.joshatron.tak.server.utils.AccountUtils;
 
 public class AccountValidator {
@@ -19,20 +19,20 @@ public class AccountValidator {
         validatePassword(auth.getPassword());
     }
 
-    public static void validatePassChange(UserChange passChange) throws BadRequestException {
+    public static void validatePassChange(Auth auth, Text passChange) throws BadRequestException {
         if(passChange == null) {
             throw new BadRequestException("The request is improperly formatted.");
         }
-        validateAuth(passChange.getAuth());
-        validatePassword(passChange.getUpdated());
+        validateAuth(auth);
+        validatePassword(passChange.getText());
     }
 
-    public static void validateUserChange(UserChange userChange) throws BadRequestException {
+    public static void validateUserChange(Auth auth, Text userChange) throws BadRequestException {
         if(userChange == null) {
             throw new BadRequestException("The request is improperly formatted.");
         }
-        validateAuth(userChange.getAuth());
-        validateUsername(userChange.getUpdated());
+        validateAuth(auth);
+        validateUsername(userChange.getText());
     }
 
     public static void validateUsername(String username) throws BadRequestException {

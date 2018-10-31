@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class GameTurn {
-    String turn;
+public class Text {
+    private String text;
 }

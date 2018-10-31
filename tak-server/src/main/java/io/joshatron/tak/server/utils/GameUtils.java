@@ -7,8 +7,7 @@ import io.joshatron.tak.server.database.SocialDAO;
 import io.joshatron.tak.server.exceptions.GameServerException;
 import io.joshatron.tak.server.request.*;
 import io.joshatron.tak.server.response.GameInfo;
-import io.joshatron.tak.server.response.GameNotification;
-import io.joshatron.tak.server.response.GameTurn;
+import io.joshatron.tak.server.response.GameNotifications;
 import io.joshatron.tak.server.response.RequestInfo;
 
 public class GameUtils {
@@ -23,13 +22,13 @@ public class GameUtils {
         this.accountDAO = accountDAO;
     }
 
-    public void requestGame(Auth auth, String other, GameRequest gameRequest) throws GameServerException {
+    public void requestGame(Auth auth, String other,GameRequest gameRequest) throws GameServerException {
     }
 
     public void deleteRequest(Auth auth, String other) throws GameServerException {
     }
 
-    public void respondToGame(Auth auth, String id, String answer) throws GameServerException {
+    public void respondToGame(Auth auth, String id, Text answer) throws GameServerException {
     }
 
     public RequestInfo[] checkIncomingRequests(Auth auth) throws GameServerException {
@@ -58,10 +57,10 @@ public class GameUtils {
         return null;
     }
 
-    public void playTurn(Auth auth, String gameId, GameTurn turn) throws GameServerException {
+    public void playTurn(Auth auth, String gameId, Text turn) throws GameServerException {
     }
 
-    public GameNotification getNotifications(Auth auth) {
+    public GameNotifications getNotifications(Auth auth) {
         return null;
     }
 }

@@ -35,7 +35,7 @@ public class SocialController {
     public ResponseEntity requestFriend(@RequestHeader(value="Authorization") String auth, @PathVariable("id") String other) {
         try {
             logger.info("Creating friend request");
-            socialUtils.createFriendRequest(new UserInteraction(new Auth(auth), other));
+            socialUtils.createFriendRequest(new Auth(auth), other);
             logger.info("Successfully created friend request");
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
@@ -47,7 +47,7 @@ public class SocialController {
     public ResponseEntity cancelFriendRequest(@RequestHeader(value="Authorization") String auth, @PathVariable("id") String other) {
         try {
             logger.info("Deleting friend request");
-            socialUtils.deleteFriendRequest(new UserInteraction(new Auth(auth), other));
+            socialUtils.deleteFriendRequest(new Auth(auth), other);
             logger.info("Successfully deleted friend request");
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
@@ -55,11 +55,11 @@ public class SocialController {
         }
     }
 
-    @PostMapping(value = "/request/respond/{id}/{answer}", produces = "application/json")
-    public ResponseEntity respondToRequest(@RequestHeader(value="Authorization") String auth, @PathVariable("id") String id, @PathVariable("answer") String friendResponse) {
+    @PostMapping(value = "/request/respond/{id}", produces = "application/json")
+    public ResponseEntity respondToRequest(@RequestHeader(value="Authorization") String auth, @PathVariable("id") String id, @RequestBody Text friendResponse) {
         try {
             logger.info("Responding to friend request");
-            socialUtils.respondToFriendRequest(new Answer(new Auth(auth), id, friendResponse));
+            socialUtils.respondToFriendRequest(new Auth(auth), id, friendResponse);
             logger.info("Successfully responded to request");
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
@@ -73,7 +73,7 @@ public class SocialController {
             logger.info("Requesting incoming friend requests");
             User[] incoming = socialUtils.listIncomingFriendRequests(new Auth(auth));
             logger.info("Returning requests");
-            return new ResponseEntity<>(new Users(incoming), HttpStatus.OK);
+            return new ResponseEntity<>(incoming, HttpStatus.OK);
         } catch (Exception e) {
             return ControllerUtils.handleExceptions(e, logger);
         }
@@ -85,7 +85,7 @@ public class SocialController {
             logger.info("Requesting outgoing friend requests");
             User[] outgoing = socialUtils.listOutgoingFriendRequests(new Auth(auth));
             logger.info("Returning requests");
-            return new ResponseEntity<>(new Users(outgoing), HttpStatus.OK);
+            return new ResponseEntity<>(outgoing, HttpStatus.OK);
         } catch (Exception e) {
             return ControllerUtils.handleExceptions(e, logger);
         }
@@ -95,7 +95,7 @@ public class SocialController {
     public ResponseEntity unfriend(@RequestHeader(value="Authorization") String auth, @PathVariable("id") String other) {
         try {
             logger.info("Unfriending user");
-            socialUtils.unfriend(new UserInteraction(new Auth(auth), other));
+            socialUtils.unfriend(new Auth(auth), other);
             logger.info("User successfully unfriended");
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
@@ -107,7 +107,7 @@ public class SocialController {
     public ResponseEntity blockUser(@RequestHeader(value="Authorization") String auth, @PathVariable("id") String block) {
         try {
             logger.info("Blocking user");
-            socialUtils.blockUser(new UserInteraction(new Auth(auth), block));
+            socialUtils.blockUser(new Auth(auth), block);
             logger.info("User successfully blocked");
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
@@ -119,7 +119,7 @@ public class SocialController {
     public ResponseEntity unblockUser(@RequestHeader(value="Authorization") String auth, @PathVariable("id") String unblock) {
         try {
             logger.info("Unblocking user");
-            socialUtils.unblockUser(new UserInteraction(new Auth(auth), unblock));
+            socialUtils.unblockUser(new Auth(auth), unblock);
             logger.info("User successfully unblocked");
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
@@ -131,7 +131,7 @@ public class SocialController {
     public ResponseEntity isBlocked(@RequestHeader(value="Authorization") String auth, @PathVariable("id") String isBlocked) {
         try {
             logger.info("Checking if user is blocked");
-            if(socialUtils.isBlocked(new UserInteraction(new Auth(auth), isBlocked))) {
+            if(socialUtils.isBlocked(new Auth(auth), isBlocked)) {
                 logger.info("The user is blocked");
                 throw new ForbiddenException("You are blocked from interacting with this user");
             }
@@ -151,7 +151,7 @@ public class SocialController {
             logger.info("Getting list of friends");
             User[] friends = socialUtils.listFriends(new Auth(auth));
             logger.info("Returning friend list");
-            return new ResponseEntity<>(new Users(friends), HttpStatus.OK);
+            return new ResponseEntity<>(friends, HttpStatus.OK);
         } catch (Exception e) {
             return ControllerUtils.handleExceptions(e, logger);
         }
@@ -163,18 +163,17 @@ public class SocialController {
             logger.info("Getting list blocking users");
             User[] blocked = socialUtils.listBlocked(new Auth(auth));
             logger.info("Returning blocking list");
-            return new ResponseEntity<>(new Users(blocked), HttpStatus.OK);
+            return new ResponseEntity<>(blocked, HttpStatus.OK);
         } catch (Exception e) {
             return ControllerUtils.handleExceptions(e, logger);
         }
     }
 
     @PostMapping(value = "/message/send", consumes = "application/json", produces = "application/json")
-    public ResponseEntity sendMessage(@RequestHeader(value="Authorization") String auth, @RequestBody SendMessage sendMessage) {
+    public ResponseEntity sendMessage(@RequestHeader(value="Authorization") String auth, @RequestBody Text sendMessage) {
         try {
             logger.info("Sending a message");
-            sendMessage.setAuth(new Auth(auth));
-            socialUtils.sendMessage(sendMessage);
+            socialUtils.sendMessage(new Auth(auth), sendMessage);
             logger.info("Message successfully sent");
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
@@ -188,10 +187,9 @@ public class SocialController {
                                        @RequestParam(value = "read", required = false) boolean read) {
         try {
             logger.info("Reading messages");
-            SearchMessages searchMessages = new SearchMessages(new Auth(auth), senders.split(","), new Date(start), new Date(end), read);
-            Message[] messages = socialUtils.listMessages(searchMessages);
+            Message[] messages = socialUtils.listMessages(new Auth(auth), senders, new Date(start), new Date(end), read);
             logger.info("Messages found, returning");
-            return new ResponseEntity<>(new Messages(messages), HttpStatus.OK);
+            return new ResponseEntity<>(messages, HttpStatus.OK);
         } catch (Exception e) {
             return ControllerUtils.handleExceptions(e, logger);
         }
@@ -201,8 +199,7 @@ public class SocialController {
     public ResponseEntity markMessagesRead(@RequestHeader(value="Authorization") String auth, @RequestBody MarkRead markRead) {
         try {
             logger.info("Marking messages as read");
-            markRead.setAuth(new Auth(auth));
-            socialUtils.markMessagesRead(markRead);
+            socialUtils.markMessagesRead(new Auth(auth), markRead);
             logger.info("Successfully marked messages");
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (Exception e) {

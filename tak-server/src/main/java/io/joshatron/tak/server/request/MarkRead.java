@@ -8,7 +8,6 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 public class MarkRead {
-    private Auth auth;
     private String[] ids;
     private Date start;
 }
