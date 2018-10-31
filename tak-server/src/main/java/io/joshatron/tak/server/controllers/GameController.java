@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
 @RestController
 @RequestMapping("/games")
 public class GameController {
@@ -131,7 +133,14 @@ public class GameController {
                                     @RequestParam(value = "complete", required = false) boolean complete, @RequestParam(value = "pending", required = false) boolean pending,
                                     @RequestParam(value = "sizes", required = false) String sizes, @RequestParam(value = "winner", required = false) String winner,
                                     @RequestParam(value = "color", required = false) String color) {
-        return null;
+        try {
+            logger.info("Searching for games");
+            GameInfo[] games = gameUtils.findGames(new Auth(auth), opponents, new Date(start), new Date(end), complete, pending, sizes, winner, color);
+            logger.info("Games found");
+            return new ResponseEntity(games, HttpStatus.OK);
+        } catch (Exception e) {
+            return ControllerUtils.handleExceptions(e, logger);
+        }
     }
 
     @GetMapping(value = "/game/{id}", produces = "application/json")

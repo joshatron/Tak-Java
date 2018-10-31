@@ -10,6 +10,8 @@ import io.joshatron.tak.server.response.GameInfo;
 import io.joshatron.tak.server.response.GameNotifications;
 import io.joshatron.tak.server.response.RequestInfo;
 
+import java.util.Date;
+
 public class GameUtils {
 
     private GameDAO gameDAO;
@@ -61,6 +63,10 @@ public class GameUtils {
     }
 
     public GameNotifications getNotifications(Auth auth) {
+        return null;
+    }
+
+    public GameInfo[] findGames(Auth auth, String opponents, Date start, Date end, boolean complete, boolean pending, String sizes, String winner, String color) {
         return null;
     }
 }
