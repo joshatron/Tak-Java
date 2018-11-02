@@ -1,17 +1,21 @@
 #!/bin/bash
 
+set -e
+
 command -v mvn >/dev/null 2>&1 || { echo >&2 "Maven is required for setup. Aborting."; exit 1; }
+
+./clean
 
 mvn clean install
 
-mkdir -p trainer/
-mkdir -p cli/
-mkdir -p server/
-cp tak-ai/target/tak-ai*.jar trainer/
-cp tak-cli/target/tak-cli*.jar cli/
-cp tak-server/target/tak-server*.jar server/
+mkdir -p Tak-AI/trainer/
+mkdir -p Tak-CLI/cli/
+mkdir -p Tak-Server/game-server/
+cp Tak-AI/target/tak-ai*.jar Tak-AI/trainer/
+cp Tak-CLI/target/tak-cli*.jar Tak-CLI/cli/
+cp Tak-Server/target/tak-server*.jar Tak-Server/game-server/
 
-cd server
+cd Tak-Server/game-server
 if [ ! -f keystore.p12 ]; then
     keytool -genkey -noprompt \
      -alias takserver \

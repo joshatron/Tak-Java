@@ -1,0 +1,15 @@
+[submodule "Tak-Engine"]
+	path = Tak-Engine
+	url = git@github.com:joshatron/Tak-Engine.git
+[submodule "Tak-AI"]
+	path = Tak-AI
+	url = git@github.com:joshatron/Tak-AI.git
+[submodule "Tak-CLI"]
+	path = Tak-CLI
+	url = git@github.com:joshatron/Tak-CLI.git
+[submodule "Tak-Server"]
+	path = Tak-Server
+	url = git@github.com:joshatron/Tak-Server.git
+[submodule "Tak-Server-Integration-Tests"]
+	path = Tak-Server-Integration-Tests
+	url = git@github.com:joshatron/Tak-Server-Integration-Tests.git

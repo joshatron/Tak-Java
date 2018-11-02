@@ -1,6 +1,9 @@
 #!/bin/bash
 
-rm -r trainer/
-rm -r cli/
-rm -r server/
+set -e
+
+rm -r Tak-AI/trainer/
+rm -r Tak-CLI/cli/
+rm -r Tak-Server/game-server/
+
 mvn clean

@@ -1,6 +1,7 @@
 #!/bin/bash
 
-command -v java >/dev/null 2>&1 || { echo >&2 "Java 8 is required for running. Aborting."; exit 1; }
+set -e
 
-cd trainer/
-java -jar tak-ai-*.jar
+cd Tak-AI/
+
+./ai-train
