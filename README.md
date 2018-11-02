@@ -31,11 +31,3 @@ To run the server:
 To clean up the project:
 
     ./clean
-
-### Server
-
-The server is detailed [here](tak-server/README.md).
-
-### AI
-
-The AI is detailed [here](tak-ai/README.md).
