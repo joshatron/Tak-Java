@@ -2,8 +2,8 @@
 
 set -e
 
-rm -r Tak-AI/trainer/
-rm -r Tak-CLI/cli/
-rm -r Tak-Server/game-server/
+rm -rf Tak-AI/trainer/
+rm -rf Tak-CLI/cli/
+rm -rf Tak-Server/game-server/
 
 mvn clean

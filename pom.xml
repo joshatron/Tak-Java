@@ -12,9 +12,9 @@
   <name>tak</name>
 
   <modules>
-    <module>tak-engine</module>
-    <module>tak-ai</module>
-    <module>tak-cli</module>
-    <module>tak-server</module>
+    <module>Tak-Engine</module>
+    <module>Tak-AI</module>
+    <module>Tak-CLI</module>
+    <module>Tak-Server</module>
   </modules>
 </project>

@@ -1,15 +1,20 @@
 [submodule "Tak-Engine"]
 	path = Tak-Engine
 	url = git@github.com:joshatron/Tak-Engine.git
+    branch = master
 [submodule "Tak-AI"]
 	path = Tak-AI
 	url = git@github.com:joshatron/Tak-AI.git
+    branch = master
 [submodule "Tak-CLI"]
 	path = Tak-CLI
 	url = git@github.com:joshatron/Tak-CLI.git
+    branch = master
 [submodule "Tak-Server"]
 	path = Tak-Server
 	url = git@github.com:joshatron/Tak-Server.git
+    branch = master
 [submodule "Tak-Server-Integration-Tests"]
 	path = Tak-Server-Integration-Tests
 	url = git@github.com:joshatron/Tak-Server-Integration-Tests.git
+    branch = master
