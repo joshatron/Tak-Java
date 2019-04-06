@@ -18,6 +18,11 @@ The sub projects that make this up are:
 
 ### Running
 
+To set up repo:
+
+    git submodule init
+    git submodule update
+
 To install:
 
     ./install

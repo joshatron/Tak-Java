@@ -13,7 +13,7 @@ mkdir -p Tak-CLI/cli/
 mkdir -p Tak-Server/game-server/
 cp Tak-AI/target/tak-ai*.jar Tak-AI/trainer/
 cp Tak-CLI/target/tak-cli*.jar Tak-CLI/cli/
-cp Tak-Server/target/tak-server*.jar Tak-Server/game-server/
+cp Tak-Server/target/tak-server*.jar Tak-Server/game-server/tak-server.jar
 
 cd Tak-Server/game-server
 if [ ! -f keystore.p12 ]; then
